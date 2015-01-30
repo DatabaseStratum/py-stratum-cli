@@ -1,0 +1,35 @@
+/**
+ *  Test for designation bulk_insert.
+ */
+create procedure tst_test_bulk_insert01()
+modifies sql data
+-- type: bulk_insert TST_TEMPO field1,field2,field3,field4,field5,field6,field7,field8,field9,field10,field11,field12,field13,field14,field15,field16,field17,field18,field19,field20
+begin
+  drop temporary table if exists TST_TEMPO;
+
+  create temporary table TST_TEMPO
+  (
+     tst_col1             int,
+     tst_col2             smallint,
+     tst_col3             mediumint,
+     tst_col4             tinyint,
+     tst_col5             bigint,
+     tst_col6             year,
+     tst_col7             decimal(10,2),
+     tst_col8             float,
+     tst_col9             double,
+     tst_col10            binary(10),
+     tst_col11            varbinary(10),
+     tst_col12            char(10),
+     tst_col13            varchar(80),
+     tst_col14            time,
+     tst_col15            timestamp,
+     tst_col16            date,
+     tst_col17            datetime,
+     tst_col18            enum('a','b','c'),
+     tst_col19            set('a','b','c'),
+     tst_col20            bit(4),
+     primary key (tst_col1)
+  ) engine = memory
+  ;
+end
