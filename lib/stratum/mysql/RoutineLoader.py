@@ -158,7 +158,9 @@ class RoutineLoader:
         StaticDataLayer.config['user'] = self._user_name
         StaticDataLayer.config['password'] = self._password
         StaticDataLayer.config['database'] = self._database
-        StaticDataLayer.config['host'] = self._host_name
+        StaticDataLayer.config['charset'] = self._character_set
+        StaticDataLayer.config['collation'] = self._collate
+        StaticDataLayer.config['sql_mode'] = self._sql_mode
 
         StaticDataLayer.connect()
 
