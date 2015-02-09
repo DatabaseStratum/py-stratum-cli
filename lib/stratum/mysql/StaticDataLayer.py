@@ -1,6 +1,7 @@
 from mysql.connector import DataError, MySQLConnection
 from mysql.connector.cursor import MySQLCursorBufferedDict, MySQLCursorBuffered, MySQLCursor
 
+
 # ----------------------------------------------------------------------------------------------------------------------
 class StaticDataLayer:
     """
@@ -249,4 +250,3 @@ class StaticDataLayer:
         return ret
 
 # ----------------------------------------------------------------------------------------------------------------------
-

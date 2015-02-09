@@ -2,9 +2,6 @@ import os
 import sys
 import json
 import configparser
-
-sys.path.append(os.path.realpath(os.path.dirname(os.path.realpath(__file__)) + '/..'))
-
 from lib.stratum.mysql.StaticDataLayer import StaticDataLayer
 from lib.stratum.mysql.RoutineLoaderHelper import RoutineLoaderHelper
 
@@ -149,8 +146,8 @@ class RoutineLoader:
     def _load_list(self, config_filename: str, file_names: list):
         """
         Loads all stored routines in a list into MySQL.
-        :param config_filename string The filename of the configuration file.
-        :param file_names      list   The list of files to be loaded.
+        :param config_filename The filename of the configuration file.
+        :param file_names      The list of files to be loaded.
         """
 
         self._read_configuration_file(config_filename)
@@ -182,7 +179,7 @@ class RoutineLoader:
     def _load_all(self, config_filename: str):
         """
         Loads all stored routines into MySQL.
-        :param config_filename string The filename of the configuration file.
+        :param config_filename The filename of the configuration file.
         """
 
         self._read_configuration_file(config_filename)
@@ -267,19 +264,19 @@ class RoutineLoader:
         """
 
         sql = """
-select table_name                                    table_name
-,      column_name                                   column_name
-,      column_type                                   column_type
-,      character_set_name                            character_set_name
+select TABLE_NAME                                    table_name
+,      COLUMN_NAME                                   column_name
+,      COLUMN_TYPE                                   column_type
+,      CHARACTER_SET_NAME                            character_set_name
 ,      null                                          table_schema
 from   information_schema.COLUMNS
-where  table_schema = database()
+where  TABLE_SCHEMA = database()
 union all
-select table_name                                    table_name
-,      column_name                                   column_name
-,      column_type                                   column_type
-,      character_set_name                            character_set_name
-,      table_schema                                  table_schema
+select TABLE_NAME                                    table_name
+,      COLUMN_NAME                                   column_name
+,      COLUMN_TYPE                                   column_type
+,      CHARACTER_SET_NAME                            character_set_name
+,      TABLE_SCHEMA                                  table_schema
 from   information_schema.COLUMNS
 order by table_schema
 ,        table_name
@@ -343,11 +340,11 @@ order by table_schema
         """
 
         query = """
-select routine_name
-,      routine_type
-,      sql_mode
-,      character_set_client
-,      collation_connection
+select ROUTINE_NAME             routine_name
+,      ROUTINE_TYPE             routine_type
+,      SQL_MODE                 sql_mode
+,      CHARACTER_SET_CLIENT     character_set_client
+,      COLLATION_CONNECTION     collation_connection
 from  information_schema.ROUTINES
 where ROUTINE_SCHEMA = database()
 order by routine_name"""
@@ -405,10 +402,10 @@ order by routine_name"""
             json.dump(self._metadata, f, indent=4, sort_keys=True)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def find_source_files_from_list(self, file_names):
+    def find_source_files_from_list(self, file_names: list):
         """
         Finds all source files that actually exists from a list of file names.
-        :param file_names list The list of file names.
+        :param file_names The list of file names.
         """
 
         for file_name in file_names:

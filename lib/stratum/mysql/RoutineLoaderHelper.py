@@ -1,9 +1,6 @@
 import os
 import re
 import sys
-
-sys.path.append(os.path.realpath(os.path.dirname(os.path.realpath(__file__)) + '/..'))
-
 from lib.stratum.mysql.StaticDataLayer import StaticDataLayer
 
 
@@ -176,8 +173,8 @@ class RoutineLoaderHelper:
     def load_stored_routine(self) -> dict:
         """
         Loads the stored routine into the instance of MySQL.
-        :return array|bool If the stored routine is loaded successfully the new mata data of the stored routine.
-                           Otherwise False.
+        :rtype dict|bool If the stored routine is loaded successfully the new mata data of the stored routine.
+                          Otherwise False.
         """
 
         try:
@@ -232,7 +229,7 @@ class RoutineLoaderHelper:
     def _must_reload(self) -> bool:
         """
         Returns True if the source file must be load or reloaded. Otherwise returns False.
-        :return bool
+        :rtype bool
         """
 
         if not self._old_metadata:
@@ -264,7 +261,7 @@ class RoutineLoaderHelper:
     def _get_placeholders(self) -> bool:
         """
         Extracts the placeholders from the stored routine source.
-        :return bool True if all placeholders are defined, False otherwise.
+        :rtype bool True if all placeholders are defined, False otherwise.
         """
 
         ret = True
@@ -295,7 +292,7 @@ class RoutineLoaderHelper:
     def _get_designation_type(self) -> bool:
         """
         Extracts the designation type of the stored routine.
-        :return bool True on success. Otherwise returns False.
+        :rtype bool True on success. Otherwise returns False.
         """
 
         ret = True
@@ -337,7 +334,7 @@ class RoutineLoaderHelper:
     def _get_name(self) -> bool:
         """
         Extracts the name of the stored routine and the stored routine type (i.e. procedure or function) source.
-        :return bool Returns True on success, False otherwise.
+        :rtype bool Returns True on success, False otherwise.
         """
 
         ret = True
@@ -403,8 +400,8 @@ class RoutineLoaderHelper:
         query = """
 select 1 from
 information_schema.TABLES
-where table_schema = database()
-and   table_name   = '%s'""" % self._table_name
+where TABLE_SCHEMA = database()
+and   TABLE_NAME   = '%s'""" % self._table_name
 
         # execute row0
         table_is_non_temporary = StaticDataLayer.execute_rows(query)
@@ -442,17 +439,17 @@ and   table_name   = '%s'""" % self._table_name
     # ------------------------------------------------------------------------------------------------------------------
     def _get_routine_parameters_info(self):
         query = """
-select t2.parameter_name      parameter_name
-,      t2.data_type           parameter_type
-,      t2.dtd_identifier      column_type
-,      t2.character_set_name  character_set_name
-,      t2.collation_name      collation
+select t2.PARAMETER_NAME      parameter_name
+,      t2.DATA_TYPE           parameter_type
+,      t2.DTD_IDENTIFIER      column_type
+,      t2.CHARACTER_SET_NAME  character_set_name
+,      t2.COLLATION_NAME      collation
 from            information_schema.ROUTINES   t1
-left outer join information_schema.PARAMETERS t2  on  t2.specific_schema = t1.routine_schema and
-                                                      t2.specific_name   = t1.routine_name and
-                                                      t2.parameter_mode   is not null
-where t1.routine_schema = database()
-and   t1.routine_name   = '%s'""" % self._routine_name
+left outer join information_schema.PARAMETERS t2  on  t2.SPECIFIC_SCHEMA = t1.ROUTINE_SCHEMA and
+                                                      t2.SPECIFIC_NAME   = t1.ROUTINE_NAME and
+                                                      t2.PARAMETER_MODE   is not null
+where t1.ROUTINE_SCHEMA = database()
+and   t1.ROUTINE_NAME   = '%s'""" % self._routine_name
 
         routine_parameters = StaticDataLayer.execute_rows(query)
 
