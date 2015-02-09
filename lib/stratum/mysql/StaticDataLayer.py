@@ -1,7 +1,6 @@
 from mysql.connector import DataError, MySQLConnection
 from mysql.connector.cursor import MySQLCursorBufferedDict, MySQLCursorBuffered, MySQLCursor
 
-
 # ----------------------------------------------------------------------------------------------------------------------
 class StaticDataLayer:
     """
@@ -15,8 +14,7 @@ class StaticDataLayer:
         'port': 3306,
         'charset': 'utf8',
         'collation': 'utf8_general_ci',
-        'sql_mode': 'STRICT_ALL_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_AUTO_VALUE_ON_ZERO,'
-                    'NO_ENGINE_SUBSTITUTION,NO_ZERO_DATE,NO_ZERO_IN_DATE,ONLY_FULL_GROUP_BY'
+        'sql_mode': 'STRICT_ALL_TABLES'
     }
     """
     The parameters for connection to the MySQL instance. See
@@ -120,7 +118,6 @@ class StaticDataLayer:
         cursor = MySQLCursor(StaticDataLayer.connection)
         itr = cursor.execute(sql, *params, multi=True)
         result = itr.__next__()
-        itr.__next__()
         cursor.close()
 
         return result.rowcount
