@@ -22,6 +22,7 @@ class StaticDataLayer:
     The parameters for connection to the MySQL instance. See
     http://dev.mysql.com/doc/connector-python/en/connector-python-connectargs.html for a complete overview of all
     parameters.
+    :type : dict
     """
 
     connection = None
@@ -77,7 +78,7 @@ class StaticDataLayer:
     @staticmethod
     def execute_none(sql: str, *params) -> int:
         """
-        Executes a query that does not select any rows.
+        Executes a query that does not select rows.
 
         :param sql: The SQL statement.
         :param params: The values for the statement.
@@ -251,3 +252,4 @@ class StaticDataLayer:
         return ret
 
 # ----------------------------------------------------------------------------------------------------------------------
+
