@@ -1,6 +1,6 @@
-from mysql.connector import DataError, MySQLConnection
+from time import strftime, gmtime
+from mysql.connector import DataError, MySQLConnection, InterfaceError
 from mysql.connector.cursor import MySQLCursorBufferedDict, MySQLCursorBuffered, MySQLCursor
-
 
 # ----------------------------------------------------------------------------------------------------------------------
 class StaticDataLayer:
@@ -21,7 +21,6 @@ class StaticDataLayer:
     The parameters for connection to the MySQL instance. See
     http://dev.mysql.com/doc/connector-python/en/connector-python-connectargs.html for a complete overview of all
     parameters.
-    :type : dict
     """
 
     connection = None
@@ -77,7 +76,7 @@ class StaticDataLayer:
     @staticmethod
     def execute_none(sql: str, *params) -> int:
         """
-        Executes a query that does not select rows.
+        Executes a query that does not select any rows.
 
         :param sql: The SQL statement.
         :param params: The values for the statement.
@@ -119,9 +118,10 @@ class StaticDataLayer:
         cursor = MySQLCursor(StaticDataLayer.connection)
         itr = cursor.execute(sql, *params, multi=True)
         result = itr.__next__()
+        n = result.rowcount
         cursor.close()
 
-        return result.rowcount
+        return n
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -224,6 +224,31 @@ class StaticDataLayer:
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
+    def execute_singleton1(sql: str, *params):
+        """
+        Executes a stored procedure that selects 1 row with 1 column.
+
+        :param sql: The SQL call the the stored procedure.
+        :param params: The arguments for the stored procedure.
+        :return: The value of the selected column.
+        """
+        cursor = MySQLCursorBuffered(StaticDataLayer.connection)
+        cursor.execute(sql, params)
+        n = cursor.rowcount
+        if n == 1:
+            ret = cursor.fetchone()[0]
+        else:
+            ret = None  # Keep our IDE happy.
+        cursor.close()
+
+        if n != 1:
+            raise DataError("Number of rows selected by query below is %d. Expected 1.\n%s" %
+                            (n, sql))
+
+        return ret
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @staticmethod
     def execute_sp_singleton1(sql: str, *params):
         """
         Executes a stored procedure that selects 1 row with 1 column.
@@ -248,5 +273,37 @@ class StaticDataLayer:
                             (n, sql))
 
         return ret
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @staticmethod
+    def execute_sp_log(sql, *params):
+        cursor = MySQLCursorBuffered(StaticDataLayer.connection)
+        itr = cursor.execute(sql, params, multi=True)
+
+        n = 0
+        try:
+            for result in itr:
+                rows = result.fetchall()
+                if rows is not None:
+                    stamp = strftime('%Y-%m-%d %H:%M:%S', gmtime())
+                    for row in rows:
+                        print(stamp, end='')
+                        for field in row:
+                            print(' %s' % field, end='')
+                        print('')
+                        n += 1
+        except InterfaceError:
+            pass
+
+        cursor.close()
+
+        return n
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @staticmethod
+    def execute_sp_table(sql: str, *params):
+        # todo methods for showing table
+        pass
+
 
 # ----------------------------------------------------------------------------------------------------------------------

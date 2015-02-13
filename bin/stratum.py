@@ -6,6 +6,7 @@ import argparse
 sys.path.append(os.path.realpath(os.path.dirname(os.path.realpath(__file__)) + '/..'))
 
 from lib.stratum.mysql.RoutineLoader import RoutineLoader
+from lib.stratum.mysql.RoutineWrapperGenerator import RoutineWrapperGenerator
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -42,8 +43,8 @@ def main():
         if ret != 0:
             exit(ret)
 
-        # wrapper = RoutineWrapperGenerator;
-        # ret = wrapper.run(setting['config'])
+        wrapper = RoutineWrapperGenerator()
+        ret = wrapper.run(args.config[0])
         exit(ret)
 
 
