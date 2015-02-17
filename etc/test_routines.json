@@ -8,7 +8,7 @@
         "replace": {},
         "routine_name": "tst_magic_constant01",
         "table_name": null,
-        "timestamp": 1422608903
+        "timestamp": 1423236550
     },
     "tst_magic_constant02": {
         "column_types": null,
@@ -19,7 +19,7 @@
         "replace": {},
         "routine_name": "tst_magic_constant02",
         "table_name": null,
-        "timestamp": 1422608903
+        "timestamp": 1423236550
     },
     "tst_magic_constant03": {
         "column_types": null,
@@ -30,7 +30,7 @@
         "replace": {},
         "routine_name": "tst_magic_constant03",
         "table_name": null,
-        "timestamp": 1422608903
+        "timestamp": 1423236550
     },
     "tst_magic_constant04": {
         "column_types": null,
@@ -41,7 +41,7 @@
         "replace": {},
         "routine_name": "tst_magic_constant04",
         "table_name": null,
-        "timestamp": 1422608903
+        "timestamp": 1423236550
     },
     "tst_test01": {
         "column_types": null,
@@ -121,12 +121,12 @@
             },
             {
                 "data_type": "char",
-                "data_type_descriptor": "char(10) character set latin1 collation latin1_swedish_ci",
+                "data_type_descriptor": "char(10) character set utf8 collation utf8_general_ci",
                 "name": "p_param14"
             },
             {
                 "data_type": "varchar",
-                "data_type_descriptor": "varchar(10) character set latin1 collation latin1_swedish_ci",
+                "data_type_descriptor": "varchar(10) character set utf8 collation utf8_general_ci",
                 "name": "p_param15"
             },
             {
@@ -141,12 +141,12 @@
             },
             {
                 "data_type": "enum",
-                "data_type_descriptor": "enum('a','b') character set latin1 collation latin1_swedish_ci",
+                "data_type_descriptor": "enum('a','b') character set utf8 collation utf8_general_ci",
                 "name": "p_param26"
             },
             {
                 "data_type": "set",
-                "data_type_descriptor": "set('a','b') character set latin1 collation latin1_swedish_ci",
+                "data_type_descriptor": "set('a','b') character set utf8 collation utf8_general_ci",
                 "name": "p_param27"
             }
         ],
@@ -165,16 +165,16 @@
             "@tst_foo1.tst_c11%type@": "timestamp",
             "@tst_foo1.tst_c12%type@": "time",
             "@tst_foo1.tst_c13%type@": "year(4)",
-            "@tst_foo1.tst_c14%type@": "char(10) character set latin1",
-            "@tst_foo1.tst_c15%type@": "varchar(10) character set latin1",
+            "@tst_foo1.tst_c14%type@": "char(10) character set utf8",
+            "@tst_foo1.tst_c15%type@": "varchar(10) character set utf8",
             "@tst_foo1.tst_c16%type@": "binary(10)",
             "@tst_foo1.tst_c17%type@": "varbinary(10)",
-            "@tst_foo1.tst_c26%type@": "enum('a','b') character set latin1",
-            "@tst_foo1.tst_c27%type@": "set('a','b') character set latin1"
+            "@tst_foo1.tst_c26%type@": "enum('a','b') character set utf8",
+            "@tst_foo1.tst_c27%type@": "set('a','b') character set utf8"
         },
         "routine_name": "tst_test01",
         "table_name": null,
-        "timestamp": 1422608903
+        "timestamp": 1423236550
     },
     "tst_test02": {
         "column_types": null,
@@ -254,12 +254,12 @@
             },
             {
                 "data_type": "char",
-                "data_type_descriptor": "char(10) character set latin1 collation latin1_swedish_ci",
+                "data_type_descriptor": "char(10) character set utf8 collation utf8_general_ci",
                 "name": "p_param14"
             },
             {
                 "data_type": "varchar",
-                "data_type_descriptor": "varchar(10) character set latin1 collation latin1_swedish_ci",
+                "data_type_descriptor": "varchar(10) character set utf8 collation utf8_general_ci",
                 "name": "p_param15"
             },
             {
@@ -294,32 +294,32 @@
             },
             {
                 "data_type": "tinytext",
-                "data_type_descriptor": "tinytext character set latin1 collation latin1_swedish_ci",
+                "data_type_descriptor": "tinytext character set utf8 collation utf8_general_ci",
                 "name": "p_param22"
             },
             {
                 "data_type": "text",
-                "data_type_descriptor": "text character set latin1 collation latin1_swedish_ci",
+                "data_type_descriptor": "text character set utf8 collation utf8_general_ci",
                 "name": "p_param23"
             },
             {
                 "data_type": "mediumtext",
-                "data_type_descriptor": "mediumtext character set latin1 collation latin1_swedish_ci",
+                "data_type_descriptor": "mediumtext character set utf8 collation utf8_general_ci",
                 "name": "p_param24"
             },
             {
                 "data_type": "longtext",
-                "data_type_descriptor": "longtext character set latin1 collation latin1_swedish_ci",
+                "data_type_descriptor": "longtext character set utf8 collation utf8_general_ci",
                 "name": "p_param25"
             },
             {
                 "data_type": "enum",
-                "data_type_descriptor": "enum('a','b') character set latin1 collation latin1_swedish_ci",
+                "data_type_descriptor": "enum('a','b') character set utf8 collation utf8_general_ci",
                 "name": "p_param26"
             },
             {
                 "data_type": "set",
-                "data_type_descriptor": "set('a','b') character set latin1 collation latin1_swedish_ci",
+                "data_type_descriptor": "set('a','b') character set utf8 collation utf8_general_ci",
                 "name": "p_param27"
             }
         ],
@@ -338,24 +338,24 @@
             "@tst_foo1.tst_c11%type@": "timestamp",
             "@tst_foo1.tst_c12%type@": "time",
             "@tst_foo1.tst_c13%type@": "year(4)",
-            "@tst_foo1.tst_c14%type@": "char(10) character set latin1",
-            "@tst_foo1.tst_c15%type@": "varchar(10) character set latin1",
+            "@tst_foo1.tst_c14%type@": "char(10) character set utf8",
+            "@tst_foo1.tst_c15%type@": "varchar(10) character set utf8",
             "@tst_foo1.tst_c16%type@": "binary(10)",
             "@tst_foo1.tst_c17%type@": "varbinary(10)",
             "@tst_foo1.tst_c18%type@": "tinyblob",
             "@tst_foo1.tst_c19%type@": "blob",
             "@tst_foo1.tst_c20%type@": "mediumblob",
             "@tst_foo1.tst_c21%type@": "longblob",
-            "@tst_foo1.tst_c22%type@": "tinytext character set latin1",
-            "@tst_foo1.tst_c23%type@": "text character set latin1",
-            "@tst_foo1.tst_c24%type@": "mediumtext character set latin1",
-            "@tst_foo1.tst_c25%type@": "longtext character set latin1",
-            "@tst_foo1.tst_c26%type@": "enum('a','b') character set latin1",
-            "@tst_foo1.tst_c27%type@": "set('a','b') character set latin1"
+            "@tst_foo1.tst_c22%type@": "tinytext character set utf8",
+            "@tst_foo1.tst_c23%type@": "text character set utf8",
+            "@tst_foo1.tst_c24%type@": "mediumtext character set utf8",
+            "@tst_foo1.tst_c25%type@": "longtext character set utf8",
+            "@tst_foo1.tst_c26%type@": "enum('a','b') character set utf8",
+            "@tst_foo1.tst_c27%type@": "set('a','b') character set utf8"
         },
         "routine_name": "tst_test02",
         "table_name": null,
-        "timestamp": 1422608903
+        "timestamp": 1423236550
     },
     "tst_test_bulk_insert01": {
         "column_types": [
@@ -429,7 +429,7 @@
         "replace": {},
         "routine_name": "tst_test_bulk_insert01",
         "table_name": "TST_TEMPO",
-        "timestamp": 1422608903
+        "timestamp": 1423236550
     },
     "tst_test_bulk_insert02": {
         "column_types": [
@@ -458,7 +458,7 @@
         "replace": {},
         "routine_name": "tst_test_bulk_insert02",
         "table_name": "TST_TEMPO",
-        "timestamp": 1422608903
+        "timestamp": 1423236550
     },
     "tst_test_function": {
         "column_types": null,
@@ -480,7 +480,7 @@
         "replace": {},
         "routine_name": "tst_test_function",
         "table_name": null,
-        "timestamp": 1422608903
+        "timestamp": 1423236550
     },
     "tst_test_hidden": {
         "column_types": null,
@@ -491,7 +491,7 @@
         "replace": {},
         "routine_name": "tst_test_hidden",
         "table_name": null,
-        "timestamp": 1422608903
+        "timestamp": 1423236550
     },
     "tst_test_log": {
         "column_types": null,
@@ -502,7 +502,7 @@
         "replace": {},
         "routine_name": "tst_test_log",
         "table_name": null,
-        "timestamp": 1422608903
+        "timestamp": 1423236550
     },
     "tst_test_max_allowed_packet": {
         "column_types": null,
@@ -519,7 +519,7 @@
         "replace": {},
         "routine_name": "tst_test_max_allowed_packet",
         "table_name": null,
-        "timestamp": 1422608903
+        "timestamp": 1423236550
     },
     "tst_test_none": {
         "column_types": null,
@@ -536,7 +536,7 @@
         "replace": {},
         "routine_name": "tst_test_none",
         "table_name": null,
-        "timestamp": 1422608903
+        "timestamp": 1423236550
     },
     "tst_test_none_with_lob": {
         "column_types": null,
@@ -558,7 +558,7 @@
         "replace": {},
         "routine_name": "tst_test_none_with_lob",
         "table_name": null,
-        "timestamp": 1422608903
+        "timestamp": 1423236550
     },
     "tst_test_row0a": {
         "column_types": null,
@@ -575,7 +575,7 @@
         "replace": {},
         "routine_name": "tst_test_row0a",
         "table_name": null,
-        "timestamp": 1422608903
+        "timestamp": 1423236550
     },
     "tst_test_row0a_with_lob": {
         "column_types": null,
@@ -597,7 +597,7 @@
         "replace": {},
         "routine_name": "tst_test_row0a_with_lob",
         "table_name": null,
-        "timestamp": 1422608903
+        "timestamp": 1423236550
     },
     "tst_test_row1a": {
         "column_types": null,
@@ -614,7 +614,7 @@
         "replace": {},
         "routine_name": "tst_test_row1a",
         "table_name": null,
-        "timestamp": 1422608903
+        "timestamp": 1423236550
     },
     "tst_test_row1a_with_lob": {
         "column_types": null,
@@ -636,7 +636,7 @@
         "replace": {},
         "routine_name": "tst_test_row1a_with_lob",
         "table_name": null,
-        "timestamp": 1422608903
+        "timestamp": 1423236550
     },
     "tst_test_rows1": {
         "column_types": null,
@@ -653,7 +653,7 @@
         "replace": {},
         "routine_name": "tst_test_rows1",
         "table_name": null,
-        "timestamp": 1422608903
+        "timestamp": 1423236550
     },
     "tst_test_rows1_with_lob": {
         "column_types": null,
@@ -675,7 +675,7 @@
         "replace": {},
         "routine_name": "tst_test_rows1_with_lob",
         "table_name": null,
-        "timestamp": 1422608904
+        "timestamp": 1423236550
     },
     "tst_test_rows_with_index1": {
         "column_types": null,
@@ -695,7 +695,7 @@
         "replace": {},
         "routine_name": "tst_test_rows_with_index1",
         "table_name": null,
-        "timestamp": 1422608904
+        "timestamp": 1423236550
     },
     "tst_test_rows_with_index1_with_lob": {
         "column_types": null,
@@ -720,7 +720,7 @@
         "replace": {},
         "routine_name": "tst_test_rows_with_index1_with_lob",
         "table_name": null,
-        "timestamp": 1422608904
+        "timestamp": 1423236550
     },
     "tst_test_rows_with_key1": {
         "column_types": null,
@@ -741,7 +741,7 @@
         "replace": {},
         "routine_name": "tst_test_rows_with_key1",
         "table_name": null,
-        "timestamp": 1422608904
+        "timestamp": 1423236550
     },
     "tst_test_rows_with_key1_with_lob": {
         "column_types": null,
@@ -767,7 +767,7 @@
         "replace": {},
         "routine_name": "tst_test_rows_with_key1_with_lob",
         "table_name": null,
-        "timestamp": 1422608904
+        "timestamp": 1423236550
     },
     "tst_test_singleton0a": {
         "column_types": null,
@@ -784,7 +784,7 @@
         "replace": {},
         "routine_name": "tst_test_singleton0a",
         "table_name": null,
-        "timestamp": 1422608904
+        "timestamp": 1423236550
     },
     "tst_test_singleton0a_with_lob": {
         "column_types": null,
@@ -806,7 +806,7 @@
         "replace": {},
         "routine_name": "tst_test_singleton0a_with_lob",
         "table_name": null,
-        "timestamp": 1422608904
+        "timestamp": 1423236550
     },
     "tst_test_singleton1a": {
         "column_types": null,
@@ -823,7 +823,7 @@
         "replace": {},
         "routine_name": "tst_test_singleton1a",
         "table_name": null,
-        "timestamp": 1422608904
+        "timestamp": 1423236550
     },
     "tst_test_singleton1a_with_lob": {
         "column_types": null,
@@ -845,7 +845,7 @@
         "replace": {},
         "routine_name": "tst_test_singleton1a_with_lob",
         "table_name": null,
-        "timestamp": 1422608904
+        "timestamp": 1423236550
     },
     "tst_test_table": {
         "column_types": null,
@@ -856,6 +856,6 @@
         "replace": {},
         "routine_name": "tst_test_table",
         "table_name": null,
-        "timestamp": 1422608904
+        "timestamp": 1423236550
     }
 }
