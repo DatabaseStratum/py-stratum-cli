@@ -2,3 +2,4 @@
 **/__pycache__/
 PyStratum.egg-info/
 dist/
+etc/test_routines.json
