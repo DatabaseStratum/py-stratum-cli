@@ -102,4 +102,5 @@ class DataLayer(StaticDataLayer):
     def tst_test_singleton1a(p_count):
         return StaticDataLayer.execute_sp_singleton1("call tst_test_singleton1a(%d)" % p_count)
 
+
 # ----------------------------------------------------------------------------------------------------------------------

@@ -21,4 +21,5 @@ class RowsWithIndexWrapper(Wrapper):
         self._write_line('else:')
         self._write_line('return {}')
 
+
 # ----------------------------------------------------------------------------------------------------------------------

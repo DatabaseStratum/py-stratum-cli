@@ -12,7 +12,6 @@ class RoutineLoaderHelper:
     """
     Class for loading a single stored routine into a MySQL instance from pseudo SQL file.
     """
-
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self,
                  routine_filename: str,
@@ -179,7 +178,6 @@ class RoutineLoaderHelper:
         :return array|bool If the stored routine is loaded successfully the new mata data of the stored routine.
                            Otherwise False.
         """
-
         try:
             self._routine_name = os.path.splitext(os.path.basename(self._source_filename))[0]
 
@@ -234,7 +232,6 @@ class RoutineLoaderHelper:
         Returns True if the source file must be load or reloaded. Otherwise returns False.
         :return bool
         """
-
         if not self._old_metadata:
             return True
 
@@ -264,9 +261,8 @@ class RoutineLoaderHelper:
     def _get_placeholders(self) -> bool:
         """
         Extracts the placeholders from the stored routine source.
-        :return bool True if all placeholders are defined, False otherwise.
+        :return True if all placeholders are defined, False otherwise.
         """
-
         ret = True
 
         p = re.compile('(@[A-Za-z0-9_\.]+(%type)?@)')
@@ -295,9 +291,8 @@ class RoutineLoaderHelper:
     def _get_designation_type(self) -> bool:
         """
         Extracts the designation type of the stored routine.
-        :return bool True on success. Otherwise returns False.
+        :return True on success. Otherwise returns False.
         """
-
         ret = True
 
         key = self._routine_source_code_lines.index('begin')
@@ -337,9 +332,8 @@ class RoutineLoaderHelper:
     def _get_name(self) -> bool:
         """
         Extracts the name of the stored routine and the stored routine type (i.e. procedure or function) source.
-        :return bool Returns True on success, False otherwise.
+        :return Returns True on success, False otherwise.
         """
-
         ret = True
         p = re.compile("create\\s+(procedure|function)\\s+([a-zA-Z0-9_]+)")
         matches = p.findall(self._routine_source_code)
@@ -364,7 +358,6 @@ class RoutineLoaderHelper:
         """
         Loads the stored routine into the database.
         """
-
         print("Loading %s %s" % (self._routine_type, self._routine_name))
 
         self._set_magic_constants()
@@ -399,7 +392,6 @@ class RoutineLoaderHelper:
         """
         Gets the column names and column types of the current table for bulk insert.
         """
-
         query = """
 select 1 from
 information_schema.TABLES
@@ -474,9 +466,8 @@ and   t1.routine_name   = '%s'""" % self._routine_name
     # ------------------------------------------------------------------------------------------------------------------
     def _update_metadata(self):
         """
-        Updates the metadata for the stored routine.
+        Updates the metadata of the stored routine.
         """
-
         self._metadata.update({'routine_name': self._routine_name})
         self._metadata.update({'designation': self._designation_type})
         self._metadata.update({'table_name': self._table_name})
@@ -492,7 +483,6 @@ and   t1.routine_name   = '%s'""" % self._routine_name
         """
         Drops the stored routine if it exists.
         """
-
         if self._old_routine_info:
             sql = "drop %s if exists %s" % (self._old_routine_info['routine_type'], self._routine_name)
             StaticDataLayer.execute_none(sql)
@@ -502,7 +492,6 @@ and   t1.routine_name   = '%s'""" % self._routine_name
         """
         Adds magic constants to replace list.
         """
-
         real_path = os.path.realpath(self._source_filename)
 
         self._replace['__FILE__'] = "'%s'" % real_path
@@ -514,7 +503,6 @@ and   t1.routine_name   = '%s'""" % self._routine_name
         """
         Removes magic constants from current replace list.
         """
-
         if '__FILE__' in self._replace:
             del (self._replace['__FILE__'])
 
@@ -526,5 +514,6 @@ and   t1.routine_name   = '%s'""" % self._routine_name
 
         if '__LINE__' in self._replace:
             del (self._replace['__LINE__'])
+
 
 # ----------------------------------------------------------------------------------------------------------------------

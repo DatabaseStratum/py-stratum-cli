@@ -99,10 +99,9 @@ class RoutineWrapperGenerator():
         """
         The "main" of the wrapper generator.
 
-        :param configuration_filename string The name of the configuration file.
-        :return int Returns 0 on success, 1 if one or more errors occurred.
+        :param configuration_filename The name of the configuration file.
+        :return Returns 0 on success, 1 if one or more errors occurred.
         """
-
         self._configuration_filename = configuration_filename
         self._read_configuration_file()
 
@@ -144,7 +143,6 @@ class RoutineWrapperGenerator():
         """
         Reads parameters from the configuration file.
         """
-
         config = configparser.ConfigParser()
         config.read(self._configuration_filename)
 
@@ -168,13 +166,14 @@ class RoutineWrapperGenerator():
     def _read_routine_metadata(self) -> dict:
         """
         Returns the metadata of stored routines.
-        @return array
+        @return
         """
-        routine = {}
+        metadata = {}
         if os.path.isfile(self._metadata_filename):
             with open(self._metadata_filename, 'r') as f:
-                routine = json.load(f)
-        return routine
+                metadata = json.load(f)
+
+        return metadata
 
     # ------------------------------------------------------------------------------------------------------------------
     def _write_class_header(self):
@@ -199,6 +198,7 @@ class RoutineWrapperGenerator():
         """
         Generate a class trailer for stored routine wrapper.
         """
+        self._write_line()
         self._write_line()
         self._write_line('# ' + ('-'*118))
 

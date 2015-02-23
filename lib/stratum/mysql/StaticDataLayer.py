@@ -306,5 +306,36 @@ class StaticDataLayer:
         pass
 
 
-# ----------------------------------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------------------------------
+    @staticmethod
+    def execute_sp_log(sql, *params):
+        cursor = MySQLCursorBuffered(StaticDataLayer.connection)
+        itr = cursor.execute(sql, params, multi=True)
 
+        n = 0
+        try:
+            for result in itr:
+                rows = result.fetchall()
+                if rows is not None:
+                    stamp = strftime('%Y-%m-%d %H:%M:%S', gmtime())
+                    for row in rows:
+                        print(stamp, end='')
+                        for field in row:
+                            print(' %s' % field, end='')
+                        print('')
+                        n += 1
+        except InterfaceError:
+            pass
+
+        cursor.close()
+
+        return n
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @staticmethod
+    def execute_sp_table(sql: str, *params):
+        # todo methods for showing table
+        pass
+
+
+# ----------------------------------------------------------------------------------------------------------------------

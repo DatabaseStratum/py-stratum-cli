@@ -14,7 +14,6 @@ class RoutineLoader:
     """
     Class for loading stored routines into a MySQL instance from pseudo SQL files.
     """
-
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self):
         self._character_set = None
@@ -137,7 +136,6 @@ class RoutineLoader:
         :param file_names: The sources that must be loaded. If empty all sources (if required) will loaded.
         :rtype : int
         """
-
         if file_names:
             self._load_list(config_filename, file_names)
         else:
@@ -149,10 +147,9 @@ class RoutineLoader:
     def _load_list(self, config_filename: str, file_names: list):
         """
         Loads all stored routines in a list into MySQL.
-        :param config_filename string The filename of the configuration file.
-        :param file_names      list   The list of files to be loaded.
+        :param config_filename The filename of the configuration file.
+        :param file_names The list of files to be loaded.
         """
-
         self._read_configuration_file(config_filename)
 
         StaticDataLayer.config['user'] = self._user_name
@@ -184,7 +181,6 @@ class RoutineLoader:
         Loads all stored routines into MySQL.
         :param config_filename string The filename of the configuration file.
         """
-
         self._read_configuration_file(config_filename)
 
         StaticDataLayer.config['user'] = self._user_name
@@ -219,7 +215,6 @@ class RoutineLoader:
         Reads parameters from the configuration file.
         :param config_filename string
         """
-
         config = configparser.ConfigParser()
         config.read(config_filename)
 
@@ -242,7 +237,6 @@ class RoutineLoader:
         """
         Searches recursively for all source files in a directory.
         """
-
         for dir_path, dir_names, files in os.walk(self._source_directory):
             for name in files:
                 if name.lower().endswith(self._source_file_extension):
@@ -255,7 +249,6 @@ class RoutineLoader:
         """
         Reads the metadata of stored routines from the metadata file.
         """
-
         if os.path.isfile(self._metadata_filename):
             with open(self._metadata_filename, 'r') as f:
                 self._metadata = json.load(f)
@@ -265,7 +258,6 @@ class RoutineLoader:
         """
         Selects schema, table, column names and the column type from MySQL and saves them as replace pairs.
         """
-
         sql = """
 select table_name                                    table_name
 ,      column_name                                   column_name
@@ -305,7 +297,6 @@ order by table_schema
         """
         Loads all stored routines.
         """
-
         for key, source_filename in self._source_file_names.items():
             routine_name = os.path.splitext(os.path.basename(source_filename))[0]
             if routine_name in self._metadata:
@@ -341,7 +332,6 @@ order by table_schema
         """
         Retrieves information about all stored routines in the current schema.
         """
-
         query = """
 select routine_name
 ,      routine_type
@@ -362,7 +352,6 @@ order by routine_name"""
         """
         Gets the SQL mode in the order as preferred by MySQL.
         """
-
         sql = "set sql_mode = %s" % self._sql_mode
         StaticDataLayer.execute_none(sql)
 
@@ -376,7 +365,6 @@ order by routine_name"""
         Drops obsolete stored routines (i.e. stored routines that exits in the current schema but for
         which we don't have a source file).
         """
-
         for routine_name, values in self._old_stored_routines_info.items():
             if routine_name not in self._source_file_names:
                 print("Dropping %s %s" % (values['routine_type'], routine_name))
@@ -388,7 +376,6 @@ order by routine_name"""
         """
         Removes obsolete entries from the metadata of all stored routines.
         """
-
         clean = {}
         for key, source_filename in self._source_file_names.items():
             if key in self._metadata:
@@ -410,7 +397,6 @@ order by routine_name"""
         Finds all source files that actually exists from a list of file names.
         :param file_names list The list of file names.
         """
-
         for file_name in file_names:
             if os.path.exists(file_name):
                 routine_name = os.path.splitext(os.path.basename(file_name))[0]
@@ -422,5 +408,6 @@ order by routine_name"""
                     self.error_file_names.append(file_name)
             else:
                 print("File not exists: '%s'." % file_name)
+
 
 # ----------------------------------------------------------------------------------------------------------------------
