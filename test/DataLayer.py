@@ -1,4 +1,4 @@
-from lib.stratum.mysql.StaticDataLayer import StaticDataLayer
+from pystratum.mysql.StaticDataLayer import StaticDataLayer
 
 
 # ----------------------------------------------------------------------------------------------------------------------

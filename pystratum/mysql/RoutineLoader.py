@@ -2,11 +2,8 @@ import os
 import sys
 import json
 import configparser
-
-sys.path.append(os.path.realpath(os.path.dirname(os.path.realpath(__file__)) + '/..'))
-
-from lib.stratum.mysql.StaticDataLayer import StaticDataLayer
-from lib.stratum.mysql.RoutineLoaderHelper import RoutineLoaderHelper
+from pystratum.mysql.StaticDataLayer import StaticDataLayer
+from pystratum.mysql.RoutineLoaderHelper import RoutineLoaderHelper
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -197,7 +194,7 @@ class RoutineLoader:
         self._read_stored_routine_metadata()
 
         # todo file with constants
-        #self._get_constants()
+        # self._get_constants()
 
         self._get_old_stored_routine_info()
         self._get_correct_sql_mode()
@@ -259,19 +256,19 @@ class RoutineLoader:
         Selects schema, table, column names and the column type from MySQL and saves them as replace pairs.
         """
         sql = """
-select table_name                                    table_name
-,      column_name                                   column_name
-,      column_type                                   column_type
-,      character_set_name                            character_set_name
+select TABLE_NAME                                    table_name
+,      COLUMN_NAME                                   column_name
+,      COLUMN_TYPE                                   column_type
+,      CHARACTER_SET_NAME                            character_set_name
 ,      null                                          table_schema
 from   information_schema.COLUMNS
-where  table_schema = database()
+where  TABLE_SCHEMA = database()
 union all
-select table_name                                    table_name
-,      column_name                                   column_name
-,      column_type                                   column_type
-,      character_set_name                            character_set_name
-,      table_schema                                  table_schema
+select TABLE_NAME                                    table_name
+,      COLUMN_NAME                                   column_name
+,      COLUMN_TYPE                                   column_type
+,      CHARACTER_SET_NAME                            character_set_name
+,      TABLE_SCHEMA                                  table_schema
 from   information_schema.COLUMNS
 order by table_schema
 ,        table_name
@@ -333,11 +330,11 @@ order by table_schema
         Retrieves information about all stored routines in the current schema.
         """
         query = """
-select routine_name
-,      routine_type
-,      sql_mode
-,      character_set_client
-,      collation_connection
+select ROUTINE_NAME           routine_name
+,      ROUTINE_TYPE           routine_type
+,      SQL_MODE               sql_mode
+,      CHARACTER_SET_CLIENT   character_set_client
+,      COLLATION_CONNECTION   collation_connection
 from  information_schema.ROUTINES
 where ROUTINE_SCHEMA = database()
 order by routine_name"""

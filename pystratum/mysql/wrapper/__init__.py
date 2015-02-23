@@ -1,16 +1,18 @@
-from lib.stratum.mysql.wrapper.LogWrapper import LogWrapper
-from lib.stratum.mysql.wrapper.FunctionsWrapper import FunctionsWrapper
-from lib.stratum.mysql.wrapper.NoneWrapper import NoneWrapper
-from lib.stratum.mysql.wrapper.Row0Wrapper import Row0Wrapper
-from lib.stratum.mysql.wrapper.Row1Wrapper import Row1Wrapper
-from lib.stratum.mysql.wrapper.RowsWithIndexWrapper import RowsWithIndexWrapper
-from lib.stratum.mysql.wrapper.RowsWithKeyWrapper import RowsWithKeyWrapper
-from lib.stratum.mysql.wrapper.RowsWrapper import RowsWrapper
-from lib.stratum.mysql.wrapper.Singleton0Wrapper import Singleton0Wrapper
-from lib.stratum.mysql.wrapper.Singleton1Wrapper import Singleton1Wrapper
+from pystratum.mysql.wrapper.FunctionsWrapper import FunctionsWrapper
+from pystratum.mysql.wrapper.LogWrapper import LogWrapper
+from pystratum.mysql.wrapper.NoneWrapper import NoneWrapper
+from pystratum.mysql.wrapper.Row0Wrapper import Row0Wrapper
+from pystratum.mysql.wrapper.Row1Wrapper import Row1Wrapper
+from pystratum.mysql.wrapper.RowsWithIndexWrapper import RowsWithIndexWrapper
+from pystratum.mysql.wrapper.RowsWithKeyWrapper import RowsWithKeyWrapper
+from pystratum.mysql.wrapper.RowsWrapper import RowsWrapper
+from pystratum.mysql.wrapper.Singleton0Wrapper import Singleton0Wrapper
 
 
 # ----------------------------------------------------------------------------------------------------------------------
+from pystratum.mysql.wrapper.Singleton1Wrapper import Singleton1Wrapper
+
+
 def create_routine_wrapper(routine, lob_as_string_flag):
     """
     A factory for creating the appropriate object for generating a wrapper method for a stored routine.
@@ -50,3 +52,6 @@ def create_routine_wrapper(routine, lob_as_string_flag):
         print("Unknown routine type '%s'." % routine['designation'])
 
     return wrapper
+
+
+# ----------------------------------------------------------------------------------------------------------------------

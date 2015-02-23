@@ -2,6 +2,7 @@ from time import strftime, gmtime
 from mysql.connector import DataError, MySQLConnection, InterfaceError
 from mysql.connector.cursor import MySQLCursorBufferedDict, MySQLCursorBuffered, MySQLCursor
 
+
 # ----------------------------------------------------------------------------------------------------------------------
 class StaticDataLayer:
     """
@@ -304,7 +305,6 @@ class StaticDataLayer:
     def execute_sp_table(sql: str, *params):
         # todo methods for showing table
         pass
-
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod

@@ -9,7 +9,7 @@ class Wrapper:
         :param routine: The metadata of the stored routine.
         """
         self.c_page_width = 120
-        #must be constant
+        # must be constant
         self._code = ''
         self._indent_level = 1
         self._routine = routine

@@ -5,8 +5,8 @@ import argparse
 
 sys.path.append(os.path.realpath(os.path.dirname(os.path.realpath(__file__)) + '/..'))
 
-from lib.stratum.mysql.RoutineLoader import RoutineLoader
-from lib.stratum.mysql.RoutineWrapperGenerator import RoutineWrapperGenerator
+from pystratum.mysql.RoutineLoader import RoutineLoader
+from pystratum.mysql.RoutineWrapperGenerator import RoutineWrapperGenerator
 
 
 # ----------------------------------------------------------------------------------------------------------------------

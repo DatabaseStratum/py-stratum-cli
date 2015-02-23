@@ -3,7 +3,7 @@ import sys
 
 sys.path.append(os.path.realpath(os.path.dirname(os.path.realpath(__file__)) + '/..'))
 
-from lib.stratum.mysql.StaticDataLayer import StaticDataLayer
+from pystratum.mysql import StaticDataLayer
 
 StaticDataLayer.config['user'] = 'test'
 StaticDataLayer.config['password'] = 'test'

@@ -1,4 +1,4 @@
-from lib.stratum.mysql.wrapper.Wrapper import Wrapper
+from pystratum.mysql.wrapper.Wrapper import Wrapper
 
 
 # ----------------------------------------------------------------------------------------------------------------------

@@ -1,11 +1,11 @@
-from lib.stratum.mysql.wrapper.Wrapper import Wrapper
+from pystratum.mysql.wrapper.Wrapper import Wrapper
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-class TableWrapper(Wrapper):
+class NoneWrapper(Wrapper):
     # ------------------------------------------------------------------------------------------------------------------
     def _write_result_handler(self, routine):
-        self._write_line('return StaticDataLayer.execute_sp_table(%s)' % self._generate_command(routine))
+        self._write_line('return StaticDataLayer.execute_sp_none(%s)' % self._generate_command(routine))
 
 
 # ----------------------------------------------------------------------------------------------------------------------
