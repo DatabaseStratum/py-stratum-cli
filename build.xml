@@ -53,7 +53,7 @@
             </fileset>
             <filterchain>
                 <replaceregexp>
-                    <regexp pattern="version=.*" replace="version=${VERSION}"/>
+                    <regexp pattern="version=.*" replace="version='${VERSION}',"/>
                 </replaceregexp>
             </filterchain>
         </reflexive>
@@ -65,13 +65,13 @@
 
     <!-- Creates a new distribution using setup.py -->
     <target name="dist">
-        <exec command="python3 setup.py" checkreturn="true"/>
+        <exec command="python3 setup.py" passthru="true" checkreturn="true"/>
     </target>
 
     <!-- Uploads a distribution to PyPI -->
     <target name="upload">
         <loadfile property="VERSION" file=".version"/>
-        <exec command="twine upload dist/PyStratum-${VERSION}.tar.gz" checkreturn="true"/>
+        <exec command="twine upload dist/PyStratum-${VERSION}.tar.gz" passthru="true" checkreturn="true"/>
     </target>
 
     <!-- Default target -->

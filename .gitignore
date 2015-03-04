@@ -1,5 +1,7 @@
 .idea/
 **/__pycache__/
+./bin/phing
+./bin/yuicompressor.jar
 PyStratum.egg-info/
 dist/
 etc/test_routines.json
