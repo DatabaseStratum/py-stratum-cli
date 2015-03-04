@@ -37,7 +37,7 @@ setup(
 
     keywords='stored routines,stored procedure,stored procedures,wrapper, loader,MySQL,SQL Server',
 
-    packages=find_packages(exclude=['build']),
+    packages=find_packages(exclude=['build', 'test']),
 
     entry_points={
         'console_scripts': [
