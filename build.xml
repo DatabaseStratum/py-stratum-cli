@@ -65,7 +65,7 @@
 
     <!-- Creates a new distribution using setup.py -->
     <target name="dist">
-        <exec command="python3 setup.py" passthru="true" checkreturn="true"/>
+        <exec command="python3 setup.py sdist" passthru="true" checkreturn="true"/>
     </target>
 
     <!-- Uploads a distribution to PyPI -->
