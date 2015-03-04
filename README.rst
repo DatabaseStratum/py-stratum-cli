@@ -1,6 +1,6 @@
 PyStratum
 =========
-A stored procedure and function loader, wrapper generator for MySQL ans SQL Server in Python.
+A stored procedure and function loader, wrapper generator for MySQL and SQL Server in Python.
 
 Overview
 ========
