@@ -4,13 +4,13 @@ from os import path
 
 here = path.abspath(path.dirname(__file__))
 
-with open(path.join(here, 'README'), encoding='utf-8') as f:
+with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
     name='PyStratum',
 
-    version='0.1.3',
+    version='0.1.4',
 
     description='A stored procedure and function loader, wrapper generator for MySQL and MS-SQL',
     long_description=long_description,
@@ -27,6 +27,8 @@ setup(
 
         'Intended Audience :: Developers',
         'Topic :: Software Development :: Build Tools',
+        'Topic :: Software Development :: Code Generators',
+        'Topic :: System :: Installation/Setup',
 
         'License :: OSI Approved :: MIT License',
 

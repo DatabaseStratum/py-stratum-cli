@@ -1,0 +1,81 @@
+<project name="PyStratum" default="build" basedir=".">
+    <taskdef name="minimizeAndHash" classname="vendor.setbased.phing-extensions.lib.Task.minimizeAndHashTask"/>
+    <taskdef name="readSemanticVersion" classname="vendor.setbased.phing-extensions.lib.Task.readSemanticVersionTask"/>
+    <property name="BUILD_DIR" value="./build"/>
+    <property name="VERSION" value="0.0.0"/>
+
+    <!-- Run composer update and executes various other updates -->
+    <target name="composer-update">
+        <exec command="composer update" checkreturn="true" passthru="true"/>
+    </target>
+
+    <!-- Merges the current branch with a remote branch -->
+    <target name="git-merge">
+        <exec command="git rev-parse --abbrev-ref HEAD" outputProperty="CURRENT_BRANCH"/>
+        <input message="Your current branch is '${CURRENT_BRANCH}'. Remote branch: " propertyName="BRANCH"/>
+        <gitbranch branchname="temp" repository="."/>
+        <gitcheckout repository="." branchname="temp"/>
+        <gitpull repository="." refspec="${BRANCH}" quiet="false"/>
+        <gitcheckout repository="." branchname="${CURRENT_BRANCH}"/>
+        <gitmerge repository="." remote="temp"/>
+        <gitbranch branchname="temp" repository="." delete="true"/>
+    </target>
+
+    <!-- Merges the current branch with a remote branch in two steps: step 1 -->
+    <target name="git-merge1">
+        <exec command="git rev-parse --abbrev-ref HEAD" outputProperty="CURRENT_BRANCH" checkreturn="true"/>
+        <exec command="git fetch -p" passthru="true" checkreturn="true"/>
+        <input message="Your current branch is '${CURRENT_BRANCH}'. Remote branch: " propertyName="BRANCH"/>
+        <gitbranch branchname="temp" repository="."/>
+        <gitcheckout repository="." branchname="temp"/>
+        <gitpull repository="." refspec="${BRANCH}" quiet="false"/>
+    </target>
+
+    <!-- Merges the current branch with a remote branch in two steps: step 2 -->
+    <target name="git-merge2">
+        <exec command="git rev-parse --abbrev-ref HEAD" outputProperty="CURRENT_BRANCH" checkreturn="true"/>
+        <input message="Your current branch is '${CURRENT_BRANCH}'. Branch: " propertyName="BRANCH"/>
+        <gitcheckout repository="." branchname="${BRANCH}"/>
+        <gitmerge repository="." remote="temp"/>
+        <gitbranch branchname="temp" repository="." delete="true"/>
+    </target>
+
+    <!-- Creates a new version/release. -->
+    <!-- @todo replace semantic version with pep-396 -->
+    <target name="version">
+        <readSemanticVersion file=".version"
+                             versionProperty="VERSION"
+                             haltOnError="true"/>
+
+        <reflexive>
+            <fileset dir=".">
+                <include name="setup.py"/>
+            </fileset>
+            <filterchain>
+                <replaceregexp>
+                    <regexp pattern="version=.*" replace="version=${VERSION}"/>
+                </replaceregexp>
+            </filterchain>
+        </reflexive>
+        <gitcommit repository="." message="Release: ${VERSION}" allFiles="true"/>
+        <gitpush repository="."/>
+        <gittag repository="." name="${VERSION}"/>
+        <gitpush repository="." refspec="${VERSION}" quiet="false"/>
+    </target>
+
+    <!-- Creates a new distribution using setup.py -->
+    <target name="dist">
+        <exec command="python3 setup.py" checkreturn="true"/>
+    </target>
+
+    <!-- Uploads a distribution to PyPI -->
+    <target name="upload">
+        <loadfile property="VERSION" file=".version"/>
+        <exec command="twine upload dist/PyStratum-${VERSION}.tar.gz" checkreturn="true"/>
+    </target>
+
+    <!-- Default target -->
+    <target name="build">
+        <echo msg="And Now for Something Completely Different"/>
+    </target>
+</project>

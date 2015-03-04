@@ -12,7 +12,7 @@ PyStratum is a tool and library with the following mayor functionalities:
 * Defining Python constants based on auto increment columns and column widths.
 
 Status
-=====
+======
 Currently this project is under development and for more information we refer to its sister project.
 
 Sister Project 
