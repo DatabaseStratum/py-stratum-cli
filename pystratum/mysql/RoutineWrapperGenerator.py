@@ -1,6 +1,7 @@
 import configparser
 import json
 import os
+from pystratum.Util import Util
 
 from pystratum.mysql.wrapper import create_routine_wrapper
 
@@ -119,23 +120,7 @@ class RoutineWrapperGenerator():
 
         self._write_class_trailer()
 
-        write_wrapper_file_flag = True
-        if os.path.exists(self._wrapper_filename):
-            with open(self._wrapper_filename, 'r') as f:
-                old_code = f.read()
-                if not old_code:
-                    print("Error reading file '%s'." % self._wrapper_filename)
-                else:
-                    if self._code == old_code:
-                        write_wrapper_file_flag = False
-
-        if write_wrapper_file_flag:
-            with open(self._wrapper_filename, 'w+') as f:
-                bytes_w = f.write(self._code)
-                if not bytes_w:
-                    print("Error writing file '%s'." % self._wrapper_filename)
-                else:
-                    print("Created: '%s'." % self._wrapper_filename)
+        Util.write_two_phases(self._wrapper_filename, self._code)
 
         return 0
 

@@ -1,7 +1,11 @@
 .idea/
 **/__pycache__/
 ./bin/phing
+bin/phing
 ./bin/yuicompressor.jar
+bin/yuicompressor.jar
 PyStratum.egg-info/
 dist/
 etc/test_routines.json
+composer.lock
+vendor/
