@@ -138,7 +138,12 @@ class RoutineLoader:
         else:
             self._load_all(config_filename)
 
-        return 0 if not self.error_file_names else 1
+        if self.error_file_names:
+            for file_name in self.error_file_names:
+                print("Error loading file '%s'." % file_name)
+            return 1
+        else:
+            return 0
 
     # ------------------------------------------------------------------------------------------------------------------
     def _load_list(self, config_filename: str, file_names: list):
