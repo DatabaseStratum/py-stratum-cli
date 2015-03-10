@@ -20,4 +20,4 @@ Sister Project
 We are also working on PhpStratum_. PhpStratum_ provides the same functionalities as PyStratum but in a PHP 
 environment and supports MySQL only.
 
-.. _PhpStratum: https://github.com/SetBased/php-stratum.
+.. _PhpStratum: https://github.com/SetBased/php-stratum
