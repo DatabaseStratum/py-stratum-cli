@@ -1,6 +1,7 @@
 import argparse
 from pystratum.mysql.RoutineLoader import RoutineLoader
 from pystratum.mysql.RoutineWrapperGenerator import RoutineWrapperGenerator
+from pystratum.mysql.Constants import Constants
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -36,10 +37,10 @@ def main():
         exit(ret)
     else:
         # Normal mode: create constants, config file, load routines, and create routine wrapper class.
-        # constants = Constants()
-        # ret = constants.main(setting['config'])
-        # if ret!=0:
-        #  exit(ret)
+        constants = Constants()
+        ret = constants.main(args.config[0])
+        if ret != 0:
+            exit(ret)
 
         loader = RoutineLoader()
         ret = loader.main(args.config[0], file_names)
