@@ -342,7 +342,7 @@ where   nullif(`%s`,'') is not null""" % (table['id'],
         Creates a python configuration file with constants.
         :return:
         """
-        content = "\n\n"
+        content = ''
         for constant, value in sorted(self._constants.items()):
             content += "%s = %s\n" % (str(constant), str(value))
 

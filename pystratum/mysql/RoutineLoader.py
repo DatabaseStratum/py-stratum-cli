@@ -438,10 +438,9 @@ order by routine_name"""
 
                         if matches:
                             matches = matches[0]
-                            name = '@' + matches[0] + '@'
-                            value = "'" + matches[1] + "'"
+                            name = '@' + matches[0].lower() + '@'
+                            value = matches[1]
                             if name not in self._replace_pairs:
                                 self._replace_pairs.update({name: value})
-
 
 # ----------------------------------------------------------------------------------------------------------------------
