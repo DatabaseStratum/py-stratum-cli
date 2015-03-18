@@ -95,21 +95,21 @@ class Constants:
 
         StaticDataLayer.connect()
 
-        self.get_old_columns()
+        self._get_old_columns()
 
-        self.get_columns()
+        self._get_columns()
 
-        self.enhance_columns()
+        self._enhance_columns()
 
-        self.merge_columns()
+        self._merge_columns()
 
-        self.write_columns()
+        self._write_columns()
 
-        self.get_labels()
+        self._get_labels()
 
-        self.fill_constants()
+        self._fill_constants()
 
-        self.write_target_config_file()
+        self._write_target_config_file()
 
         StaticDataLayer.disconnect()
 
@@ -135,7 +135,7 @@ class Constants:
         self._config_filename = config.get('constants', 'config')
 
     # ------------------------------------------------------------------------------------------------------------------
-    def get_old_columns(self):
+    def _get_old_columns(self):
         """
         Reads from file constants_filename the previous table and column names, the width of the column,
         and the constant name (if assigned) and stores this data in old_columns.
@@ -178,7 +178,7 @@ class Constants:
                             self._old_columns.update({table_name: {column_name: column_info}})
 
     # ------------------------------------------------------------------------------------------------------------------
-    def get_columns(self):
+    def _get_columns(self):
         """
         Loads the width of all columns in the MySQL schema into columns.
         """
@@ -227,7 +227,7 @@ union all
                 self._columns.update({row['table_name']: {row['column_name']: row}})
 
     # ------------------------------------------------------------------------------------------------------------------
-    def enhance_columns(self):
+    def _enhance_columns(self):
         """
         Enhances old_columns as follows:
         If the constant name is *, is is replaced with the column name prefixed by prefix in uppercase.
@@ -248,7 +248,7 @@ union all
                             self._old_columns[table_name][column_name].update({'constant_name': constant_name})
 
     # ------------------------------------------------------------------------------------------------------------------
-    def merge_columns(self):
+    def _merge_columns(self):
         """
         Preserves relevant data in old_columns into columns.
         """
@@ -259,7 +259,7 @@ union all
                         self._columns[table_name][column_name].update({'constant_name': column['constant_name']})
 
     # ------------------------------------------------------------------------------------------------------------------
-    def write_columns(self):
+    def _write_columns(self):
         """
         Writes table and column names, the width of the column, and the constant name (if assigned) to
         constants_filename.
@@ -293,7 +293,7 @@ union all
         Util.write_two_phases(self._constants_filename, content)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def get_labels(self):
+    def _get_labels(self):
         """
         Gets all primary key labels from the MySQL database.
         """
@@ -324,7 +324,7 @@ where   nullif(`%s`,'') is not null""" % (table['id'],
                 self._labels.update({row['label']: row['id']})
 
     # ------------------------------------------------------------------------------------------------------------------
-    def fill_constants(self):
+    def _fill_constants(self):
         """
         Merges columns and labels (i.e. all known constants) into constants.
         """
@@ -337,7 +337,7 @@ where   nullif(`%s`,'') is not null""" % (table['id'],
             self._constants.update({label: label_id})
 
     # ------------------------------------------------------------------------------------------------------------------
-    def write_target_config_file(self):
+    def _write_target_config_file(self):
         """
         Creates a python configuration file with constants.
         :return:
