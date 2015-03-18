@@ -351,12 +351,6 @@ where   nullif(`%s`,'') is not null""" % (table['id'],
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def multiple_replace(replace_pair, text):
-        pattern = "|".join(map(re.escape, replace_pair.keys()))
-        return re.sub(pattern, lambda m: replace_pair[m.group()], text)
-
-    # ------------------------------------------------------------------------------------------------------------------
-    @staticmethod
     def derive_field_length(the_column: dict) -> int:
         """
         Returns the width of a field based on column.
