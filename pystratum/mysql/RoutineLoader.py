@@ -1,4 +1,6 @@
 import os
+from pprint import pprint
+import re
 import sys
 import json
 import configparser
@@ -125,20 +127,39 @@ class RoutineLoader:
         :type: string
         """
 
+        self._constants_filename = None
+        """
+
+        :type: string
+        """
+
     # ------------------------------------------------------------------------------------------------------------------
     def main(self, config_filename: str, file_names=None) -> int:
         """
         Loads stored routines into the current schema.
         :param config_filename: The name of the configuration file of the current project
         :param file_names: The sources that must be loaded. If empty all sources (if required) will loaded.
-        :rtype : int
+        :rtype : int The status of exit.
         """
         if file_names:
             self._load_list(config_filename, file_names)
         else:
             self._load_all(config_filename)
 
-        return 0 if not self.error_file_names else 1
+        if self.error_file_names:
+            self._log_overview_errors()
+            return 1
+        else:
+            return 0
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def _log_overview_errors(self):
+        """
+        Show info about sources files of stored routines that were not loaded successfully.
+        """
+        for file_info in self.error_file_names:
+            print("Error loading routine '%s' source file '%s'." % (file_info['routine_name'],
+                                                                    file_info['source_filename']))
 
     # ------------------------------------------------------------------------------------------------------------------
     def _load_list(self, config_filename: str, file_names: list):
@@ -161,10 +182,7 @@ class RoutineLoader:
         self.find_source_files_from_list(file_names)
         self._get_column_type()
         self._read_stored_routine_metadata()
-
-        # todo file with constants
-        #self._get_constants()
-
+        self._get_constants()
         self._get_old_stored_routine_info()
         self._get_correct_sql_mode()
         self._load_stored_routine()
@@ -192,10 +210,7 @@ class RoutineLoader:
         self._find_source_files()
         self._get_column_type()
         self._read_stored_routine_metadata()
-
-        # todo file with constants
-        # self._get_constants()
-
+        self._get_constants()
         self._get_old_stored_routine_info()
         self._get_correct_sql_mode()
         self._load_stored_routine()
@@ -228,6 +243,8 @@ class RoutineLoader:
         self._sql_mode = config.get('loader', 'sql_mode')
         self._character_set = config.get('loader', 'character_set')
         self._collate = config.get('loader', 'collate')
+
+        self._constants_filename = config.get('constants', 'config')
 
     # ------------------------------------------------------------------------------------------------------------------
     def _find_source_files(self):
@@ -318,7 +335,8 @@ order by table_schema
             metadata = routine.load_stored_routine()
 
             if not metadata:
-                self.error_file_names.append(routine_name)
+                self.error_file_names.append({'routine_name': routine_name,
+                                              'source_filename': source_filename})
                 if routine_name in self._metadata:
                     del (self._metadata[routine_name])
             else:
@@ -406,5 +424,23 @@ order by routine_name"""
             else:
                 print("File not exists: '%s'." % file_name)
 
+    # ------------------------------------------------------------------------------------------------------------------
+    def _get_constants(self):
+        """
+        Temp solution for replace constants.
+        """
+        if os.path.exists(self._constants_filename):
+            with open(self._constants_filename, 'r') as f:
+                for line in f:
+                    if line.strip() != "\n":
+                        p = re.compile('(?:(\w+)\s*=\s*(\w+))')
+                        matches = p.findall(line)
+
+                        if matches:
+                            matches = matches[0]
+                            name = '@' + matches[0].lower() + '@'
+                            value = matches[1]
+                            if name not in self._replace_pairs:
+                                self._replace_pairs.update({name: value})
 
 # ----------------------------------------------------------------------------------------------------------------------

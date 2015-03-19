@@ -1,4 +1,5 @@
 import os
+from pprint import pprint
 import re
 import sys
 from pystratum.mysql.StaticDataLayer import StaticDataLayer
@@ -362,12 +363,12 @@ class RoutineLoaderHelper:
         routine_source = []
         i = 0
         for line in self._routine_source_code_lines:
-            new_line = False
+            new_line = line
             self._replace['__LINE__'] = "'%d'" % (i + 1)
             for search, replace in self._replace.items():
-                if not new_line:
-                    new_line = line
-                new_line = new_line.replace(search, replace)
+                tmp = re.findall(search, new_line, re.IGNORECASE)
+                if tmp:
+                    new_line = new_line.replace(tmp[0], replace)
             routine_source.append(new_line)
             i += 1
 
