@@ -6,6 +6,9 @@ from pystratum.mysql.Constants import Constants
 
 # ----------------------------------------------------------------------------------------------------------------------
 def main():
+    """
+    The main function of PyStratum. This function must eb used as entry point for the console script pystratum.
+    """
     parser = argparse.ArgumentParser(description='Description')
 
     parser.add_argument(metavar='routine_file_name',

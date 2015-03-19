@@ -1,5 +1,4 @@
 import os
-from pprint import pprint
 import re
 import sys
 from pystratum.mysql.StaticDataLayer import StaticDataLayer

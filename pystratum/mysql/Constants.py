@@ -7,77 +7,97 @@ from pystratum.mysql.StaticDataLayer import StaticDataLayer
 
 # ----------------------------------------------------------------------------------------------------------------------
 class Constants:
+    """
+    Class for creating constants based on column widths, and auto increment columns and labels.
+    """
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self):
+        """
+        Object constructor.
+        """
+
         self._constants = {}
         """
         All constants.
+
         :type: dict
         """
+
         self._old_columns = {}
         """
         The previous column names, widths, and constant names (i.e. the content of $myConstantsFilename upon
         starting this program).
+
         :type: dict
         """
 
         self._database = None
         """
         The database name.
+
         :type: string
         """
 
         self._host_name = None
         """
         The hostname of the MySQL instance.
+
         :type: string
         """
 
         self._password = None
         """
         Password required for logging in on to the MySQL instance.
+
         :type: string
         """
 
         self._user_name = None
         """
         User name.
+
         :type: string
         """
 
         self._constants_filename = None
         """
         Filename with column names, their widths, and constant names.
+
         :type: string
         """
 
         self._prefix = None
         """
         The prefix used for designations a unknown constants.
+
         :type: string
         """
 
         self._template_config_filename = None
         """
         Template filename under which the file is generated with the constants.
+
         :type: string
         """
 
         self._config_filename = None
         """
         The destination filename with constants.
+
         :type: string
         """
 
         self._columns = {}
         """
         All columns in the MySQL schema.
+
         :type: dict
         """
 
         self._labels = {}
         """
         All primary key labels, their widths and constant names.
+
         :type: dict
         """
 
@@ -180,7 +200,7 @@ class Constants:
     # ------------------------------------------------------------------------------------------------------------------
     def _get_columns(self):
         """
-        Loads the width of all columns in the MySQL schema into columns.
+        Retrieves metadata all columns in the MySQL schema.
         """
         query = """
 (
@@ -217,7 +237,9 @@ union all
         rows = StaticDataLayer.execute_rows(query)
 
         for row in rows:
+            # Enhance row with the actual length of the column.
             row['length'] = self.derive_field_length(row)
+
             if row['table_name'] in self._columns:
                 if row['column_name'] in self._columns[row['table_name']]:
                     pass
@@ -298,17 +320,18 @@ union all
         Gets all primary key labels from the MySQL database.
         """
         query_string = """
-select t1.table_name  `table_name`
-,      t1.column_name `id`
-,      t2.column_name `label`
-from       information_schema.columns t1
-inner join information_schema.columns t2 on t1.table_name = t2.table_name
-where t1.table_schema = database()
-and   t1.extra        = 'auto_increment'
-and   t2.table_schema = database()
-and   t2.column_name like '%%\\_label'"""
+SELECT t1.TABLE_NAME  `table_name`
+,      t1.COLUMN_NAME `id`
+,      t2.COLUMN_NAME `label`
+FROM       information_schema.COLUMNS t1
+INNER JOIN information_schema.COLUMNS t2 ON t1.TABLE_NAME = t2.TABLE_NAME
+WHERE t1.TABLE_SCHEMA = database()
+AND   t1.EXTRA        = 'auto_increment'
+AND   t2.TABLE_SCHEMA = database()
+AND   t2.COLUMN_NAME LIKE '%%\\_label'"""
 
         tables = StaticDataLayer.execute_rows(query_string)
+
         for table in tables:
             query_string = """
 select `%s`  as `id`

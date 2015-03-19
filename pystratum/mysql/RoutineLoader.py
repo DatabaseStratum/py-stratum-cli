@@ -1,5 +1,4 @@
 import os
-from pprint import pprint
 import re
 import sys
 import json
@@ -36,16 +35,16 @@ class RoutineLoader:
         :type: string
         """
 
-        self.error_file_names = []
+        self.error_file_names = set()
         """
-        A list with source names that are not loaded into MySQL.
+        A set with source names that are not loaded into MySQL.
 
-        :type: list
+        :type: set
         """
 
         self._host_name = None
         """
-        The hostname of the MySQL instance.
+        The hostname required connection to the MySQL instance.
 
         :type: string
         """
@@ -73,7 +72,7 @@ class RoutineLoader:
 
         self._password = None
         """
-        Password required for logging in on to the MySQL instance.
+        Password required for connection to the MySQL instance.
 
         :type: string
         """
@@ -122,7 +121,7 @@ class RoutineLoader:
 
         self._user_name = None
         """
-        User name.
+        User name required for connection to the MySQL instance..
 
         :type: string
         """
@@ -157,9 +156,8 @@ class RoutineLoader:
         """
         Show info about sources files of stored routines that were not loaded successfully.
         """
-        for file_info in self.error_file_names:
-            print("Error loading routine '%s' source file '%s'." % (file_info['routine_name'],
-                                                                    file_info['source_filename']))
+        for filename in sorted(self.error_file_names):
+            print("Error loading file '%s'." % filename)
 
     # ------------------------------------------------------------------------------------------------------------------
     def _load_list(self, config_filename: str, file_names: list):
@@ -185,7 +183,7 @@ class RoutineLoader:
         self._get_constants()
         self._get_old_stored_routine_info()
         self._get_correct_sql_mode()
-        self._load_stored_routine()
+        self._load_stored_routines()
         self._write_stored_routine_metadata()
 
         StaticDataLayer.disconnect()
@@ -213,7 +211,7 @@ class RoutineLoader:
         self._get_constants()
         self._get_old_stored_routine_info()
         self._get_correct_sql_mode()
-        self._load_stored_routine()
+        self._load_stored_routines()
 
         self._drop_obsolete_routines()
         self._remove_obsolete_metadata()
@@ -254,9 +252,15 @@ class RoutineLoader:
         for dir_path, dir_names, files in os.walk(self._source_directory):
             for name in files:
                 if name.lower().endswith(self._source_file_extension):
-                    key = os.path.splitext(os.path.basename(name))[0]
-                    value = os.path.relpath(os.path.join(dir_path, name))
-                    self._source_file_names.update({key: value})
+                    basename = os.path.splitext(os.path.basename(name))[0]
+                    relative_path = os.path.relpath(os.path.join(dir_path, name))
+
+                    if basename in self._source_file_names:
+                        print("Error: Files '%s' and '%s' have the same basename." %
+                              (self._source_file_names[basename], relative_path), file=sys.stderr)
+                        self.error_file_names.add(relative_path)
+                    else:
+                        self._source_file_names[basename] = relative_path
 
     # ------------------------------------------------------------------------------------------------------------------
     def _read_stored_routine_metadata(self):
@@ -273,21 +277,21 @@ class RoutineLoader:
         Selects schema, table, column names and the column type from MySQL and saves them as replace pairs.
         """
         sql = """
-select TABLE_NAME                                    table_name
+SELECT TABLE_NAME                                    table_name
 ,      COLUMN_NAME                                   column_name
 ,      COLUMN_TYPE                                   column_type
 ,      CHARACTER_SET_NAME                            character_set_name
-,      null                                          table_schema
-from   information_schema.COLUMNS
-where  TABLE_SCHEMA = database()
-union all
-select TABLE_NAME                                    table_name
+,      NULL                                          table_schema
+FROM   information_schema.COLUMNS
+WHERE  TABLE_SCHEMA = database()
+UNION ALL
+SELECT TABLE_NAME                                    table_name
 ,      COLUMN_NAME                                   column_name
 ,      COLUMN_TYPE                                   column_type
 ,      CHARACTER_SET_NAME                            character_set_name
 ,      TABLE_SCHEMA                                  table_schema
-from   information_schema.COLUMNS
-order by table_schema
+FROM   information_schema.COLUMNS
+ORDER BY table_schema
 ,        table_name
 ,        column_name"""
 
@@ -307,12 +311,11 @@ order by table_schema
             self._replace_pairs[key] = value
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _load_stored_routine(self):
+    def _load_stored_routines(self):
         """
-        Loads all stored routines.
+        Loads all stored routines into a Mysql instance.
         """
-        for key, source_filename in self._source_file_names.items():
-            routine_name = os.path.splitext(os.path.basename(source_filename))[0]
+        for routine_name in sorted(self._source_file_names):
             if routine_name in self._metadata:
                 old_metadata = self._metadata[routine_name]
             else:
@@ -323,7 +326,7 @@ order by table_schema
             else:
                 old_routine_info = None
 
-            routine = RoutineLoaderHelper(source_filename,
+            routine = RoutineLoaderHelper(self._source_file_names[routine_name],
                                           self._source_file_extension,
                                           old_metadata,
                                           self._replace_pairs,
@@ -335,12 +338,11 @@ order by table_schema
             metadata = routine.load_stored_routine()
 
             if not metadata:
-                self.error_file_names.append({'routine_name': routine_name,
-                                              'source_filename': source_filename})
+                self.error_file_names.add(self._source_file_names[routine_name])
                 if routine_name in self._metadata:
                     del (self._metadata[routine_name])
             else:
-                self._metadata.update({routine_name: metadata})
+                self._metadata[routine_name] = metadata
 
     # ------------------------------------------------------------------------------------------------------------------
     def _get_old_stored_routine_info(self):
@@ -348,14 +350,14 @@ order by table_schema
         Retrieves information about all stored routines in the current schema.
         """
         query = """
-select ROUTINE_NAME           routine_name
+SELECT ROUTINE_NAME           routine_name
 ,      ROUTINE_TYPE           routine_type
 ,      SQL_MODE               sql_mode
 ,      CHARACTER_SET_CLIENT   character_set_client
 ,      COLLATION_CONNECTION   collation_connection
-from  information_schema.ROUTINES
-where ROUTINE_SCHEMA = database()
-order by routine_name"""
+FROM  information_schema.ROUTINES
+WHERE ROUTINE_SCHEMA = database()
+ORDER BY routine_name"""
 
         rows = StaticDataLayer.execute_rows(query)
         self._old_stored_routines_info = {}
@@ -420,7 +422,7 @@ order by routine_name"""
                 else:
                     print("Error: Files '%s' and '%s' have the same basename." %
                           (self._source_file_names[routine_name], file_name), file=sys.stderr)
-                    self.error_file_names.append(file_name)
+                    self.error_file_names.add(file_name)
             else:
                 print("File not exists: '%s'." % file_name)
 
@@ -441,6 +443,7 @@ order by routine_name"""
                             name = '@' + matches[0].lower() + '@'
                             value = matches[1]
                             if name not in self._replace_pairs:
-                                self._replace_pairs.update({name: value})
+                                self._replace_pairs[name] = value
+
 
 # ----------------------------------------------------------------------------------------------------------------------
