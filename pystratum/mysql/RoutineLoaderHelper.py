@@ -269,8 +269,8 @@ class RoutineLoaderHelper:
 
         if len(matches) != 0:
             for tmp in matches:
-                placeholder = tmp[0].lower()
-                if placeholder not in self._replace_pairs:
+                placeholder = tmp[0]
+                if placeholder.lower() not in self._replace_pairs:
                     print("Error: Unknown placeholder '%s' in file '%s'." % (placeholder, self._source_filename),
                           file=sys.stderr)
                     ret = False
@@ -278,9 +278,7 @@ class RoutineLoaderHelper:
                     placeholders.append(placeholder)
         if ret:
             for placeholder in placeholders:
-                self._replace[placeholder] = self._replace_pairs[placeholder]
-
-        sorted(self._replace.keys())
+                self._replace[placeholder] = self._replace_pairs[placeholder.lower()]
 
         return ret
 
