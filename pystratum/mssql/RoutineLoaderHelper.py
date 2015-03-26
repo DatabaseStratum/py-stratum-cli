@@ -1,11 +1,7 @@
 import os
 import re
 import sys
-
 from pystratum.mssql.StaticDataLayer import StaticDataLayer
-
-
-
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -215,7 +211,7 @@ class RoutineLoaderHelper:
 
                 self._load_routine_file()
 
-                #if self._designation_type == 'bulk_insert':
+                # if self._designation_type == 'bulk_insert':
                 #    self.get_bulk_insert_table_columns_info()
 
                 self._get_routine_parameters_info()
@@ -248,13 +244,13 @@ class RoutineLoaderHelper:
         if not self._old_routine_info:
             return True
 
-        #if self._old_routine_info['sql_mode'] != self._sql_mode:
+        # if self._old_routine_info['sql_mode'] != self._sql_mode:
         #    return True
 
-        #if self._old_routine_info['character_set_client'] != self._character_set:
+        # if self._old_routine_info['character_set_client'] != self._character_set:
         #    return True
 
-        #if self._old_routine_info['collation_connection'] != self._collate:
+        # if self._old_routine_info['collation_connection'] != self._collate:
         #    return True
 
         return False
@@ -380,11 +376,11 @@ class RoutineLoaderHelper:
         self._unset_magic_constants()
         self._drop_routine()
 
-        #sql = "set sql_mode ='%s'" % self._sql_mode
-        #StaticDataLayer.execute_none(sql)
+        # sql = "set sql_mode ='%s'" % self._sql_mode
+        # StaticDataLayer.execute_none(sql)
 
-        #sql = "set names '%s' collate '%s'" % (self._character_set, self._collate)
-        #StaticDataLayer.execute_none(sql)
+        # sql = "set names '%s' collate '%s'" % (self._character_set, self._collate)
+        # StaticDataLayer.execute_none(sql)
 
         StaticDataLayer.execute_none(routine_source)
 
@@ -404,7 +400,7 @@ and   TABLE_NAME   = '%s'""" % self._table_name
 
         if len(table_is_non_temporary) == 0:
             query = 'call %s()' % self._routine_name
-            #StaticDataLayer.execute_sp_none(query)
+            # StaticDataLayer.execute_sp_none(query)
 
         query = "describe `%s`" % self._table_name
         columns = StaticDataLayer.execute_rows(query)
@@ -456,10 +452,10 @@ order by par.parameter_id
                 if routine_parameter['parameter_name']:
                     parameter_name = routine_parameter['parameter_name'][1:]
                     value = routine_parameter['type_name']
-                    #if 'character_set_name' in routine_parameter:
+                    # if 'character_set_name' in routine_parameter:
                     #    if routine_parameter['character_set_name']:
                     #        value += ' character set %s' % routine_parameter['character_set_name']
-                    #if 'collation' in routine_parameter:
+                    # if 'collation' in routine_parameter:
                     #    if routine_parameter['character_set_name']:
                     #        value += ' collation %s' % routine_parameter['collation']
 

@@ -8,9 +8,6 @@ from pystratum.mysql.StaticDataLayer import StaticDataLayer
 from pystratum.mysql.RoutineLoaderHelper import RoutineLoaderHelper
 
 
-
-
-
 # ----------------------------------------------------------------------------------------------------------------------
 class RoutineLoader:
     """

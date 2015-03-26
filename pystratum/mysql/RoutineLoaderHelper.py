@@ -5,9 +5,6 @@ import sys
 from pystratum.mysql.StaticDataLayer import StaticDataLayer
 
 
-
-
-
 # ----------------------------------------------------------------------------------------------------------------------
 class RoutineLoaderHelper:
     """

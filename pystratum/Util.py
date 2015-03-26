@@ -18,7 +18,6 @@ class Util:
 
         :param str the_filename: The name of the file were the data must be stored.
         :param str the_data: The data that must be written.
-        :return: void
         """
         write_flag = True
         if os.path.exists(the_filename):

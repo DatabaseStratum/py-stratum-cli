@@ -6,9 +6,6 @@ from pystratum.Util import Util
 from pystratum.mssql.StaticDataLayer import StaticDataLayer
 
 
-
-
-
 # ----------------------------------------------------------------------------------------------------------------------
 class Constants:
     """

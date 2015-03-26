@@ -6,9 +6,6 @@ from pystratum.Util import Util
 from pystratum.mysql.wrapper import create_routine_wrapper
 
 
-
-
-
 # ----------------------------------------------------------------------------------------------------------------------
 class RoutineWrapperGenerator():
     """
