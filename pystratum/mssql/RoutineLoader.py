@@ -3,12 +3,8 @@ import re
 import sys
 import json
 import configparser
-
-from pystratum.mysql.StaticDataLayer import StaticDataLayer
-from pystratum.mysql.RoutineLoaderHelper import RoutineLoaderHelper
-
-
-
+from pystratum.mssql.RoutineLoaderHelper import RoutineLoaderHelper
+from pystratum.mssql.StaticDataLayer import StaticDataLayer
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -172,21 +168,16 @@ class RoutineLoader:
         """
         self._read_configuration_file(config_filename)
 
-        StaticDataLayer.config['user'] = self._user_name
-        StaticDataLayer.config['password'] = self._password
-        StaticDataLayer.config['database'] = self._database
-        StaticDataLayer.config['charset'] = self._character_set
-        StaticDataLayer.config['collation'] = self._collate
-        StaticDataLayer.config['sql_mode'] = self._sql_mode
-
-        StaticDataLayer.connect()
+        StaticDataLayer.connect(self._host_name,
+                                self._user_name,
+                                self._password,
+                                self._database)
 
         self.find_source_files_from_list(file_names)
         self._get_column_type()
         self._read_stored_routine_metadata()
         self._get_constants()
         self._get_old_stored_routine_info()
-        self._get_correct_sql_mode()
         self._load_stored_routines()
         self._write_stored_routine_metadata()
 
@@ -200,21 +191,16 @@ class RoutineLoader:
         """
         self._read_configuration_file(config_filename)
 
-        StaticDataLayer.config['user'] = self._user_name
-        StaticDataLayer.config['password'] = self._password
-        StaticDataLayer.config['database'] = self._database
-        StaticDataLayer.config['charset'] = self._character_set
-        StaticDataLayer.config['collation'] = self._collate
-        StaticDataLayer.config['sql_mode'] = self._sql_mode
-
-        StaticDataLayer.connect()
+        StaticDataLayer.connect(self._host_name,
+                                self._user_name,
+                                self._password,
+                                self._database)
 
         self._find_source_files()
         self._get_column_type()
         self._read_stored_routine_metadata()
         self._get_constants()
         self._get_old_stored_routine_info()
-        self._get_correct_sql_mode()
         self._load_stored_routines()
 
         self._drop_obsolete_routines()
@@ -242,9 +228,6 @@ class RoutineLoader:
         self._source_directory = config.get('loader', 'source_directory')
         self._source_file_extension = config.get('loader', 'extension')
         self._target_config_filename = config.get('loader', 'config')
-        self._sql_mode = config.get('loader', 'sql_mode')
-        self._character_set = config.get('loader', 'character_set')
-        self._collate = config.get('loader', 'collate')
 
         self._constants_filename = config.get('constants', 'config')
 
@@ -280,37 +263,32 @@ class RoutineLoader:
         """
         Selects schema, table, column names and the column type from MySQL and saves them as replace pairs.
         """
-        sql = """
-SELECT TABLE_NAME                                    table_name
-,      COLUMN_NAME                                   column_name
-,      COLUMN_TYPE                                   column_type
-,      CHARACTER_SET_NAME                            character_set_name
-,      NULL                                          table_schema
-FROM   information_schema.COLUMNS
-WHERE  TABLE_SCHEMA = database()
-UNION ALL
-SELECT TABLE_NAME                                    table_name
-,      COLUMN_NAME                                   column_name
-,      COLUMN_TYPE                                   column_type
-,      CHARACTER_SET_NAME                            character_set_name
-,      TABLE_SCHEMA                                  table_schema
-FROM   information_schema.COLUMNS
-ORDER BY table_schema
-,        table_name
-,        column_name"""
+        sql = """select scm.name  schema_name
+,      tab.name  table_name
+,      col.name  column_name
+,      typ.name  type_name
+,      col.max_length
+,      col.precision
+,      col.scale
+from       sys.schemas     scm
+inner join sys.tables      tab  on  tab.[schema_id] = scm.[schema_id]
+inner join sys.all_columns col  on  col.[object_id] = tab.[object_id]
+inner join sys.types       typ  on  typ.user_type_id = col.system_type_id
+where tab.type in ('U','S','V')
+order by  scm.name
+,         tab.name
+,         col.column_id
+;"""
 
         rows = StaticDataLayer.execute_rows(sql)
 
         for row in rows:
             key = '@'
-            if row['table_schema']:
-                key += row['table_schema'] + '.'
+            if row['schema_name']:
+                key += row['schema_name'] + '.'
             key += row['table_name'] + '.' + row['column_name'] + '%type@'
             key = key.lower()
-            value = row['column_type']
-
-            if row['character_set_name']:
-                value += ' character set ' + row['character_set_name']
+            value = row['type_name']
 
             self._replace_pairs[key] = value
 
@@ -354,31 +332,22 @@ ORDER BY table_schema
         Retrieves information about all stored routines in the current schema.
         """
         query = """
-SELECT ROUTINE_NAME           routine_name
-,      ROUTINE_TYPE           routine_type
-,      SQL_MODE               sql_mode
-,      CHARACTER_SET_CLIENT   character_set_client
-,      COLLATION_CONNECTION   collation_connection
-FROM  information_schema.ROUTINES
-WHERE ROUTINE_SCHEMA = database()
-ORDER BY routine_name"""
+select scm.name  schema_name
+,      prc.name  procedure_name
+,      prc.[type]  [type]
+from       sys.all_objects  prc
+inner join sys.schemas     scm  on   scm.schema_id = prc.schema_id
+where prc.type in ('P','FN')
+and   scm.name <> 'sys'
+and   prc.is_ms_shipped=0
+;
+"""
 
         rows = StaticDataLayer.execute_rows(query)
+
         self._old_stored_routines_info = {}
         for row in rows:
-            self._old_stored_routines_info[row['routine_name']] = row
-
-    # ------------------------------------------------------------------------------------------------------------------
-    def _get_correct_sql_mode(self):
-        """
-        Gets the SQL mode in the order as preferred by MySQL.
-        """
-        sql = "set sql_mode = %s" % self._sql_mode
-        StaticDataLayer.execute_none(sql)
-
-        query = "select @@sql_mode;"
-        tmp = StaticDataLayer.execute_rows(query)
-        self._sql_mode = tmp[0]['@@sql_mode']
+            self._old_stored_routines_info[row['procedure_name']] = row
 
     # ------------------------------------------------------------------------------------------------------------------
     def _drop_obsolete_routines(self):
@@ -388,8 +357,9 @@ ORDER BY routine_name"""
         """
         for routine_name, values in self._old_stored_routines_info.items():
             if routine_name not in self._source_file_names:
-                print("Dropping %s %s" % (values['routine_type'], routine_name))
-                sql = "drop %s if exists %s" % (values['routine_type'], routine_name)
+                # todo improve drop fun and proc
+                print("Dropping %s.%s" % (values['schema_name'], routine_name))
+                sql = "drop procedure %s.%s" % (values['schema_name'], routine_name)
                 StaticDataLayer.execute_none(sql)
 
     # ------------------------------------------------------------------------------------------------------------------

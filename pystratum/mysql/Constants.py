@@ -1,6 +1,7 @@
 import configparser
 import os
 import re
+
 from pystratum.Util import Util
 from pystratum.mysql.StaticDataLayer import StaticDataLayer
 

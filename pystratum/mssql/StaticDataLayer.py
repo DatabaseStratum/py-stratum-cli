@@ -1,47 +1,47 @@
 import csv
 import pymssql
-import sys
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-class DataLayer:
-    _conn = None
-
+class StaticDataLayer:
     # ------------------------------------------------------------------------------------------------------------------
-    @staticmethod
-    def my_msg_handler(msgstate, severity, srvname, procname, line, msgtext):
-        if severity > 0:
-            print("Error at line %d: %s" % (line, msgtext.decode("utf-8")), file=sys.stderr)
-        else:
-            print(msgtext.decode("utf-8"))
+    __conn = None
+    """
+    The SQL connection.
+    :type: "Object"
+    """
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
     def connect(server, user, password, database):
         # Connect to the SQL-Server
-        DataLayer._conn = pymssql.connect(server, user, password, database)
-
-        # Install our own message handler.
-        DataLayer._conn._conn.set_msghandler(DataLayer.my_msg_handler)
+        StaticDataLayer.__conn = pymssql.connect(server, user, password, database)
 
         # Set the default settings.
-        cursor = DataLayer._conn.cursor()
+        cursor = StaticDataLayer.__conn.cursor()
         cursor.execute('set nocount on')
         cursor.execute('set ansi_nulls on')
         cursor.close()
 
         # We are not interested in transaction (but in restartable process steps).
-        DataLayer._conn.autocommit(True)
+        StaticDataLayer.__conn.autocommit(True)
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
     def disconnect():
-        DataLayer._conn.close()
+        StaticDataLayer.__conn.close()
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @staticmethod
+    def execute_none(sql, *params):
+        cursor = StaticDataLayer.__conn.cursor()
+        cursor.execute(sql, params)
+        cursor.close()
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
     def execute_rows(sql, *params):
-        cursor = DataLayer._conn.cursor(as_dict=True)
+        cursor = StaticDataLayer.__conn.cursor(as_dict=True)
         cursor.execute(sql, params)
         rows = cursor.fetchall()
         cursor.close()
@@ -50,23 +50,66 @@ class DataLayer:
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def execute_row1(sql, *params):
-        cursor = DataLayer._conn.cursor(as_dict=True)
+    def execute_row0(sql, *params):
+        cursor = StaticDataLayer.__conn.cursor(as_dict=True)
         cursor.execute(sql, params)
         rows = cursor.fetchall()
         cursor.close()
+
+        n = len(rows)
+        if n == 1:
+            return rows[0]
+        elif n == 0:
+            return None
+        else:
+            raise Exception("Number of rows selected by query below is %d. Expected 0 or 1.\n%s" %
+                            (n, sql))
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @staticmethod
+    def execute_row1(sql, *params):
+        cursor = StaticDataLayer.__conn.cursor(as_dict=True)
+        cursor.execute(sql, params)
+        rows = cursor.fetchall()
+        cursor.close()
+
+        n = len(rows)
+        if n != 1:
+            raise Exception("Number of rows selected by query below is %d. Expected 1.\n%s" %
+                            (n, sql))
 
         return rows[0]
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def execute_singleton(sql, *params):
-        cursor = DataLayer._conn.cursor()
+    def execute_singleton0(sql, *params):
+        cursor = StaticDataLayer.__conn.cursor()
         cursor.execute(sql, params)
-        row = cursor.fetchone()
+        rows = cursor.fetchall()
         cursor.close()
 
-        return row[0]
+        n = len(rows)
+        if n == 1:
+            return rows[0][0]
+        elif n == 0:
+            return None
+        else:
+            raise Exception("Number of rows selected by query below is %d. Expected 0 or 1.\n%s" % (n, sql))
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @staticmethod
+    def execute_singleton1(sql, *params):
+        cursor = StaticDataLayer.__conn.cursor()
+        cursor.execute(sql, params)
+        rows = cursor.fetchall()
+        cursor.close()
+
+        n = len(rows)
+        if n != 1:
+            raise Exception("Number of rows selected by query below is %d. Expected 1.\n%s" %
+                            (n, sql))
+
+        return rows[0][0]
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -76,7 +119,7 @@ class DataLayer:
         csv_file = csv.writer(file, dialect='unix')
 
         # Run the query.
-        cursor = DataLayer._conn.cursor()
+        cursor = StaticDataLayer.__conn.cursor()
         cursor.execute(sql)
 
         # Store all rows in CSV format in the file.
@@ -89,9 +132,15 @@ class DataLayer:
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def execute_none(sql, *params):
-        cursor = DataLayer._conn.cursor()
-        cursor.execute(sql, params)
-        cursor.close()
+    def execute_log(sql, *params):
+        # todo methods for showing log
+        pass
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @staticmethod
+    def execute_table(sql: str, *params):
+        # todo methods for showing table
+        pass
+
 
 # ----------------------------------------------------------------------------------------------------------------------

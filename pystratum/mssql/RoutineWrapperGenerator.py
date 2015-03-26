@@ -3,10 +3,7 @@ import json
 import os
 
 from pystratum.Util import Util
-from pystratum.mysql.wrapper import create_routine_wrapper
-
-
-
+from pystratum.mssql.wrapper import create_routine_wrapper
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -146,10 +143,6 @@ class RoutineWrapperGenerator():
         self._wrapper_filename = config.get('wrapper', 'wrapper_file')
         self._metadata_filename = config.get('wrapper', 'metadata')
         self._lob_as_string_flag = config.get('wrapper', 'lob_as_string')
-
-        self._sql_mode = config.get('loader', 'sql_mode')
-        self._character_set = config.get('loader', 'character_set')
-        self._collate = config.get('loader', 'collate')
 
     # ------------------------------------------------------------------------------------------------------------------
     def _read_routine_metadata(self) -> dict:

@@ -2,7 +2,7 @@ import os
 import re
 import sys
 
-from pystratum.mysql.StaticDataLayer import StaticDataLayer
+from pystratum.mssql.StaticDataLayer import StaticDataLayer
 
 
 
@@ -194,6 +194,7 @@ class RoutineLoaderHelper:
                 self._metadata = self._old_metadata
 
             load = self._must_reload()
+
             if load:
                 with open(self._source_filename, 'r') as f:
                     self._routine_source_code = f.read()
@@ -214,8 +215,8 @@ class RoutineLoaderHelper:
 
                 self._load_routine_file()
 
-                if self._designation_type == 'bulk_insert':
-                    self.get_bulk_insert_table_columns_info()
+                #if self._designation_type == 'bulk_insert':
+                #    self.get_bulk_insert_table_columns_info()
 
                 self._get_routine_parameters_info()
 
@@ -247,14 +248,14 @@ class RoutineLoaderHelper:
         if not self._old_routine_info:
             return True
 
-        if self._old_routine_info['sql_mode'] != self._sql_mode:
-            return True
+        #if self._old_routine_info['sql_mode'] != self._sql_mode:
+        #    return True
 
-        if self._old_routine_info['character_set_client'] != self._character_set:
-            return True
+        #if self._old_routine_info['character_set_client'] != self._character_set:
+        #    return True
 
-        if self._old_routine_info['collation_connection'] != self._collate:
-            return True
+        #if self._old_routine_info['collation_connection'] != self._collate:
+        #    return True
 
         return False
 
@@ -294,7 +295,7 @@ class RoutineLoaderHelper:
         """
         ret = True
 
-        key = self._routine_source_code_lines.index('begin')
+        key = self._routine_source_code_lines.index('as')
 
         if key != -1:
             p = re.compile('\s*--\s+type:\s*(\w+)\s*(.+)?\s*')
@@ -334,15 +335,16 @@ class RoutineLoaderHelper:
         :return Returns True on success, False otherwise.
         """
         ret = True
-        p = re.compile("create\\s+(procedure|function)\\s+([a-zA-Z0-9_]+)")
+        p = re.compile("create\\s+(procedure|function)\\s+(?:(\w+)\.([a-zA-Z0-9_]+))")
         matches = p.findall(self._routine_source_code)
 
         if matches:
             self._routine_type = matches[0][0].lower()
+            self._routines_schema_name = matches[0][1]
 
-            if self._routine_name != matches[0][1]:
+            if self._routine_name != matches[0][2]:
                 print("Error: Stored routine name '%s' does not match filename in file '%s'." % (
-                    matches[0][1], self._source_filename))
+                    matches[0][2], self._source_filename))
                 ret = False
         else:
             ret = False
@@ -378,11 +380,11 @@ class RoutineLoaderHelper:
         self._unset_magic_constants()
         self._drop_routine()
 
-        sql = "set sql_mode ='%s'" % self._sql_mode
-        StaticDataLayer.execute_none(sql)
+        #sql = "set sql_mode ='%s'" % self._sql_mode
+        #StaticDataLayer.execute_none(sql)
 
-        sql = "set names '%s' collate '%s'" % (self._character_set, self._collate)
-        StaticDataLayer.execute_none(sql)
+        #sql = "set names '%s' collate '%s'" % (self._character_set, self._collate)
+        #StaticDataLayer.execute_none(sql)
 
         StaticDataLayer.execute_none(routine_source)
 
@@ -402,7 +404,7 @@ and   TABLE_NAME   = '%s'""" % self._table_name
 
         if len(table_is_non_temporary) == 0:
             query = 'call %s()' % self._routine_name
-            StaticDataLayer.execute_sp_none(query)
+            #StaticDataLayer.execute_sp_none(query)
 
         query = "describe `%s`" % self._table_name
         columns = StaticDataLayer.execute_rows(query)
@@ -433,33 +435,36 @@ and   TABLE_NAME   = '%s'""" % self._table_name
     # ------------------------------------------------------------------------------------------------------------------
     def _get_routine_parameters_info(self):
         query = """
-select t2.PARAMETER_NAME      parameter_name
-,      t2.DATA_TYPE           parameter_type
-,      t2.DTD_IDENTIFIER      column_type
-,      t2.CHARACTER_SET_NAME  character_set_name
-,      t2.COLLATION_NAME      collation
-from            information_schema.ROUTINES   t1
-left outer join information_schema.PARAMETERS t2  on  t2.SPECIFIC_SCHEMA = t1.ROUTINE_SCHEMA and
-                                                      t2.SPECIFIC_NAME   = t1.ROUTINE_NAME and
-                                                      t2.PARAMETER_MODE   is not null
-where t1.ROUTINE_SCHEMA = database()
-and   t1.ROUTINE_NAME   = '%s'""" % self._routine_name
+select par.name      parameter_name
+,      typ.name      type_name
+,      typ.max_length
+,      typ.precision
+,      typ.scale
+from       sys.schemas        scm
+inner join sys.all_objects    prc  on  prc.[schema_id] = scm.[schema_id]
+inner join sys.all_parameters par  on  par.[object_id] = prc.[object_id]
+inner join sys.types          typ  on  typ.user_type_id = par.system_type_id
+where scm.name = '%s'
+and   prc.name = '%s'
+order by par.parameter_id
+;""" % (self._routines_schema_name, self._routine_name)
 
         routine_parameters = StaticDataLayer.execute_rows(query)
 
         if len(routine_parameters) != 0:
             for routine_parameter in routine_parameters:
                 if routine_parameter['parameter_name']:
-                    value = routine_parameter['column_type']
-                    if 'character_set_name' in routine_parameter:
-                        if routine_parameter['character_set_name']:
-                            value += ' character set %s' % routine_parameter['character_set_name']
-                    if 'collation' in routine_parameter:
-                        if routine_parameter['character_set_name']:
-                            value += ' collation %s' % routine_parameter['collation']
+                    parameter_name = routine_parameter['parameter_name'][1:]
+                    value = routine_parameter['type_name']
+                    #if 'character_set_name' in routine_parameter:
+                    #    if routine_parameter['character_set_name']:
+                    #        value += ' character set %s' % routine_parameter['character_set_name']
+                    #if 'collation' in routine_parameter:
+                    #    if routine_parameter['character_set_name']:
+                    #        value += ' collation %s' % routine_parameter['collation']
 
-                    self._parameters.append({'name': routine_parameter['parameter_name'],
-                                             'data_type': routine_parameter['parameter_type'],
+                    self._parameters.append({'name': parameter_name,
+                                             'data_type': routine_parameter['type_name'],
                                              'data_type_descriptor': value})
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -467,6 +472,7 @@ and   t1.ROUTINE_NAME   = '%s'""" % self._routine_name
         """
         Updates the metadata of the stored routine.
         """
+        self._metadata.update({'schema_name': self._routines_schema_name})
         self._metadata.update({'routine_name': self._routine_name})
         self._metadata.update({'designation': self._designation_type})
         self._metadata.update({'table_name': self._table_name})
@@ -483,7 +489,18 @@ and   t1.ROUTINE_NAME   = '%s'""" % self._routine_name
         Drops the stored routine if it exists.
         """
         if self._old_routine_info:
-            sql = "drop %s if exists %s" % (self._old_routine_info['routine_type'], self._routine_name)
+            sql = """
+if exists
+    ( select *
+      from sys.objects
+      where type_desc = 'SQL_STORED_PROCEDURE'
+      and name = '%s' )
+      DROP PROC %s.%s;
+"""
+            sql = sql % (self._routine_name,
+                         self._old_routine_info['schema_name'],
+                         self._routine_name)
+
             StaticDataLayer.execute_none(sql)
 
     # ------------------------------------------------------------------------------------------------------------------
