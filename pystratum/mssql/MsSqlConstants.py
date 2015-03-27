@@ -35,7 +35,8 @@ class MsSqlConstants(Constants):
                 for line in f:
                     line_number += 1
                     if line != "\n":
-                        p = re.compile('\s*(?:([a-zA-Z0-9_]+)\.)?([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\s+(\d+)\s*(\*|[a-zA-Z0-9_]+)?\s*')
+                        p = re.compile('\s*(?:([a-zA-Z0-9_]+)\.)?([a-zA-Z0-9_]+)\.'
+                                       '([a-zA-Z0-9_]+)\s+(\d+)\s*(\*|[a-zA-Z0-9_]+)?\s*')
                         matches = p.findall(line)
 
                         if matches:
@@ -75,19 +76,19 @@ class MsSqlConstants(Constants):
         Retrieves metadata all columns in the MySQL schema.
         """
         query = """
-select scm.name  schema_name
-,      tab.name  table_name
-,      col.name  column_name
-,      typ.name  data_type
-,      col.max_length length
+SELECT scm.name        schema_name
+,      tab.name        table_name
+,      col.name        column_name
+,      typ.name        data_type
+,      col.max_length
 ,      col.precision
 ,      col.scale
-from       sys.schemas     scm
-inner join sys.tables      tab  on  tab.[schema_id] = scm.[schema_id]
-inner join sys.all_columns col  on  col.[object_id] = tab.[object_id]
-inner join sys.types       typ  on  typ.user_type_id = col.system_type_id
-where tab.type in ('U','S','V')
-order by  scm.name
+FROM       sys.schemas     scm
+INNER JOIN sys.tables      tab  ON  tab.[schema_id] = scm.[schema_id]
+INNER JOIN sys.all_columns col  ON  col.[object_id] = tab.[object_id]
+INNER JOIN sys.types       typ  ON  typ.user_type_id = col.system_type_id
+WHERE tab.type IN ('U','S','V')
+ORDER BY  scm.name
 ,         tab.name
 ,         col.column_id
 ;"""
@@ -95,6 +96,8 @@ order by  scm.name
         rows = StaticDataLayer.execute_rows(query)
 
         for row in rows:
+            row['length'] = MsSqlConstants.derive_field_length(row)
+
             if row['schema_name'] in self._columns:
                 if row['table_name'] in self._columns[row['schema_name']]:
                     if row['column_name'] in self._columns[row['schema_name']][row['table_name']]:
@@ -120,10 +123,13 @@ order by  scm.name
                         if 'constant_name' in column:
                             if column['constant_name'].strip() == '*':
                                 constant_name = str(self._prefix + column['column_name']).upper()
-                                self._old_columns[schema_name][table_name][column_name].update({'constant_name': constant_name})
+                                self._old_columns[schema_name][table_name][column_name].update(
+                                    {'constant_name': constant_name})
                             else:
-                                constant_name = str(self._old_columns[schema_name][table_name][column_name]['constant_name']).upper()
-                                self._old_columns[schema_name][table_name][column_name].update({'constant_name': constant_name})
+                                constant_name = str(
+                                    self._old_columns[schema_name][table_name][column_name]['constant_name']).upper()
+                                self._old_columns[schema_name][table_name][column_name].update(
+                                    {'constant_name': constant_name})
 
     # ------------------------------------------------------------------------------------------------------------------
     def _merge_columns(self):
@@ -135,7 +141,8 @@ order by  scm.name
                 for table_name, table in sorted(schema.items()):
                     for column_name, column in sorted(table.items()):
                         if 'constant_name' in column:
-                            self._columns[schema_name][table_name][column_name].update({'constant_name': column['constant_name']})
+                            self._columns[schema_name][table_name][column_name].update(
+                                {'constant_name': column['constant_name']})
 
     # ------------------------------------------------------------------------------------------------------------------
     def _write_columns(self):
@@ -201,13 +208,14 @@ and   cl2.is_identity = 1
 select tab.%s id
 ,      tab.%s label
 from   %s.%s.%s tab
-where  nullif(tab.%s,'') is not null
-;""" % (table['id'],
-        table['label'],
-        self._database,
-        table['schema_name'],
-        table['table_name'],
-        table['label'])
+where  isnull(tab.%s,'') is not null
+;""" \
+                           % (table['id'],
+                              table['label'],
+                              self._database,
+                              table['schema_name'],
+                              table['table_name'],
+                              table['label'])
 
             rows = StaticDataLayer.execute_rows(query_string)
 
@@ -231,5 +239,105 @@ where  nullif(tab.%s,'') is not null
 
         for label, label_id in sorted(self._labels.items()):
             self._constants.update({label: label_id})
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @staticmethod
+    def derive_field_length(column: dict) -> int:
+        """
+        Returns the width of a field based on column.
+        :param column dict The column of which the field is based.
+        :returns int The width of the column.
+        """
+
+        data_type = column['data_type']
+
+        if data_type == 'bigint':
+            return column['precision']
+
+        if data_type == 'int':
+            return column['precision']
+
+        if data_type == 'smallint':
+            return column['precision']
+
+        if data_type == 'tinyint':
+            return column['precision']
+
+        if data_type == 'bit':
+            return column['length']
+
+        if data_type == 'money':
+            return column['precision']
+
+        if data_type == 'smallmoney':
+            return column['precision']
+
+        if data_type == 'decimal':
+            return column['precision']
+
+        if data_type == 'numeric':
+            return column['precision']
+
+        if data_type == 'float':
+            return column['precision']
+
+        if data_type == 'real':
+            return column['precision']
+
+        if data_type == 'date':
+            return column['precision']
+
+        if data_type == 'datetime':
+            return column['precision']
+
+        if data_type == 'datetimeoffset':
+            return column['precision']
+
+        if data_type == 'smalldatetime':
+            return column['precision']
+
+        if data_type == 'time':
+            return column['precision']
+
+        if data_type == 'char':
+            return column['length']
+
+        if data_type == 'varchar':
+            if column['length'] == -1:
+                # This is a varchar(max) data type.
+                return 2147483647
+
+            return column['length']
+
+        if data_type == 'text':
+            return 2147483647
+
+        if data_type == 'nchar':
+            return column['length'] / 2
+
+        if data_type == 'nvarchar':
+            if column['length'] == -1:
+                # This is a nvarchar(max) data type.
+                return 1073741823
+
+            return column['length'] / 2
+
+        if data_type == 'ntext':
+            return 1073741823
+
+        if data_type == 'binary':
+            return column['length']
+
+        if data_type == 'varbinary':
+            return column['length']
+
+        if data_type == 'image':
+            return 2147483647
+
+        if data_type == 'xml':
+            return 2147483647
+
+        raise Exception("Unexpected data type '%s'." % data_type)
+
 
 # ----------------------------------------------------------------------------------------------------------------------
