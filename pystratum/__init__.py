@@ -5,8 +5,8 @@ from pydoc import locate
 from pystratum.mysql.MySqlConstants import MySqlConstants
 from pystratum.mssql.MsSqlConstants import MsSqlConstants
 
-from pystratum.mysql.RoutineLoader import RoutineLoader as MySqlRoutineLoader
-from pystratum.mssql.RoutineLoader import RoutineLoader as MsSqlRoutineLoader
+from pystratum.mysql.MySqlRoutineLoader import MySqlRoutineLoader
+from pystratum.mssql.MsSqlRoutineLoader import MsSqlRoutineLoader
 
 from pystratum.mysql.MySqlRoutineLoaderHelper import MySqlRoutineLoaderHelper
 from pystratum.mssql.MsSqlRoutineLoaderHelper import MsSqlRoutineLoaderHelper
@@ -29,11 +29,11 @@ def create_constants(rdbms: str):
 
     if rdbms == 'mysql':
         module = locate('pystratum.mysql.MySqlConstants')
-        return module.Constants()
+        return module.MySqlConstants()
 
     if rdbms == 'mssql':
         module = locate('pystratum.mssql.MsSqlConstants')
-        return module.Constants()
+        return module.MsSqlConstants()
 
     raise Exception("Unknown RDBMS '%s'." % rdbms)
 
@@ -51,12 +51,12 @@ def create_routine_loader(rdbms: str):
     #       dependencies for the other RDBMSs are not required).
 
     if rdbms == 'mysql':
-        module = locate('pystratum.mysql.RoutineLoader')
-        return module.RoutineLoader()
+        module = locate('pystratum.mysql.MySqlRoutineLoader')
+        return module.MySqlRoutineLoader()
 
     if rdbms == 'mssql':
-        module = locate('pystratum.mssql.RoutineLoader')
-        return module.RoutineLoader()
+        module = locate('pystratum.mssql.MsSqlRoutineLoader')
+        return module.MsSqlRoutineLoader()
 
     raise Exception("Unknown RDBMS '%s'." % rdbms)
 
@@ -74,14 +74,15 @@ def create_routine_loader_helper(rdbms: str):
     #       dependencies for the other RDBMSs are not required).
 
     pass
-    # @todo Fix arguments.
-    # if rdbms == 'mysql':
-    #    return MySqlRoutineLoaderHelper()
+    if rdbms == 'mysql':
+        module = locate('pystratum.mysql.MySqlRoutineLoaderHelper')
+        return module.MySqlRoutineLoaderHelper()
 
-    # if rdbms == 'mssql':
-    #    return MsSqlRoutineLoaderHelper()
+    if rdbms == 'mssql':
+        module = locate('pystratum.mssql.MsSqlRoutineLoaderHelper')
+        return module.MsSqlRoutineLoaderHelper()
 
-    # raise Exception("Unknown RDBMS '%s'." % rdbms)
+    raise Exception("Unknown RDBMS '%s'." % rdbms)
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -144,6 +145,8 @@ def main():
     if args.fast:
         # Fast mode: only load stored routines.
         loader = create_routine_loader(rdbms)
+        helper = create_routine_loader_helper(rdbms)
+        loader.set_loader_helper(helper)
         ret = loader.main(config_filename, file_names)
         exit(ret)
     else:
@@ -154,6 +157,8 @@ def main():
             exit(ret)
 
         loader = create_routine_loader(rdbms)
+        helper = create_routine_loader_helper(rdbms)
+        loader.set_loader_helper(helper)
         ret = loader.main(config_filename, file_names)
         if ret != 0:
             exit(ret)

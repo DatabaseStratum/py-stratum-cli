@@ -1,11 +1,9 @@
+import abc
 import os
 import re
 import sys
 import json
 import configparser
-
-from pystratum.mysql.StaticDataLayer import StaticDataLayer
-from pystratum.mysql.MySqlRoutineLoaderHelper import MySqlRoutineLoaderHelper
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -133,6 +131,16 @@ class RoutineLoader:
         :type: string
         """
 
+        self._routine_loader_helper = None
+        """
+
+        :type : Object
+        """
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def set_loader_helper(self, helper):
+        self._routine_loader_helper = helper
+
     # ------------------------------------------------------------------------------------------------------------------
     def main(self, config_filename: str, file_names=None) -> int:
         """
@@ -161,6 +169,22 @@ class RoutineLoader:
             print("Error loading file '%s'." % filename)
 
     # ------------------------------------------------------------------------------------------------------------------
+    @abc.abstractmethod
+    def connect(self):
+        """
+        Connects to the database.
+        """
+        pass
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @abc.abstractmethod
+    def disconnect(self):
+        """
+        Disconnects from the database.
+        """
+        pass
+
+    # ------------------------------------------------------------------------------------------------------------------
     def _load_list(self, config_filename: str, file_names: list):
         """
         Loads all stored routines in a list into MySQL.
@@ -168,16 +192,7 @@ class RoutineLoader:
         :param file_names The list of files to be loaded.
         """
         self._read_configuration_file(config_filename)
-
-        StaticDataLayer.config['user'] = self._user_name
-        StaticDataLayer.config['password'] = self._password
-        StaticDataLayer.config['database'] = self._database
-        StaticDataLayer.config['charset'] = self._character_set
-        StaticDataLayer.config['collation'] = self._collate
-        StaticDataLayer.config['sql_mode'] = self._sql_mode
-
-        StaticDataLayer.connect()
-
+        self.connect()
         self.find_source_files_from_list(file_names)
         self._get_column_type()
         self._read_stored_routine_metadata()
@@ -186,8 +201,7 @@ class RoutineLoader:
         self._get_correct_sql_mode()
         self._load_stored_routines()
         self._write_stored_routine_metadata()
-
-        StaticDataLayer.disconnect()
+        self.disconnect()
 
     # ------------------------------------------------------------------------------------------------------------------
     def _load_all(self, config_filename: str):
@@ -196,16 +210,7 @@ class RoutineLoader:
         :param config_filename string The filename of the configuration file.
         """
         self._read_configuration_file(config_filename)
-
-        StaticDataLayer.config['user'] = self._user_name
-        StaticDataLayer.config['password'] = self._password
-        StaticDataLayer.config['database'] = self._database
-        StaticDataLayer.config['charset'] = self._character_set
-        StaticDataLayer.config['collation'] = self._collate
-        StaticDataLayer.config['sql_mode'] = self._sql_mode
-
-        StaticDataLayer.connect()
-
+        self.connect()
         self._find_source_files()
         self._get_column_type()
         self._read_stored_routine_metadata()
@@ -213,12 +218,10 @@ class RoutineLoader:
         self._get_old_stored_routine_info()
         self._get_correct_sql_mode()
         self._load_stored_routines()
-
         self._drop_obsolete_routines()
         self._remove_obsolete_metadata()
         self._write_stored_routine_metadata()
-
-        StaticDataLayer.disconnect()
+        self.disconnect()
 
     # ------------------------------------------------------------------------------------------------------------------
     def _read_configuration_file(self, config_filename: str):
@@ -229,6 +232,7 @@ class RoutineLoader:
         config = configparser.ConfigParser()
         config.read(config_filename)
 
+        rdbms = config.get('database', 'rdbms')
         self._host_name = config.get('database', 'host_name')
         self._user_name = config.get('database', 'user_name')
         self._password = config.get('database', 'password')
@@ -239,9 +243,11 @@ class RoutineLoader:
         self._source_directory = config.get('loader', 'source_directory')
         self._source_file_extension = config.get('loader', 'extension')
         self._target_config_filename = config.get('loader', 'config')
-        self._sql_mode = config.get('loader', 'sql_mode')
-        self._character_set = config.get('loader', 'character_set')
-        self._collate = config.get('loader', 'collate')
+
+        if rdbms == 'mysql':
+            self._sql_mode = config.get('loader', 'sql_mode')
+            self._character_set = config.get('loader', 'character_set')
+            self._collate = config.get('loader', 'collate')
 
         self._constants_filename = config.get('constants', 'config')
 
@@ -273,43 +279,12 @@ class RoutineLoader:
                 self._metadata = json.load(f)
 
     # ------------------------------------------------------------------------------------------------------------------
+    @abc.abstractmethod
     def _get_column_type(self):
         """
         Selects schema, table, column names and the column type from MySQL and saves them as replace pairs.
         """
-        sql = """
-SELECT TABLE_NAME                                    table_name
-,      COLUMN_NAME                                   column_name
-,      COLUMN_TYPE                                   column_type
-,      CHARACTER_SET_NAME                            character_set_name
-,      NULL                                          table_schema
-FROM   information_schema.COLUMNS
-WHERE  TABLE_SCHEMA = database()
-UNION ALL
-SELECT TABLE_NAME                                    table_name
-,      COLUMN_NAME                                   column_name
-,      COLUMN_TYPE                                   column_type
-,      CHARACTER_SET_NAME                            character_set_name
-,      TABLE_SCHEMA                                  table_schema
-FROM   information_schema.COLUMNS
-ORDER BY table_schema
-,        table_name
-,        column_name"""
-
-        rows = StaticDataLayer.execute_rows(sql)
-
-        for row in rows:
-            key = '@'
-            if row['table_schema']:
-                key += row['table_schema'] + '.'
-            key += row['table_name'] + '.' + row['column_name'] + '%type@'
-            key = key.lower()
-            value = row['column_type']
-
-            if row['character_set_name']:
-                value += ' character set ' + row['character_set_name']
-
-            self._replace_pairs[key] = value
+        pass
 
     # ------------------------------------------------------------------------------------------------------------------
     def _load_stored_routines(self):
@@ -327,16 +302,15 @@ ORDER BY table_schema
             else:
                 old_routine_info = None
 
-            routine = MySqlRoutineLoaderHelper(self._source_file_names[routine_name],
-                                          self._source_file_extension,
-                                          old_metadata,
-                                          self._replace_pairs,
-                                          old_routine_info,
-                                          self._sql_mode,
-                                          self._character_set,
-                                          self._collate)
-
-            metadata = routine.load_stored_routine()
+            self._routine_loader_helper.reset_helper()
+            metadata = self._routine_loader_helper.load_stored_routine(self._source_file_names[routine_name],
+                                                                       self._source_file_extension,
+                                                                       old_metadata,
+                                                                       self._replace_pairs,
+                                                                       old_routine_info,
+                                                                       self._sql_mode,
+                                                                       self._character_set,
+                                                                       self._collate)
 
             if not metadata:
                 self.error_file_names.add(self._source_file_names[routine_name])
@@ -346,48 +320,28 @@ ORDER BY table_schema
                 self._metadata[routine_name] = metadata
 
     # ------------------------------------------------------------------------------------------------------------------
+    @abc.abstractmethod
     def _get_old_stored_routine_info(self):
         """
         Retrieves information about all stored routines in the current schema.
         """
-        query = """
-SELECT ROUTINE_NAME           routine_name
-,      ROUTINE_TYPE           routine_type
-,      SQL_MODE               sql_mode
-,      CHARACTER_SET_CLIENT   character_set_client
-,      COLLATION_CONNECTION   collation_connection
-FROM  information_schema.ROUTINES
-WHERE ROUTINE_SCHEMA = database()
-ORDER BY routine_name"""
-
-        rows = StaticDataLayer.execute_rows(query)
-        self._old_stored_routines_info = {}
-        for row in rows:
-            self._old_stored_routines_info[row['routine_name']] = row
+        pass
 
     # ------------------------------------------------------------------------------------------------------------------
     def _get_correct_sql_mode(self):
         """
         Gets the SQL mode in the order as preferred by MySQL.
         """
-        sql = "set sql_mode = %s" % self._sql_mode
-        StaticDataLayer.execute_none(sql)
-
-        query = "select @@sql_mode;"
-        tmp = StaticDataLayer.execute_rows(query)
-        self._sql_mode = tmp[0]['@@sql_mode']
+        pass
 
     # ------------------------------------------------------------------------------------------------------------------
+    @abc.abstractmethod
     def _drop_obsolete_routines(self):
         """
         Drops obsolete stored routines (i.e. stored routines that exits in the current schema but for
         which we don't have a source file).
         """
-        for routine_name, values in self._old_stored_routines_info.items():
-            if routine_name not in self._source_file_names:
-                print("Dropping %s %s" % (values['routine_type'], routine_name))
-                sql = "drop %s if exists %s" % (values['routine_type'], routine_name)
-                StaticDataLayer.execute_none(sql)
+        pass
 
     # ------------------------------------------------------------------------------------------------------------------
     def _remove_obsolete_metadata(self):
@@ -443,8 +397,9 @@ ORDER BY routine_name"""
                             matches = matches[0]
                             name = '@' + matches[0].lower() + '@'
                             value = matches[1]
-                            if name not in self._replace_pairs:
-                                self._replace_pairs[name] = value
+                            if name in self._replace_pairs:
+                                raise Exception("Duplicate placeholder '%s'" % name)
+                            self._replace_pairs.update({name: value})
 
 
 # ----------------------------------------------------------------------------------------------------------------------

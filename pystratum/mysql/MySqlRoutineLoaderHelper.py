@@ -110,7 +110,6 @@ information_schema.TABLES
 where TABLE_SCHEMA = database()
 and   TABLE_NAME   = '%s'""" % self._table_name
 
-        # execute row0
         table_is_non_temporary = StaticDataLayer.execute_rows(query)
 
         if len(table_is_non_temporary) == 0:
@@ -201,20 +200,19 @@ and   t1.ROUTINE_NAME   = '%s'""" % self._routine_name
 
         routine_parameters = StaticDataLayer.execute_rows(query)
 
-        if len(routine_parameters) != 0:
-            for routine_parameter in routine_parameters:
-                if routine_parameter['parameter_name']:
-                    value = routine_parameter['column_type']
-                    if 'character_set_name' in routine_parameter:
-                        if routine_parameter['character_set_name']:
-                            value += ' character set %s' % routine_parameter['character_set_name']
-                    if 'collation' in routine_parameter:
-                        if routine_parameter['character_set_name']:
-                            value += ' collation %s' % routine_parameter['collation']
+        for routine_parameter in routine_parameters:
+            if routine_parameter['parameter_name']:
+                value = routine_parameter['column_type']
+                if 'character_set_name' in routine_parameter:
+                    if routine_parameter['character_set_name']:
+                        value += ' character set %s' % routine_parameter['character_set_name']
+                if 'collation' in routine_parameter:
+                    if routine_parameter['character_set_name']:
+                        value += ' collation %s' % routine_parameter['collation']
 
-                    self._parameters.append({'name': routine_parameter['parameter_name'],
-                                             'data_type': routine_parameter['parameter_type'],
-                                             'data_type_descriptor': value})
+                self._parameters.append({'name': routine_parameter['parameter_name'],
+                                        'data_type': routine_parameter['parameter_type'],
+                                        'data_type_descriptor': value})
 
     # ------------------------------------------------------------------------------------------------------------------
     def _drop_routine(self):
