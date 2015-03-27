@@ -14,6 +14,12 @@ from pystratum.mssql.RoutineWrapperGenerator import RoutineWrapperGenerator as M
 
 # ----------------------------------------------------------------------------------------------------------------------
 def create_constants(rdbms: str):
+    """
+    Factory for creating a Constants objects (i.e. objects for creating constants based on column widths, and auto
+    increment columns and labels).
+    :param rdbms: The target RDBMS (i.e. mysql or mssql).
+    :return:
+    """
     if rdbms == 'mysql':
         return MySqlConstants()
 
@@ -25,6 +31,12 @@ def create_constants(rdbms: str):
 
 # ----------------------------------------------------------------------------------------------------------------------
 def create_routine_loader(rdbms: str):
+    """
+    Factory for creating a Routine Loader objects (i.e. objects for loading stored routines into a database from
+    pseudo SQL files.
+    :param rdbms: The target RDBMS (i.e. mysql or mssql).
+    :return:
+    """
     if rdbms == 'mysql':
         return MySqlRoutineLoader()
 
@@ -36,6 +48,7 @@ def create_routine_loader(rdbms: str):
 
 # ----------------------------------------------------------------------------------------------------------------------
 def create_routine_loader_helper(rdbms: str):
+    # @todo Fix arguments.
     if rdbms == 'mysql':
         return MySqlRoutineLoaderHelper()
 
@@ -47,6 +60,12 @@ def create_routine_loader_helper(rdbms: str):
 
 # ----------------------------------------------------------------------------------------------------------------------
 def create_routine_wrapper_generator(rdbms: str):
+    """
+    Factory for creating a Constants objects (i.e. objects for generating a class with wrapper methods for calling
+    stored routines in a database).
+    :param rdbms: The target RDBMS (i.e. mysql or mssql).
+    :return:
+    """
     if rdbms == 'mysql':
         return MySqlRoutineWrapperGenerator()
 
