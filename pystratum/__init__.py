@@ -16,7 +16,7 @@ def create_constants(rdbms: str):
     #       dependencies for the other RDBMSs are not required).
 
     if rdbms == 'mysql':
-        module = locate('pystratum.mysql.Constants')
+        module = locate('pystratum.mysql.MySqlConstants')
         return module.Constants()
 
     if rdbms == 'mssql':
