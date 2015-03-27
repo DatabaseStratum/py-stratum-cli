@@ -5,7 +5,7 @@ import json
 import configparser
 
 from pystratum.mysql.StaticDataLayer import StaticDataLayer
-from pystratum.mysql.RoutineLoaderHelper import RoutineLoaderHelper
+from pystratum.mysql.MySqlRoutineLoaderHelper import MySqlRoutineLoaderHelper
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -327,7 +327,7 @@ ORDER BY table_schema
             else:
                 old_routine_info = None
 
-            routine = RoutineLoaderHelper(self._source_file_names[routine_name],
+            routine = MySqlRoutineLoaderHelper(self._source_file_names[routine_name],
                                           self._source_file_extension,
                                           old_metadata,
                                           self._replace_pairs,

@@ -2,6 +2,18 @@ import argparse
 import configparser
 from pydoc import locate
 
+from pystratum.mysql.MySqlConstants import MySqlConstants
+from pystratum.mssql.MsSqlConstants import MsSqlConstants
+
+from pystratum.mysql.RoutineLoader import RoutineLoader as MySqlRoutineLoader
+from pystratum.mssql.RoutineLoader import RoutineLoader as MsSqlRoutineLoader
+
+from pystratum.mysql.MySqlRoutineLoaderHelper import MySqlRoutineLoaderHelper
+from pystratum.mssql.MsSqlRoutineLoaderHelper import MsSqlRoutineLoaderHelper
+
+from pystratum.mysql.RoutineWrapperGenerator import RoutineWrapperGenerator as MySqlRoutineWrapperGenerator
+from pystratum.mssql.RoutineWrapperGenerator import RoutineWrapperGenerator as MsSqlRoutineWrapperGenerator
+
 
 # ----------------------------------------------------------------------------------------------------------------------
 def create_constants(rdbms: str):
@@ -20,7 +32,7 @@ def create_constants(rdbms: str):
         return module.Constants()
 
     if rdbms == 'mssql':
-        module = locate('pystratum.mssql.Constants')
+        module = locate('pystratum.mssql.MsSqlConstants')
         return module.Constants()
 
     raise Exception("Unknown RDBMS '%s'." % rdbms)

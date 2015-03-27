@@ -3,7 +3,7 @@ import re
 import sys
 import json
 import configparser
-from pystratum.mssql.RoutineLoaderHelper import RoutineLoaderHelper
+from pystratum.mssql.MsSqlRoutineLoaderHelper import MsSqlRoutineLoaderHelper
 from pystratum.mssql.StaticDataLayer import StaticDataLayer
 
 
@@ -308,7 +308,7 @@ order by  scm.name
             else:
                 old_routine_info = None
 
-            routine = RoutineLoaderHelper(self._source_file_names[routine_name],
+            routine = MsSqlRoutineLoaderHelper(self._source_file_names[routine_name],
                                           self._source_file_extension,
                                           old_metadata,
                                           self._replace_pairs,
