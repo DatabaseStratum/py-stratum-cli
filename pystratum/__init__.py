@@ -1,15 +1,6 @@
 import argparse
 import configparser
-
-from pystratum.mysql.Constants import Constants as MySqlConstants
-from pystratum.mysql.RoutineLoader import RoutineLoader as MySqlRoutineLoader
-from pystratum.mysql.RoutineLoaderHelper import RoutineLoaderHelper as MySqlRoutineLoaderHelper
-from pystratum.mysql.RoutineWrapperGenerator import RoutineWrapperGenerator as MySqlRoutineWrapperGenerator
-
-from pystratum.mssql.Constants import Constants as MsSqlConstants
-from pystratum.mssql.RoutineLoader import RoutineLoader as MsSqlRoutineLoader
-from pystratum.mssql.RoutineLoaderHelper import RoutineLoaderHelper as MsSqlRoutineLoaderHelper
-from pystratum.mssql.RoutineWrapperGenerator import RoutineWrapperGenerator as MsSqlRoutineWrapperGenerator
+from pydoc import locate
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -20,11 +11,17 @@ def create_constants(rdbms: str):
     :param rdbms: The target RDBMS (i.e. mysql or mssql).
     :return:
     """
+    # Note: We load modules and classes dynamically such that on the end user's system only the required modules
+    #       and other dependencies for the targeted RDBMS must be installed (and required modules and other
+    #       dependencies for the other RDBMSs are not required).
+
     if rdbms == 'mysql':
-        return MySqlConstants()
+        module = locate('pystratum.mysql.Constants')
+        return module.Constants()
 
     if rdbms == 'mssql':
-        return MsSqlConstants()
+        module = locate('pystratum.mssql.Constants')
+        return module.Constants()
 
     raise Exception("Unknown RDBMS '%s'." % rdbms)
 
@@ -37,25 +34,42 @@ def create_routine_loader(rdbms: str):
     :param rdbms: The target RDBMS (i.e. mysql or mssql).
     :return:
     """
+    # Note: We load modules and classes dynamically such that on the end user's system only the required modules
+    #       and other dependencies for the targeted RDBMS must be installed (and required modules and other
+    #       dependencies for the other RDBMSs are not required).
+
     if rdbms == 'mysql':
-        return MySqlRoutineLoader()
+        module = locate('pystratum.mysql.RoutineLoader')
+        return module.RoutineLoader()
 
     if rdbms == 'mssql':
-        return MsSqlRoutineLoader()
+        module = locate('pystratum.mssql.RoutineLoader')
+        return module.RoutineLoader()
 
     raise Exception("Unknown RDBMS '%s'." % rdbms)
 
 
 # ----------------------------------------------------------------------------------------------------------------------
 def create_routine_loader_helper(rdbms: str):
+    """
+    Factory for creating a Routine Loader Helper objects (i.e. objects loading a single stored routine into a database
+    from a pseudo SQL file).
+    :param rdbms: The target RDBMS (i.e. mysql or mssql).
+    :return:
+    """
+    # Note: We load modules and classes dynamically such that on the end user's system only the required modules
+    #       and other dependencies for the targeted RDBMS must be installed (and required modules and other
+    #       dependencies for the other RDBMSs are not required).
+
+    pass
     # @todo Fix arguments.
-    if rdbms == 'mysql':
-        return MySqlRoutineLoaderHelper()
+    # if rdbms == 'mysql':
+    #    return MySqlRoutineLoaderHelper()
 
-    if rdbms == 'mssql':
-        return MsSqlRoutineLoaderHelper()
+    # if rdbms == 'mssql':
+    #    return MsSqlRoutineLoaderHelper()
 
-    raise Exception("Unknown RDBMS '%s'." % rdbms)
+    # raise Exception("Unknown RDBMS '%s'." % rdbms)
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -66,11 +80,17 @@ def create_routine_wrapper_generator(rdbms: str):
     :param rdbms: The target RDBMS (i.e. mysql or mssql).
     :return:
     """
+    # Note: We load modules and classes dynamically such that on the end user's system only the required modules
+    #       and other dependencies for the targeted RDBMS must be installed (and required modules and other
+    #       dependencies for the other RDBMSs are not required).
+
     if rdbms == 'mysql':
-        return MySqlRoutineWrapperGenerator()
+        module = locate('pystratum.mysql.RoutineWrapperGenerator')
+        return module.RoutineWrapperGenerator()
 
     if rdbms == 'mssql':
-        return MsSqlRoutineWrapperGenerator()
+        module = locate('pystratum.mssql.RoutineWrapperGenerator')
+        return module.RoutineWrapperGenerator()
 
     raise Exception("Unknown RDBMS '%s'." % rdbms)
 
