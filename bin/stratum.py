@@ -5,6 +5,6 @@ import sys
 
 sys.path.append(os.path.realpath(os.path.dirname(os.path.realpath(__file__)) + '/..'))
 
-import pystratum.mysql
+import pystratum
 
-pystratum.mysql.main()
+pystratum.main()

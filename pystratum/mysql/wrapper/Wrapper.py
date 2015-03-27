@@ -62,7 +62,7 @@ class Wrapper:
             self._write(line + "\n")
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _indent_level_down(self, levels=-1):
+    def _indent_level_down(self, levels=1):
         """
         Decrements the indent level of the generated code.
 

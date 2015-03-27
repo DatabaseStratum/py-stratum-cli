@@ -244,15 +244,6 @@ class RoutineLoaderHelper:
         if not self._old_routine_info:
             return True
 
-        # if self._old_routine_info['sql_mode'] != self._sql_mode:
-        #    return True
-
-        # if self._old_routine_info['character_set_client'] != self._character_set:
-        #    return True
-
-        # if self._old_routine_info['collation_connection'] != self._collate:
-        #    return True
-
         return False
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -400,7 +391,7 @@ and   TABLE_NAME   = '%s'""" % self._table_name
 
         if len(table_is_non_temporary) == 0:
             query = 'call %s()' % self._routine_name
-            # StaticDataLayer.execute_sp_none(query)
+            StaticDataLayer.execute_none(query)
 
         query = "describe `%s`" % self._table_name
         columns = StaticDataLayer.execute_rows(query)
@@ -452,12 +443,6 @@ order by par.parameter_id
                 if routine_parameter['parameter_name']:
                     parameter_name = routine_parameter['parameter_name'][1:]
                     value = routine_parameter['type_name']
-                    # if 'character_set_name' in routine_parameter:
-                    #    if routine_parameter['character_set_name']:
-                    #        value += ' character set %s' % routine_parameter['character_set_name']
-                    # if 'collation' in routine_parameter:
-                    #    if routine_parameter['character_set_name']:
-                    #        value += ' collation %s' % routine_parameter['collation']
 
                     self._parameters.append({'name': parameter_name,
                                              'data_type': routine_parameter['type_name'],
