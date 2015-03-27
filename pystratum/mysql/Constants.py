@@ -113,23 +113,15 @@ class Constants:
         StaticDataLayer.config['user'] = self._user_name
         StaticDataLayer.config['password'] = self._password
         StaticDataLayer.config['database'] = self._database
-
         StaticDataLayer.connect()
 
         self._get_old_columns()
-
         self._get_columns()
-
         self._enhance_columns()
-
         self._merge_columns()
-
         self._write_columns()
-
         self._get_labels()
-
         self._fill_constants()
-
         self._write_target_config_file()
 
         StaticDataLayer.disconnect()
