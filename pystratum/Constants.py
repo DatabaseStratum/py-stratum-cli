@@ -158,34 +158,60 @@ class Constants:
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
     def _get_old_columns(self):
+        """
+        Reads from file constants_filename the previous table and column names, the width of the column,
+        and the constant name (if assigned) and stores this data in old_columns.
+        """
         pass
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
     def _get_columns(self):
+        """
+        Retrieves metadata all columns in the MySQL schema.
+        """
         pass
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
     def _enhance_columns(self):
+        """
+        Enhances old_columns as follows:
+        If the constant name is *, is is replaced with the column name prefixed by prefix in uppercase.
+        Otherwise the constant name is set to uppercase.
+        """
         pass
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
     def _merge_columns(self):
+        """
+        Preserves relevant data in old_columns into columns.
+        """
         pass
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
     def _write_columns(self):
+        """
+        Writes table and column names, the width of the column, and the constant name (if assigned) to
+        constants_filename.
+        """
         pass
+
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
     def _get_labels(self):
+        """
+        Gets all primary key labels from the MySQL database.
+        """
         pass
 
     # ------------------------------------------------------------------------------------------------------------------
     def _fill_constants(self):
+        """
+        Merges columns and labels (i.e. all known constants) into constants.
+        """
         pass
 
     # ------------------------------------------------------------------------------------------------------------------
