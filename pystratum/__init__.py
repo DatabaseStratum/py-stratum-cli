@@ -1,12 +1,12 @@
 import argparse
 import configparser
 
-from pystratum.mysql.Constants import Constants as MySqlConstants
+from pystratum.mysql.MySqlConstants import MySqlConstants
 from pystratum.mysql.RoutineLoader import RoutineLoader as MySqlRoutineLoader
 from pystratum.mysql.RoutineLoaderHelper import RoutineLoaderHelper as MySqlRoutineLoaderHelper
 from pystratum.mysql.RoutineWrapperGenerator import RoutineWrapperGenerator as MySqlRoutineWrapperGenerator
 
-from pystratum.mssql.Constants import Constants as MsSqlConstants
+from pystratum.mssql.MsSqlConstants import MsSqlConstants
 from pystratum.mssql.RoutineLoader import RoutineLoader as MsSqlRoutineLoader
 from pystratum.mssql.RoutineLoaderHelper import RoutineLoaderHelper as MsSqlRoutineLoaderHelper
 from pystratum.mssql.RoutineWrapperGenerator import RoutineWrapperGenerator as MsSqlRoutineWrapperGenerator
