@@ -1,5 +1,6 @@
 import abc
 import os
+from pprint import pprint
 import re
 import sys
 
@@ -404,5 +405,9 @@ class RoutineLoaderHelper:
         if '__LINE__' in self._replace:
             del (self._replace['__LINE__'])
 
+    # ------------------------------------------------------------------------------------------------------------------
+    @abc.abstractmethod
+    def _drop_function(self):
+        pass
 
 # ----------------------------------------------------------------------------------------------------------------------

@@ -96,7 +96,6 @@ information_schema.TABLES
 where TABLE_SCHEMA = database()
 and   TABLE_NAME   = '%s'""" % self._table_name
 
-        # execute row0
         table_is_non_temporary = StaticDataLayer.execute_rows(query)
 
         if len(table_is_non_temporary) == 0:
@@ -208,13 +207,24 @@ order by par.parameter_id""" % (self._routines_schema_name, self._routine_name)
 if exists
     ( select *
       from sys.objects
-      where type_desc = 'SQL_STORED_PROCEDURE'
+      where type_desc = '%s'
       and name = '%s' )
-      drop proc %s.%s
+      drop %s [%s].[%s];
 """
-            sql = sql % (self._routine_name,
-                         self._old_routine_info['schema_name'],
-                         self._routine_name)
+            if self._old_routine_info['type'].strip() == 'P':
+                sql = sql % ('SQL_STORED_PROCEDURE',
+                             self._routine_name,
+                             'PROC',
+                             self._old_routine_info['schema_name'],
+                             self._routine_name)
+            elif self._old_routine_info['type'].strip() == 'FN':
+                sql = sql % ('SQL_SCALAR_FUNCTION',
+                             self._routine_name,
+                             'FUNCTION',
+                             self._old_routine_info['schema_name'],
+                             self._routine_name)
+            else:
+                raise Exception("Unknown routine type '%s'." % self._old_routine_info['type'])
 
             StaticDataLayer.execute_none(sql)
 
