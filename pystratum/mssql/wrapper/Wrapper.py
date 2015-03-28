@@ -65,7 +65,7 @@ class Wrapper:
                 if parameter_info['data_type'] in templates:
                     has_blob = templates[parameter_info['data_type']]
                 else:
-                    print("Unknown MySQL type '%s'." % parameter_info['data_type'])
+                    print("Unknown SQL type '%s'." % parameter_info['data_type'])
 
         return has_blob
 
