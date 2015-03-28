@@ -178,6 +178,7 @@ class Wrapper:
                      'binary': '%s',
                      'char': '%s',
                      'varchar': '%s',
+                     'nvarchar': '%s',
                      'time': '%s',
                      'timestamp': '%s',
                      'date': '%s',
