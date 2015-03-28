@@ -1,7 +1,7 @@
+import abc
 import os
 import re
 import sys
-from pystratum.mssql.StaticDataLayer import StaticDataLayer
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -10,31 +10,22 @@ class RoutineLoaderHelper:
     Class for loading a single stored routine into a MySQL instance from pseudo SQL file.
     """
     # ------------------------------------------------------------------------------------------------------------------
-    def __init__(self,
-                 routine_filename: str,
-                 routine_file_extension: str,
-                 metadata: dict,
-                 replace_pairs: dict,
-                 old_routine_info: dict,
-                 sql_mode: str,
-                 character_set: str,
-                 collate: str):
-
-        self._source_filename = routine_filename
+    def __init__(self):
+        self._source_filename = None
         """
         The source filename holding the stored routine.
 
         :type : string
         """
 
-        self._routine_file_extension = routine_file_extension
+        self._routine_file_extension = None
         """
         The source filename extension.
 
         :type : string
         """
 
-        self._old_metadata = metadata
+        self._old_metadata = None
         """
         The old metadata of the stored routine.  Note: this data comes from the metadata file.
 
@@ -49,35 +40,35 @@ class RoutineLoaderHelper:
         :type : dict
         """
 
-        self._replace_pairs = replace_pairs
+        self._replace_pairs = None
         """
         A map from placeholders to their actual values.
 
         :type : dict
         """
 
-        self._old_routine_info = old_routine_info
+        self._old_routine_info = None
         """
         The old information about the stored routine. Note: this data comes from information_schema.ROUTINES.
 
         :type : dict
         """
 
-        self._sql_mode = sql_mode
+        self._sql_mode = None
         """
         The SQL mode under which the stored routine will be loaded and run.
 
         :type : string
         """
 
-        self._character_set = character_set
+        self._character_set = None
         """
         The default character set under which the stored routine will be loaded and run.
 
         :type : string
         """
 
-        self._collate = collate
+        self._collate = None
         """
         The default collate under which the stored routine will be loaded and run.
 
@@ -168,13 +159,75 @@ class RoutineLoaderHelper:
         :type : list
         """
 
+        self._routines_schema_name = None
+        """
+
+        :type : string
+        """
+
     # ------------------------------------------------------------------------------------------------------------------
-    def load_stored_routine(self) -> dict:
+    def reset_helper(self):
+        self._source_filename = None
+        self._routine_file_extension = None
+        self._old_metadata = None
+        self._metadata = {}
+        self._replace_pairs = None
+        self._old_routine_info = None
+        self._sql_mode = None
+        self._character_set = None
+        self._collate = None
+        self._m_time = 0
+        self._routine_name = None
+        self._routine_source_code = None
+        self._routine_source_code_lines = []
+        self._replace = {}
+        self._routine_type = None
+        self._designation_type = None
+        self._columns_types = None
+        self._fields = None
+        self._parameters = []
+        self._table_name = None
+        self._columns = None
+        self._routines_schema_name = None
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def load_stored_routine(self,
+                            routine_filename: str,
+                            routine_file_extension: str,
+                            metadata: dict,
+                            replace_pairs: dict,
+                            old_routine_info: dict,
+                            sql_mode: str,
+                            character_set: str,
+                            collate: str) -> dict:
         """
         Loads the stored routine into the instance of MySQL.
+
+        :param : routine_filename       string The source filename holding the stored routine.
+        :param : routine_file_extension string The source filename extension.
+        :param : metadata               dict   The old metadata of the stored routine.
+                                               Note: this data comes from the metadata file.
+        :param : replace_pairs          dict   A map from placeholders to their actual values.
+        :param : old_routine_info       dict   The old information about the stored routine.
+                                               Note: this data comes from information_schema.ROUTINES.
+        :param : sql_mode               string The SQL mode under which the stored routine will be loaded and run.
+        :param : character_set          string The default character set under which the stored routine
+                                               will be loaded and run.
+        :param : collate                string The default collate under which the stored routine
+                                               will be loaded and run.
+
         :return array|bool If the stored routine is loaded successfully the new mata data of the stored routine.
                            Otherwise False.
         """
+        self._source_filename = routine_filename
+        self._routine_file_extension = routine_file_extension
+        self._old_metadata = metadata
+        self._replace_pairs = replace_pairs
+        self._old_routine_info = old_routine_info
+        self._sql_mode = sql_mode
+        self._character_set = character_set
+        self._collate = collate
+
         try:
             self._routine_name = os.path.splitext(os.path.basename(self._source_filename))[0]
 
@@ -190,7 +243,6 @@ class RoutineLoaderHelper:
                 self._metadata = self._old_metadata
 
             load = self._must_reload()
-
             if load:
                 with open(self._source_filename, 'r') as f:
                     self._routine_source_code = f.read()
@@ -211,8 +263,8 @@ class RoutineLoaderHelper:
 
                 self._load_routine_file()
 
-                # if self._designation_type == 'bulk_insert':
-                #    self.get_bulk_insert_table_columns_info()
+                if self._designation_type == 'bulk_insert':
+                    self.get_bulk_insert_table_columns_info()
 
                 self._get_routine_parameters_info()
 
@@ -225,26 +277,13 @@ class RoutineLoaderHelper:
             return False
 
     # ------------------------------------------------------------------------------------------------------------------
+    @abc.abstractmethod
     def _must_reload(self) -> bool:
         """
         Returns True if the source file must be load or reloaded. Otherwise returns False.
         :return bool
         """
-        if not self._old_metadata:
-            return True
-
-        if self._old_metadata['timestamp'] != self._m_time:
-            return True
-
-        if self._old_metadata['replace']:
-            for key, value in self._old_metadata['replace'].items():
-                if key.lower() not in self._replace_pairs or self._replace_pairs[key.lower()] != value:
-                    return True
-
-        if not self._old_routine_info:
-            return True
-
-        return False
+        pass
 
     # ------------------------------------------------------------------------------------------------------------------
     def _get_placeholders(self) -> bool:
@@ -270,7 +309,8 @@ class RoutineLoaderHelper:
                     placeholders.append(placeholder)
         if ret:
             for placeholder in placeholders:
-                self._replace[placeholder] = self._replace_pairs[placeholder.lower()]
+                if placeholder not in self._replace:
+                    self._replace.update({placeholder: self._replace_pairs[placeholder.lower()]})
 
         return ret
 
@@ -280,173 +320,37 @@ class RoutineLoaderHelper:
         Extracts the designation type of the stored routine.
         :return True on success. Otherwise returns False.
         """
-        ret = True
-
-        key = self._routine_source_code_lines.index('as')
-
-        if key != -1:
-            p = re.compile('\s*--\s+type:\s*(\w+)\s*(.+)?\s*')
-            matches = p.findall(self._routine_source_code_lines[key - 1])
-
-            if matches:
-                self._designation_type = matches[0][0]
-                tmp = str(matches[0][1])
-                if self._designation_type == 'bulk_insert':
-                    n = re.compile('([a-zA-Z0-9_]+)\s+([a-zA-Z0-9_,]+)')
-                    info = n.findall(tmp)
-
-                    if not info:
-                        print("Error: Expected: -- type: bulk_insert <table_name> <columns> in file '%s'." %
-                              self._source_filename, file=sys.stderr)
-                    self._table_name = info[0][0]
-                    self._columns = str(info[0][1]).split(',')
-
-                elif self._designation_type == 'rows_with_key' or self._designation_type == 'rows_with_index':
-                    self._columns = str(matches[0][1]).split(',')
-                else:
-                    if matches[0][1]:
-                        ret = False
-        else:
-            ret = False
-
-        if not ret:
-            print("Error: Unable to find the designation type of the stored routine in file '%s'." %
-                  self._source_filename, file=sys.stderr)
-
-        return ret
+        pass
 
     # ------------------------------------------------------------------------------------------------------------------
+    @abc.abstractmethod
     def _get_name(self) -> bool:
         """
         Extracts the name of the stored routine and the stored routine type (i.e. procedure or function) source.
         :return Returns True on success, False otherwise.
         """
-        ret = True
-        p = re.compile("create\\s+(procedure|function)\\s+(?:(\w+)\.([a-zA-Z0-9_]+))")
-        matches = p.findall(self._routine_source_code)
-
-        if matches:
-            self._routine_type = matches[0][0].lower()
-            self._routines_schema_name = matches[0][1]
-
-            if self._routine_name != matches[0][2]:
-                print("Error: Stored routine name '%s' does not match filename in file '%s'." % (
-                    matches[0][2], self._source_filename))
-                ret = False
-        else:
-            ret = False
-
-        if not self._routine_type:
-            print("Error: Unable to find the stored routine name and type in file '%s'." % self._source_filename)
-
-        return ret
+        pass
 
     # ------------------------------------------------------------------------------------------------------------------
+    @abc.abstractmethod
     def _load_routine_file(self):
         """
         Loads the stored routine into the database.
         """
-        print("Loading %s %s" % (self._routine_type, self._routine_name))
-
-        self._set_magic_constants()
-
-        routine_source = []
-        i = 0
-        for line in self._routine_source_code_lines:
-            new_line = line
-            self._replace['__LINE__'] = "'%d'" % (i + 1)
-            for search, replace in self._replace.items():
-                tmp = re.findall(search, new_line, re.IGNORECASE)
-                if tmp:
-                    new_line = new_line.replace(tmp[0], replace)
-            routine_source.append(new_line)
-            i += 1
-
-        routine_source = "\n".join(routine_source)
-
-        self._unset_magic_constants()
-        self._drop_routine()
-
-        # sql = "set sql_mode ='%s'" % self._sql_mode
-        # StaticDataLayer.execute_none(sql)
-
-        # sql = "set names '%s' collate '%s'" % (self._character_set, self._collate)
-        # StaticDataLayer.execute_none(sql)
-
-        StaticDataLayer.execute_none(routine_source)
+        pass
 
     # ------------------------------------------------------------------------------------------------------------------
+    @abc.abstractmethod
     def get_bulk_insert_table_columns_info(self):
         """
         Gets the column names and column types of the current table for bulk insert.
         """
-        query = """
-select 1 from
-information_schema.TABLES
-where TABLE_SCHEMA = database()
-and   TABLE_NAME   = '%s'""" % self._table_name
-
-        # execute row0
-        table_is_non_temporary = StaticDataLayer.execute_rows(query)
-
-        if len(table_is_non_temporary) == 0:
-            query = 'call %s()' % self._routine_name
-            StaticDataLayer.execute_none(query)
-
-        query = "describe `%s`" % self._table_name
-        columns = StaticDataLayer.execute_rows(query)
-
-        tmp_column_types = []
-        tmp_fields = []
-
-        n1 = 0
-        for column in columns:
-            p = re.compile('(\\w+)')
-            c_type = p.findall(column['Type'])
-            tmp_column_types.append(c_type[0])
-            tmp_fields.append(column['Field'])
-            n1 += 1
-
-        n2 = len(self._columns)
-
-        if len(table_is_non_temporary) == 0:
-            query = "drop temporary table `%s`" % self._table_name
-            StaticDataLayer.execute_none(query)
-
-        if n1 != n2:
-            raise Exception("Number of fields %d and number of columns %d don't match." % (n1, n2))
-
-        self._columns_types = tmp_column_types
-        self._fields = tmp_fields
+        pass
 
     # ------------------------------------------------------------------------------------------------------------------
+    @abc.abstractmethod
     def _get_routine_parameters_info(self):
-        query = """
-select par.name      parameter_name
-,      typ.name      type_name
-,      typ.max_length
-,      typ.precision
-,      typ.scale
-from       sys.schemas        scm
-inner join sys.all_objects    prc  on  prc.[schema_id] = scm.[schema_id]
-inner join sys.all_parameters par  on  par.[object_id] = prc.[object_id]
-inner join sys.types          typ  on  typ.user_type_id = par.system_type_id
-where scm.name = '%s'
-and   prc.name = '%s'
-order by par.parameter_id
-;""" % (self._routines_schema_name, self._routine_name)
-
-        routine_parameters = StaticDataLayer.execute_rows(query)
-
-        if len(routine_parameters) != 0:
-            for routine_parameter in routine_parameters:
-                if routine_parameter['parameter_name']:
-                    parameter_name = routine_parameter['parameter_name'][1:]
-                    value = routine_parameter['type_name']
-
-                    self._parameters.append({'name': parameter_name,
-                                             'data_type': routine_parameter['type_name'],
-                                             'data_type_descriptor': value})
+        pass
 
     # ------------------------------------------------------------------------------------------------------------------
     def _update_metadata(self):
@@ -465,24 +369,12 @@ order by par.parameter_id
         self._metadata.update({'replace': self._replace})
 
     # ------------------------------------------------------------------------------------------------------------------
+    @abc.abstractmethod
     def _drop_routine(self):
         """
         Drops the stored routine if it exists.
         """
-        if self._old_routine_info:
-            sql = """
-if exists
-    ( select *
-      from sys.objects
-      where type_desc = 'SQL_STORED_PROCEDURE'
-      and name = '%s' )
-      DROP PROC %s.%s;
-"""
-            sql = sql % (self._routine_name,
-                         self._old_routine_info['schema_name'],
-                         self._routine_name)
-
-            StaticDataLayer.execute_none(sql)
+        pass
 
     # ------------------------------------------------------------------------------------------------------------------
     def _set_magic_constants(self):
