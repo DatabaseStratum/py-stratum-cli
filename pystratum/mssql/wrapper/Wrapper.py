@@ -124,6 +124,11 @@ class Wrapper:
     # ------------------------------------------------------------------------------------------------------------------
     def _generate_command(self, routine):
         if routine['parameters']:
+            if routine['designation'] == 'function':
+                sql = "'select %s.%s(%s)' %% %s"
+            else:
+                sql = "'exec %s.%s %s' %% %s"
+
             parameters = ''
             placeholders = ''
             for parameter in routine['parameters']:
@@ -131,13 +136,68 @@ class Wrapper:
                     parameters += ', '
                     placeholders += ', '
                 parameters += parameter['name']
-                placeholders += '%s'
-            ret = "'exec %s.%s %s' %% %s" % (routine['schema_name'],
-                                             routine['routine_name'],
-                                             placeholders,
-                                             parameters)
+                placeholders += self._get_parameter_format_specifier(parameter['data_type'])
+
+            if len(routine['parameters']) > 1:
+                parameters = '(' + parameters + ')'
+
+            ret = sql % (routine['schema_name'],
+                         routine['routine_name'],
+                         placeholders,
+                         parameters)
         else:
-            ret = "'exec %s.%s'" % (routine['schema_name'], routine['routine_name'])
+            if routine['designation'] == 'function':
+                sql = "'select %s.%s()'"
+            else:
+                sql = "'exec %s.%s'"
+
+            ret = sql % (routine['schema_name'],
+                         routine['routine_name'])
+
+        return ret
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @staticmethod
+    def _get_parameter_format_specifier(data_type: str):
+        """
+        Returns the appropriate format specifier for a parameter type.
+
+        :param data_type: The parameter type.
+        :return: The format specifier.
+        """
+        templates = {'tinyint': '%d',
+                     'smallint': '%d',
+                     'mediumint': '%d',
+                     'int': '%d',
+                     'bigint': '%d',
+                     'year': '%d',
+                     'decimal': '%d',
+                     'float': '%d',
+                     'double': '%d',
+                     'varbinary': '%s',
+                     'binary': '%s',
+                     'char': '%s',
+                     'varchar': '%s',
+                     'time': '%s',
+                     'timestamp': '%s',
+                     'date': '%s',
+                     'datetime': '%s',
+                     'enum': '%s',
+                     'set': '%s',
+                     'bit': '%s',
+                     'tinytext': '%s',
+                     'text': '%s',
+                     'mediumtext': '%s',
+                     'longtext': '%s',
+                     'tinyblob': '%s',
+                     'blob': '%s',
+                     'mediumblob': '%s',
+                     'longblob': '%s'}
+
+        if data_type in templates:
+            ret = templates[data_type]
+        else:
+            raise Exception('Unknown data type %s.' % data_type)
 
         return ret
 

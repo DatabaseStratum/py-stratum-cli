@@ -1,5 +1,7 @@
 import unittest
 from test.mssql.DataLayerTestCase import DataLayerTestCase
+from test.mssql.MagicConstantTest import MagicConstantTest
+from test.mssql.FunctionTest import FunctionTest
 from test.mssql.Row0Test import Row0Test
 from test.mssql.Row1Test import Row1Test
 from test.mssql.RowsTest import RowsTest
@@ -14,6 +16,8 @@ class TestAll(DataLayerTestCase):
 
     def test(self):
         suite = unittest.TestSuite()
+        suite.addTest(MagicConstantTest())
+        suite.addTest(FunctionTest())
         suite.addTest(Row0Test())
         suite.addTest(Row1Test())
         suite.addTest(RowsTest())
