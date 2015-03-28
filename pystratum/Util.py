@@ -30,7 +30,7 @@ class Util:
             tmp_filename = the_filename + '.tmp'
             with open(tmp_filename, 'w+') as f:
                 f.write(the_data)
-            os.rename(tmp_filename, the_filename)
+            os.replace(tmp_filename, the_filename)
             print("Wrote: '%s'." % the_filename)
 
 # ----------------------------------------------------------------------------------------------------------------------
