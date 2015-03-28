@@ -7,7 +7,7 @@ from pystratum.mssql.StaticDataLayer import StaticDataLayer
 # ----------------------------------------------------------------------------------------------------------------------
 class MsSqlRoutineLoaderHelper(RoutineLoaderHelper):
     """
-    Class for loading a single stored routine into a MySQL instance from pseudo SQL file.
+    Class for loading a single stored routine into a SQL Server instance from a (pseudo) SQL file.
     """
     # ------------------------------------------------------------------------------------------------------------------
     def _must_reload(self) -> bool:
@@ -60,7 +60,7 @@ class MsSqlRoutineLoaderHelper(RoutineLoaderHelper):
     # ------------------------------------------------------------------------------------------------------------------
     def _load_routine_file(self):
         """
-        Loads the stored routine into the database.
+        Loads the stored routine into the SQL Server instance.
         """
         print("Loading %s %s" % (self._routine_type, self._routine_name))
 
@@ -143,8 +143,7 @@ inner join sys.all_parameters par  on  par.[object_id] = prc.[object_id]
 inner join sys.types          typ  on  typ.user_type_id = par.system_type_id
 where scm.name = '%s'
 and   prc.name = '%s'
-order by par.parameter_id
-;""" % (self._routines_schema_name, self._routine_name)
+order by par.parameter_id""" % (self._routines_schema_name, self._routine_name)
 
         routine_parameters = StaticDataLayer.execute_rows(query)
 
@@ -211,7 +210,7 @@ if exists
       from sys.objects
       where type_desc = 'SQL_STORED_PROCEDURE'
       and name = '%s' )
-      DROP PROC %s.%s;
+      drop proc %s.%s
 """
             sql = sql % (self._routine_name,
                          self._old_routine_info['schema_name'],

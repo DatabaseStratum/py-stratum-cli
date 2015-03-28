@@ -7,7 +7,7 @@ import sys
 # ----------------------------------------------------------------------------------------------------------------------
 class RoutineLoaderHelper:
     """
-    Class for loading a single stored routine into a MySQL instance from pseudo SQL file.
+    Class for loading a single stored routine into a RDBMS instance from a (pseudo) SQL file.
     """
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self):
@@ -49,7 +49,7 @@ class RoutineLoaderHelper:
 
         self._old_routine_info = None
         """
-        The old information about the stored routine. Note: this data comes from information_schema.ROUTINES.
+        The old information about the stored routine. Note: this data comes from the metadata of the RDBMS instance.
 
         :type : dict
         """
@@ -133,7 +133,7 @@ class RoutineLoaderHelper:
 
         self._fields = None
         """
-        The keys in the PHP array for bulk insert.
+        The keys in the dictionary for bulk insert.
 
         :type : list
         """
@@ -209,7 +209,7 @@ class RoutineLoaderHelper:
                                                Note: this data comes from the metadata file.
         :param : replace_pairs          dict   A map from placeholders to their actual values.
         :param : old_routine_info       dict   The old information about the stored routine.
-                                               Note: this data comes from information_schema.ROUTINES.
+                                               Note: this data comes from the metadata of the RDBMS.
         :param : sql_mode               string The SQL mode under which the stored routine will be loaded and run.
         :param : character_set          string The default character set under which the stored routine
                                                will be loaded and run.
@@ -335,7 +335,7 @@ class RoutineLoaderHelper:
     @abc.abstractmethod
     def _load_routine_file(self):
         """
-        Loads the stored routine into the database.
+        Loads the stored routine into the RDBMS instance.
         """
         pass
 

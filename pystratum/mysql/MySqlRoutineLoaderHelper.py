@@ -7,7 +7,7 @@ from pystratum.mysql.StaticDataLayer import StaticDataLayer
 # ----------------------------------------------------------------------------------------------------------------------
 class MySqlRoutineLoaderHelper(RoutineLoaderHelper):
     """
-    Class for loading a single stored routine into a MySQL instance from pseudo SQL file.
+    Class for loading a single stored routine into a MySQL instance from a (pseudo) SQL file.
     """
     # ------------------------------------------------------------------------------------------------------------------
     def _must_reload(self) -> bool:
@@ -68,7 +68,7 @@ class MySqlRoutineLoaderHelper(RoutineLoaderHelper):
     # ------------------------------------------------------------------------------------------------------------------
     def _load_routine_file(self):
         """
-        Loads the stored routine into the database.
+        Loads the stored routine into the MySQL instance.
         """
         print("Loading %s %s" % (self._routine_type, self._routine_name))
 

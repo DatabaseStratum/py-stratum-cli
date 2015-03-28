@@ -2,18 +2,6 @@ import argparse
 import configparser
 from pydoc import locate
 
-from pystratum.mysql.MySqlConstants import MySqlConstants
-from pystratum.mssql.MsSqlConstants import MsSqlConstants
-
-from pystratum.mysql.MySqlRoutineLoader import MySqlRoutineLoader
-from pystratum.mssql.MsSqlRoutineLoader import MsSqlRoutineLoader
-
-from pystratum.mysql.MySqlRoutineLoaderHelper import MySqlRoutineLoaderHelper
-from pystratum.mssql.MsSqlRoutineLoaderHelper import MsSqlRoutineLoaderHelper
-
-from pystratum.mysql.RoutineWrapperGenerator import RoutineWrapperGenerator as MySqlRoutineWrapperGenerator
-from pystratum.mssql.RoutineWrapperGenerator import RoutineWrapperGenerator as MsSqlRoutineWrapperGenerator
-
 
 # ----------------------------------------------------------------------------------------------------------------------
 def create_constants(rdbms: str):
@@ -41,8 +29,8 @@ def create_constants(rdbms: str):
 # ----------------------------------------------------------------------------------------------------------------------
 def create_routine_loader(rdbms: str):
     """
-    Factory for creating a Routine Loader objects (i.e. objects for loading stored routines into a database from
-    pseudo SQL files.
+    Factory for creating a Routine Loader objects (i.e. objects for loading stored routines into a RDBMS instacne from
+    (pseudo) SQL files.
     :param rdbms: The target RDBMS (i.e. mysql or mssql).
     :return:
     """
@@ -64,8 +52,8 @@ def create_routine_loader(rdbms: str):
 # ----------------------------------------------------------------------------------------------------------------------
 def create_routine_loader_helper(rdbms: str):
     """
-    Factory for creating a Routine Loader Helper objects (i.e. objects loading a single stored routine into a database
-    from a pseudo SQL file).
+    Factory for creating a Routine Loader Helper objects (i.e. objects loading a single stored routine into a RDBMS
+    instance from a (pseudo) SQL file).
     :param rdbms: The target RDBMS (i.e. mysql or mssql).
     :return:
     """

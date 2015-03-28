@@ -9,7 +9,7 @@ import configparser
 # ----------------------------------------------------------------------------------------------------------------------
 class RoutineLoader:
     """
-    Class for loading stored routines into a MySQL instance from pseudo SQL files.
+    Class for loading stored routines into a RDBMS instance from (pseudo) SQL files.
     """
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self):
@@ -36,7 +36,7 @@ class RoutineLoader:
 
         self.error_file_names = set()
         """
-        A set with source names that are not loaded into MySQL.
+        A set with source names that are not loaded into RDBMS instance.
 
         :type: set
         """
@@ -172,7 +172,7 @@ class RoutineLoader:
     @abc.abstractmethod
     def connect(self):
         """
-        Connects to the database.
+        Connects to the RDBMS instance.
         """
         pass
 
@@ -180,14 +180,14 @@ class RoutineLoader:
     @abc.abstractmethod
     def disconnect(self):
         """
-        Disconnects from the database.
+        Disconnects from the RDBMS instance.
         """
         pass
 
     # ------------------------------------------------------------------------------------------------------------------
     def _load_list(self, config_filename: str, file_names: list):
         """
-        Loads all stored routines in a list into MySQL.
+        Loads all stored routines in a list into the RDBMS instance.
         :param config_filename The filename of the configuration file.
         :param file_names The list of files to be loaded.
         """
@@ -206,7 +206,7 @@ class RoutineLoader:
     # ------------------------------------------------------------------------------------------------------------------
     def _load_all(self, config_filename: str):
         """
-        Loads all stored routines into MySQL.
+        Loads all stored routines into the RDBMS instance.
         :param config_filename string The filename of the configuration file.
         """
         self._read_configuration_file(config_filename)
@@ -282,14 +282,14 @@ class RoutineLoader:
     @abc.abstractmethod
     def _get_column_type(self):
         """
-        Selects schema, table, column names and the column type from MySQL and saves them as replace pairs.
+        Selects schema, table, column names and the column type from the RDBMS instance and saves them as replace pairs.
         """
         pass
 
     # ------------------------------------------------------------------------------------------------------------------
     def _load_stored_routines(self):
         """
-        Loads all stored routines into a Mysql instance.
+        Loads all stored routines into the RDBMS instance instance.
         """
         for routine_name in sorted(self._source_file_names):
             if routine_name in self._metadata:
@@ -330,7 +330,7 @@ class RoutineLoader:
     # ------------------------------------------------------------------------------------------------------------------
     def _get_correct_sql_mode(self):
         """
-        Gets the SQL mode in the order as preferred by MySQL.
+        Gets the SQL mode in the order as preferred by MySQL. This method is specific for MySQL.
         """
         pass
 

@@ -5,12 +5,12 @@ from pystratum.mysql.StaticDataLayer import StaticDataLayer
 # ----------------------------------------------------------------------------------------------------------------------
 class MySqlRoutineLoader(RoutineLoader):
     """
-    Class for loading stored routines into a MySQL instance from pseudo SQL files.
+    Class for loading stored routines into a MySQL instance from (pseudo) SQL files.
     """
     # ------------------------------------------------------------------------------------------------------------------
     def connect(self):
         """
-        Connects to the database.
+        Connects to the MySQL instance.
         """
         StaticDataLayer.config['user'] = self._user_name
         StaticDataLayer.config['password'] = self._password
@@ -23,7 +23,7 @@ class MySqlRoutineLoader(RoutineLoader):
     # ------------------------------------------------------------------------------------------------------------------
     def disconnect(self):
         """
-        Disconnects from the database.
+        Disconnects from the MySQL instance.
         """
         StaticDataLayer.disconnect()
 
@@ -33,21 +33,21 @@ class MySqlRoutineLoader(RoutineLoader):
         Selects schema, table, column names and the column type from MySQL and saves them as replace pairs.
         """
         sql = """
-SELECT TABLE_NAME                                    table_name
+select TABLE_NAME                                    table_name
 ,      COLUMN_NAME                                   column_name
 ,      COLUMN_TYPE                                   column_type
 ,      CHARACTER_SET_NAME                            character_set_name
 ,      NULL                                          table_schema
-FROM   information_schema.COLUMNS
-WHERE  TABLE_SCHEMA = database()
-UNION ALL
-SELECT TABLE_NAME                                    table_name
+from   information_schema.COLUMNS
+where  TABLE_SCHEMA = database()
+union all
+select TABLE_NAME                                    table_name
 ,      COLUMN_NAME                                   column_name
 ,      COLUMN_TYPE                                   column_type
 ,      CHARACTER_SET_NAME                            character_set_name
 ,      TABLE_SCHEMA                                  table_schema
-FROM   information_schema.COLUMNS
-ORDER BY table_schema
+from   information_schema.COLUMNS
+order by table_schema
 ,        table_name
 ,        column_name"""
 
@@ -72,14 +72,14 @@ ORDER BY table_schema
         Retrieves information about all stored routines in the current schema.
         """
         query = """
-SELECT ROUTINE_NAME           routine_name
+select ROUTINE_NAME           routine_name
 ,      ROUTINE_TYPE           routine_type
 ,      SQL_MODE               sql_mode
 ,      CHARACTER_SET_CLIENT   character_set_client
 ,      COLLATION_CONNECTION   collation_connection
-FROM  information_schema.ROUTINES
-WHERE ROUTINE_SCHEMA = database()
-ORDER BY routine_name"""
+from  information_schema.ROUTINES
+where ROUTINE_SCHEMA = database()
+order by routine_name"""
 
         rows = StaticDataLayer.execute_rows(query)
         self._old_stored_routines_info = {}
@@ -109,5 +109,6 @@ ORDER BY routine_name"""
                 print("Dropping %s %s" % (values['routine_type'], routine_name))
                 sql = "drop %s if exists %s" % (values['routine_type'], routine_name)
                 StaticDataLayer.execute_none(sql)
+
 
 # ----------------------------------------------------------------------------------------------------------------------

@@ -27,9 +27,11 @@ class MsSqlRoutineLoader(RoutineLoader):
     # ------------------------------------------------------------------------------------------------------------------
     def _get_column_type(self):
         """
-        Selects schema, table, column names and the column type from MySQL and saves them as replace pairs.
+        Selects schema, table, column names and the column types from the SQL Server instance and saves them as replace
+        pairs.
         """
-        sql = """select scm.name  schema_name
+        sql = """
+select scm.name  schema_name
 ,      tab.name  table_name
 ,      col.name  column_name
 ,      typ.name  type_name
@@ -43,8 +45,7 @@ inner join sys.types       typ  on  typ.user_type_id = col.system_type_id
 where tab.type in ('U','S','V')
 order by  scm.name
 ,         tab.name
-,         col.column_id
-;"""
+,         col.column_id"""
 
         rows = StaticDataLayer.execute_rows(sql)
 
@@ -71,9 +72,7 @@ from       sys.all_objects  prc
 inner join sys.schemas     scm  on   scm.schema_id = prc.schema_id
 where prc.type in ('P','FN')
 and   scm.name <> 'sys'
-and   prc.is_ms_shipped=0
-;
-"""
+and   prc.is_ms_shipped=0"""
 
         rows = StaticDataLayer.execute_rows(query)
 
@@ -93,5 +92,6 @@ and   prc.is_ms_shipped=0
                 print("Dropping %s.%s" % (values['schema_name'], routine_name))
                 sql = "drop procedure %s.%s" % (values['schema_name'], routine_name)
                 StaticDataLayer.execute_none(sql)
+
 
 # ----------------------------------------------------------------------------------------------------------------------
