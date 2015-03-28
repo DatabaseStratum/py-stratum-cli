@@ -194,10 +194,8 @@ class Wrapper:
 
         if l == 0:
             line = '"%s %s()"' % (execute, routine['routine_name'])
-        elif l == 1:
-            line = '"%s %s(%s)" %% %s' % (execute, routine['routine_name'], placeholders, parameters)
-        elif l > 1:
-            line = '"%s %s(%s)" %% (%s)' % (execute, routine['routine_name'], placeholders, parameters)
+        elif l >= 1:
+            line = '"%s %s(%s)", %s' % (execute, routine['routine_name'], placeholders, parameters)
         else:
             raise Exception('Internal error.')
 

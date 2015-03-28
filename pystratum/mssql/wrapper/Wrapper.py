@@ -52,20 +52,20 @@ class Wrapper:
     def is_blob_parameter(parameters):
         has_blob = False
 
-        templates = {'tinytext': True, 'text': True, 'mediumtext': True, 'longtext': True, 'tinyblob': True,
-                     'blob': True, 'mediumblob': True, 'longblob': True, 'tinyint': False, 'smallint': False,
-                     'mediumint': False, 'int': False, 'bigint': False, 'year': False, 'decimal': False,
-                     'float': False, 'double': False, 'time': False, 'timestamp': False, 'binary': False,
-                     'enum': False, 'bit': False, 'set': False, 'char': False, 'varchar': False,
-                     'date': False, 'datetime': False, 'varbinary': False}
-
-        if parameters:
-
-            for parameter_info in parameters:
-                if parameter_info['data_type'] in templates:
-                    has_blob = templates[parameter_info['data_type']]
-                else:
-                    print("Unknown SQL type '%s'." % parameter_info['data_type'])
+        # templates = {'tinytext': True, 'text': True, 'mediumtext': True, 'longtext': True, 'tinyblob': True,
+        #              'blob': True, 'mediumblob': True, 'longblob': True, 'tinyint': False, 'smallint': False,
+        #              'mediumint': False, 'int': False, 'bigint': False, 'year': False, 'decimal': False,
+        #              'float': False, 'double': False, 'time': False, 'timestamp': False, 'binary': False,
+        #              'enum': False, 'bit': False, 'set': False, 'char': False, 'varchar': False,
+        #              'date': False, 'datetime': False, 'varbinary': False}
+        #
+        # if parameters:
+        #
+        #     for parameter_info in parameters:
+        #         if parameter_info['data_type'] in templates:
+        #             has_blob = templates[parameter_info['data_type']]
+        #         else:
+        #             print("Unknown SQL type '%s'." % parameter_info['data_type'])
 
         return has_blob
 
@@ -125,9 +125,9 @@ class Wrapper:
     def _generate_command(self, routine):
         if routine['parameters']:
             if routine['designation'] == 'function':
-                sql = "'select %s.%s(%s)' %% %s"
+                sql = "'select %s.%s(%s)', %s"
             else:
-                sql = "'exec %s.%s %s' %% %s"
+                sql = "'exec %s.%s %s', %s"
 
             parameters = ''
             placeholders = ''
