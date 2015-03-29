@@ -29,7 +29,7 @@ def create_constants(rdbms: str):
 # ----------------------------------------------------------------------------------------------------------------------
 def create_routine_loader(rdbms: str):
     """
-    Factory for creating a Routine Loader objects (i.e. objects for loading stored routines into a RDBMS instacne from
+    Factory for creating a Routine Loader objects (i.e. objects for loading stored routines into a RDBMS instance from
     (pseudo) SQL files.
     :param rdbms: The target RDBMS (i.e. mysql or mssql).
     :return:
@@ -99,7 +99,7 @@ def create_routine_wrapper_generator(rdbms: str):
 # ----------------------------------------------------------------------------------------------------------------------
 def main():
     """
-    The main function of PyStratum. This function must eb used as entry point for the console script pystratum.
+    The main function of PyStratum. This function must be used as entry point for the console script pystratum.
     """
     parser = argparse.ArgumentParser(description='Description')
 
