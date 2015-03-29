@@ -1,9 +1,9 @@
-from test.mssql.DataLayerTestCase import DataLayerTestCase
+from test.mssql.StratumTestCase import StratumTestCase
 from test.mssql.DataLayer import DataLayer
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-class Row1Test(DataLayerTestCase):
+class Row1Test(StratumTestCase):
 
     # ------------------------------------------------------------------------------------------------------------------
     def test1(self):

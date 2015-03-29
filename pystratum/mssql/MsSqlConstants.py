@@ -198,18 +198,16 @@ inner join sys.all_columns cl1  on  cl1.[object_id] = tab.[object_id]
 inner join sys.all_columns cl2  on  cl2.[object_id] = tab.[object_id]
 where cl1.name like '%_label'
 and   cl2.name like '%_id'
-and   cl2.is_identity = 1
-;"""
+and   cl2.is_identity = 1"""
 
         tables = StaticDataLayer.execute_rows(query_string)
 
         for table in tables:
             query_string = """
-select tab.%s id
-,      tab.%s label
-from   %s.%s.%s tab
-where  isnull(tab.%s,'') is not null
-;""" \
+select tab.[%s] id
+,      tab.[%s] label
+from   [%s].[%s].[%s] tab
+where  nullif(tab.[%s],'') is not null""" \
                            % (table['id'],
                               table['label'],
                               self._database,
@@ -218,7 +216,6 @@ where  isnull(tab.%s,'') is not null
                               table['label'])
 
             rows = StaticDataLayer.execute_rows(query_string)
-
             for row in rows:
                 if row['label'] not in self._labels:
                     self._labels.update({row['label']: row['id']})
@@ -248,41 +245,19 @@ where  isnull(tab.%s,'') is not null
         :param column dict The column of which the field is based.
         :returns int The width of the column.
         """
-
         data_type = column['data_type']
 
         if data_type == 'bigint':
             return column['precision']
 
-        if data_type == 'int':
-            return column['precision']
-
-        if data_type == 'smallint':
-            return column['precision']
-
-        if data_type == 'tinyint':
-            return column['precision']
+        if data_type == 'binary':
+            return column['max_length']
 
         if data_type == 'bit':
-            return column['length']
+            return column['max_length']
 
-        if data_type == 'money':
-            return column['precision']
-
-        if data_type == 'smallmoney':
-            return column['precision']
-
-        if data_type == 'decimal':
-            return column['precision']
-
-        if data_type == 'numeric':
-            return column['precision']
-
-        if data_type == 'float':
-            return column['precision']
-
-        if data_type == 'real':
-            return column['precision']
+        if data_type == 'char':
+            return column['max_length']
 
         if data_type == 'date':
             return column['precision']
@@ -290,49 +265,73 @@ where  isnull(tab.%s,'') is not null
         if data_type == 'datetime':
             return column['precision']
 
+        if data_type == 'datetime2':
+            return column['precision']
+
         if data_type == 'datetimeoffset':
+            return column['precision']
+
+        if data_type == 'decimal':
+            return column['precision']
+
+        if data_type == 'float':
+            return column['precision']
+
+        if data_type == 'image':
+            return 2147483647
+
+        if data_type == 'int':
+            return column['precision']
+
+        if data_type == 'money':
+            return column['precision']
+
+        if data_type == 'nchar':
+            return column['max_length'] / 2
+
+        if data_type == 'ntext':
+            return 1073741823
+
+        if data_type == 'numeric':
+            return column['precision']
+
+        if data_type == 'nvarchar':
+            if column['max_length'] == -1:
+                # This is a nvarchar(max) data type.
+                return 1073741823
+
+            return column['max_length'] / 2
+
+        if data_type == 'real':
             return column['precision']
 
         if data_type == 'smalldatetime':
             return column['precision']
 
-        if data_type == 'time':
+        if data_type == 'smallint':
             return column['precision']
 
-        if data_type == 'char':
-            return column['length']
-
-        if data_type == 'varchar':
-            if column['length'] == -1:
-                # This is a varchar(max) data type.
-                return 2147483647
-
-            return column['length']
+        if data_type == 'smallmoney':
+            return column['precision']
 
         if data_type == 'text':
             return 2147483647
 
-        if data_type == 'nchar':
-            return column['length'] / 2
+        if data_type == 'time':
+            return column['precision']
 
-        if data_type == 'nvarchar':
-            if column['length'] == -1:
-                # This is a nvarchar(max) data type.
-                return 1073741823
-
-            return column['length'] / 2
-
-        if data_type == 'ntext':
-            return 1073741823
-
-        if data_type == 'binary':
-            return column['length']
+        if data_type == 'tinyint':
+            return column['precision']
 
         if data_type == 'varbinary':
-            return column['length']
+            return column['max_length']
 
-        if data_type == 'image':
-            return 2147483647
+        if data_type == 'varchar':
+            if column['max_length'] == -1:
+                # This is a varchar(max) data type.
+                return 2147483647
+
+            return column['max_length']
 
         if data_type == 'xml':
             return 2147483647

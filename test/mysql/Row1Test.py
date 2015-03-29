@@ -1,10 +1,10 @@
 from mysql.connector import DataError
-from test.mysql.DataLayerTestCase import DataLayerTestCase
+from test.mysql.StratumTestCase import StratumTestCase
 from test.mysql.DataLayer import DataLayer
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-class Row1Test(DataLayerTestCase):
+class Row1Test(StratumTestCase):
 
     # ------------------------------------------------------------------------------------------------------------------
     def test1(self):

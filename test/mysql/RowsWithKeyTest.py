@@ -1,9 +1,9 @@
-from test.mysql.DataLayerTestCase import DataLayerTestCase
+from test.mysql.StratumTestCase import StratumTestCase
 from test.mysql.DataLayer import DataLayer
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-class RowsWithKeyTest(DataLayerTestCase):
+class RowsWithKeyTest(StratumTestCase):
 
     # ------------------------------------------------------------------------------------------------------------------
     def test1(self):

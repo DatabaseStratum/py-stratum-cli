@@ -1,10 +1,10 @@
 import os
-from test.mysql.DataLayerTestCase import DataLayerTestCase
+from test.mysql.StratumTestCase import StratumTestCase
 from test.mysql.DataLayer import DataLayer
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-class MagicConstantTest(DataLayerTestCase):
+class MagicConstantTest(StratumTestCase):
 
     # ------------------------------------------------------------------------------------------------------------------
     def test1(self):
