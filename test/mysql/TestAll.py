@@ -1,5 +1,5 @@
 import unittest
-from test.mysql.DataLayerTestCase import DataLayerTestCase
+from test.mysql.StratumTestCase import StratumTestCase
 from test.mysql.FunctionTest import FunctionTest
 from test.mysql.LogTest import LogTest
 from test.mysql.MagicConstantTest import MagicConstantTest
@@ -14,7 +14,7 @@ from test.mysql.Singleton1Test import Singleton1Test
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-class TestAll(DataLayerTestCase):
+class TestAll(StratumTestCase):
 
     def test(self):
         suite = unittest.TestSuite()

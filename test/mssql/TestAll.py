@@ -1,5 +1,5 @@
 import unittest
-from test.mssql.DataLayerTestCase import DataLayerTestCase
+from test.mssql.StratumTestCase import StratumTestCase
 from test.mssql.MagicConstantTest import MagicConstantTest
 from test.mssql.FunctionTest import FunctionTest
 from test.mssql.Row0Test import Row0Test
@@ -12,7 +12,7 @@ from test.mssql.Singleton1Test import Singleton1Test
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-class TestAll(DataLayerTestCase):
+class TestAll(StratumTestCase):
 
     def test(self):
         suite = unittest.TestSuite()

@@ -82,28 +82,51 @@ class Wrapper:
     @staticmethod
     def is_lob_parameter(parameters) -> bool:
         """
-        Returns True of one of the parameters os a BLOC or CLOB. Otherwise, returns False.
+        Returns True of one of the parameters is a BLOB or CLOB. Otherwise, returns False.
 
         :param parameters: The parameters of a stored routine.
         :return:
         """
-        has_blob = False
+        has_lob = False
 
-        templates = {'tinytext': True, 'text': True, 'mediumtext': True, 'longtext': True, 'tinyblob': True,
-                     'blob': True, 'mediumblob': True, 'longblob': True, 'tinyint': False, 'smallint': False,
-                     'mediumint': False, 'int': False, 'bigint': False, 'year': False, 'decimal': False,
-                     'float': False, 'double': False, 'time': False, 'timestamp': False, 'binary': False,
-                     'enum': False, 'bit': False, 'set': False, 'char': False, 'varchar': False,
-                     'date': False, 'datetime': False, 'varbinary': False}
+        lob_map = {'bigint': False,
+                   'binary': False,
+                   'bit': False,
+                   'char': False,
+                   'date': False,
+                   'datetime': False,
+                   'decimal': False,
+                   'double': False,
+                   'enum': False,
+                   'float': False,
+                   'int': False,
+                   'mediumint': False,
+                   'set': False,
+                   'smallint': False,
+                   'time': False,
+                   'timestamp': False,
+                   'tinyint': False,
+                   'varbinary': False,
+                   'varchar': False,
+                   'year': False,
+
+                   'blob': True,
+                   'longblob': True,
+                   'longtext': True,
+                   'mediumblob': True,
+                   'mediumtext': True,
+                   'text': True,
+                   'tinyblob': True,
+                   'tinytext': True}
 
         if parameters:
             for parameter_info in parameters:
-                if parameter_info['data_type'] in templates:
-                    has_blob = templates[parameter_info['data_type']]
+                if parameter_info['data_type'] in lob_map:
+                    has_lob = lob_map[parameter_info['data_type']]
                 else:
-                    print("Unknown MySQL type '%s'." % parameter_info['data_type'])
+                    raise Exception("Unexpected date type '%s'." % parameter_info['data_type'])
 
-        return has_blob
+        return has_lob
 
     # ------------------------------------------------------------------------------------------------------------------
     def write_routine_method(self, routine):
@@ -210,41 +233,39 @@ class Wrapper:
         :param data_type: The parameter type.
         :return: The format specifier.
         """
-        templates = {'tinyint': '%d',
-                     'smallint': '%d',
-                     'mediumint': '%d',
-                     'int': '%d',
-                     'bigint': '%d',
-                     'year': '%d',
-                     'decimal': '%d',
-                     'float': '%d',
-                     'double': '%d',
-                     'varbinary': '%s',
+        templates = {'bigint': '%d',
                      'binary': '%s',
+                     'bit': '%s',
+                     'blob': '%s',
                      'char': '%s',
-                     'varchar': '%s',
-                     'time': '%s',
-                     'timestamp': '%s',
                      'date': '%s',
                      'datetime': '%s',
+                     'decimal': '%d',
+                     'double': '%d',
                      'enum': '%s',
-                     'set': '%s',
-                     'bit': '%s',
-                     'tinytext': '%s',
-                     'text': '%s',
-                     'mediumtext': '%s',
+                     'float': '%d',
+                     'int': '%d',
+                     'longblob': '%s',
                      'longtext': '%s',
-                     'tinyblob': '%s',
-                     'blob': '%s',
                      'mediumblob': '%s',
-                     'longblob': '%s'}
+                     'mediumint': '%d',
+                     'mediumtext': '%s',
+                     'set': '%s',
+                     'smallint': '%d',
+                     'text': '%s',
+                     'time': '%s',
+                     'timestamp': '%s',
+                     'tinyblob': '%s',
+                     'tinyint': '%d',
+                     'tinytext': '%s',
+                     'varbinary': '%s',
+                     'varchar': '%s',
+                     'year': '%d'}
 
         if data_type in templates:
-            ret = templates[data_type]
-        else:
-            raise Exception('Unknown data type %s.' % data_type)
+            return templates[data_type]
 
-        return ret
+        raise Exception('Unexpected data type %s.' % data_type)
 
 
 # ----------------------------------------------------------------------------------------------------------------------

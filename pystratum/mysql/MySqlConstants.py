@@ -34,7 +34,8 @@ class MySqlConstants(Constants):
                 for line in f:
                     line_number += 1
                     if line != "\n":
-                        p = re.compile('\s*(?:([a-zA-Z0-9_]+)\.)?([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\s+(\d+)\s*(\*|[a-zA-Z0-9_]+)?\s*')
+                        p = re.compile(
+                            '\s*(?:([a-zA-Z0-9_]+)\.)?([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\s+(\d+)\s*(\*|[a-zA-Z0-9_]+)?\s*')
                         matches = p.findall(line)
 
                         if matches:
@@ -189,15 +190,15 @@ union all
         Gets all primary key labels from the MySQL database.
         """
         query_string = """
-select t1.TABLE_NAME  `table_name`
+SELECT t1.TABLE_NAME  `table_name`
 ,      t1.COLUMN_NAME `id`
 ,      t2.COLUMN_NAME `label`
-from       information_schema.COLUMNS t1
-inner join information_schema.COLUMNS t2 ON t1.TABLE_NAME = t2.TABLE_NAME
-where t1.TABLE_SCHEMA = database()
-and   t1.EXTRA        = 'auto_increment'
-and   t2.TABLE_SCHEMA = database()
-and   t2.COLUMN_NAME like '%%\\_label'"""
+FROM       information_schema.COLUMNS t1
+INNER JOIN information_schema.COLUMNS t2 ON t1.TABLE_NAME = t2.TABLE_NAME
+WHERE t1.TABLE_SCHEMA = database()
+AND   t1.EXTRA        = 'auto_increment'
+AND   t2.TABLE_SCHEMA = database()
+AND   t2.COLUMN_NAME LIKE '%%\\_label'"""
 
         tables = StaticDataLayer.execute_rows(query_string)
 
@@ -234,7 +235,7 @@ where   nullif(`%s`,'') is not null""" % (table['id'],
         """
         Returns the width of a field based on column.
         :param the_column dict The column of which the field is based.
-        :returns int The width of the column.
+        :returns The width of the column.
         """
         types_length = {'tinyint': the_column['numeric_precision'],
                         'smallint': the_column['numeric_precision'],
@@ -267,10 +268,8 @@ where   nullif(`%s`,'') is not null""" % (table['id'],
 
         if the_column['data_type'] in types_length:
             return types_length[the_column['data_type']]
-        else:
-            # assert failed
-            print("Unknown type '%s'." % the_column['data_type'])
-            return None
+
+        raise Exception("Unexpected type '%s'." % the_column['data_type'])
 
 
 # ----------------------------------------------------------------------------------------------------------------------

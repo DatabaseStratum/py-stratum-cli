@@ -138,9 +138,6 @@ class Wrapper:
                 parameters += parameter['name']
                 placeholders += self._get_parameter_format_specifier(parameter['data_type'])
 
-            if len(routine['parameters']) > 1:
-                parameters = '(' + parameters + ')'
-
             ret = sql % (routine['schema_name'],
                          routine['routine_name'],
                          placeholders,
@@ -196,11 +193,9 @@ class Wrapper:
                      'longblob': '%s'}
 
         if data_type in templates:
-            ret = templates[data_type]
-        else:
-            raise Exception('Unknown data type %s.' % data_type)
+            return templates[data_type]
 
-        return ret
+        raise Exception('Unexpected data type %s.' % data_type)
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -214,13 +209,10 @@ class Wrapper:
                      'set': '%s', 'bit': '%s', 'tinytext': lob, 'text': lob, 'mediumtext': lob, 'longtext': lob,
                      'tinyblob': lob, 'blob': lob, 'mediumblob': lob, 'longblob': lob}
 
-        ret = '%s'
         if data_type in templates:
-            ret = templates[data_type]
-        else:
-            print('Unknown data type %s.' % data_type)
+            return templates[data_type]
 
-        return ret
+        raise Exception('Unexpected data type %s.' % data_type)
 
 
 # ----------------------------------------------------------------------------------------------------------------------
