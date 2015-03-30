@@ -159,12 +159,6 @@ class RoutineLoaderHelper:
         :type : list
         """
 
-        self._routines_schema_name = None
-        """
-
-        :type : string
-        """
-
     # ------------------------------------------------------------------------------------------------------------------
     def reset_helper(self):
         self._source_filename = None
@@ -188,7 +182,6 @@ class RoutineLoaderHelper:
         self._parameters = []
         self._table_name = None
         self._columns = None
-        self._routines_schema_name = None
 
     # ------------------------------------------------------------------------------------------------------------------
     def load_stored_routine(self,
@@ -357,7 +350,6 @@ class RoutineLoaderHelper:
         """
         Updates the metadata of the stored routine.
         """
-        self._metadata.update({'schema_name': self._routines_schema_name})
         self._metadata.update({'routine_name': self._routine_name})
         self._metadata.update({'designation': self._designation_type})
         self._metadata.update({'table_name': self._table_name})
@@ -404,9 +396,5 @@ class RoutineLoaderHelper:
         if '__LINE__' in self._replace:
             del (self._replace['__LINE__'])
 
-    # ------------------------------------------------------------------------------------------------------------------
-    @abc.abstractmethod
-    def _drop_function(self):
-        pass
 
 # ----------------------------------------------------------------------------------------------------------------------

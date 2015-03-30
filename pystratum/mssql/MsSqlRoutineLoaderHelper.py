@@ -10,6 +10,16 @@ class MsSqlRoutineLoaderHelper(RoutineLoaderHelper):
     Class for loading a single stored routine into a SQL Server instance from a (pseudo) SQL file.
     """
     # ------------------------------------------------------------------------------------------------------------------
+    def __init__(self):
+        RoutineLoaderHelper.__init__(self)
+
+        self._routines_schema_name = None
+        """
+        The name of the schema of the stored routine.
+
+        :type : string
+        """
+    # ------------------------------------------------------------------------------------------------------------------
     def _must_reload(self) -> bool:
         """
         Returns True if the source file must be load or reloaded. Otherwise returns False.
@@ -227,6 +237,17 @@ if exists
                 raise Exception("Unknown routine type '%s'." % self._old_routine_info['type'])
 
             StaticDataLayer.execute_none(sql)
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def _update_metadata(self):
+        """
+        Updates the metadata of the stored routine.
+        """
+        # Update general metadata.
+        RoutineLoaderHelper._update_metadata(self)
+
+        # Update SQL Server specific metadata.
+        self._metadata.update({'schema_name': self._routines_schema_name})
 
 
 # ----------------------------------------------------------------------------------------------------------------------
