@@ -90,8 +90,7 @@ INNER JOIN sys.types       typ  ON  typ.user_type_id = col.system_type_id
 WHERE tab.type IN ('U','S','V')
 ORDER BY  scm.name
 ,         tab.name
-,         col.column_id
-;"""
+,         col.column_id"""
 
         rows = StaticDataLayer.execute_rows(query)
 
@@ -250,14 +249,35 @@ where  nullif(tab.[%s],'') is not null""" \
         if data_type == 'bigint':
             return column['precision']
 
-        if data_type == 'binary':
-            return column['max_length']
+        if data_type == 'int':
+            return column['precision']
+
+        if data_type == 'smallint':
+            return column['precision']
+
+        if data_type == 'tinyint':
+            return column['precision']
 
         if data_type == 'bit':
             return column['max_length']
 
-        if data_type == 'char':
-            return column['max_length']
+        if data_type == 'money':
+            return column['precision']
+
+        if data_type == 'smallmoney':
+            return column['precision']
+
+        if data_type == 'decimal':
+            return column['precision']
+
+        if data_type == 'numeric':
+            return column['precision']
+
+        if data_type == 'float':
+            return column['precision']
+
+        if data_type == 'real':
+            return column['precision']
 
         if data_type == 'date':
             return column['precision']
@@ -271,59 +291,13 @@ where  nullif(tab.[%s],'') is not null""" \
         if data_type == 'datetimeoffset':
             return column['precision']
 
-        if data_type == 'decimal':
-            return column['precision']
-
-        if data_type == 'float':
-            return column['precision']
-
-        if data_type == 'image':
-            return 2147483647
-
-        if data_type == 'int':
-            return column['precision']
-
-        if data_type == 'money':
-            return column['precision']
-
-        if data_type == 'nchar':
-            return column['max_length'] / 2
-
-        if data_type == 'ntext':
-            return 1073741823
-
-        if data_type == 'numeric':
-            return column['precision']
-
-        if data_type == 'nvarchar':
-            if column['max_length'] == -1:
-                # This is a nvarchar(max) data type.
-                return 1073741823
-
-            return column['max_length'] / 2
-
-        if data_type == 'real':
-            return column['precision']
-
         if data_type == 'smalldatetime':
             return column['precision']
-
-        if data_type == 'smallint':
-            return column['precision']
-
-        if data_type == 'smallmoney':
-            return column['precision']
-
-        if data_type == 'text':
-            return 2147483647
 
         if data_type == 'time':
             return column['precision']
 
-        if data_type == 'tinyint':
-            return column['precision']
-
-        if data_type == 'varbinary':
+        if data_type == 'char':
             return column['max_length']
 
         if data_type == 'varchar':
@@ -333,6 +307,31 @@ where  nullif(tab.[%s],'') is not null""" \
 
             return column['max_length']
 
+        if data_type == 'text':
+            return 2147483647
+
+        if data_type == 'nchar':
+            return column['max_length'] / 2
+
+        if data_type == 'nvarchar':
+            if column['max_length'] == -1:
+                # This is a nvarchar(max) data type.
+                return 1073741823
+
+            return column['max_length'] / 2
+
+        if data_type == 'ntext':
+            return 1073741823
+
+        if data_type == 'binary':
+            return column['max_length']
+
+        if data_type == 'varbinary':
+            return column['max_length']
+
+        if data_type == 'image':
+            return 2147483647
+
         if data_type == 'xml':
             return 2147483647
 
@@ -340,3 +339,4 @@ where  nullif(tab.[%s],'') is not null""" \
 
 
 # ----------------------------------------------------------------------------------------------------------------------
+

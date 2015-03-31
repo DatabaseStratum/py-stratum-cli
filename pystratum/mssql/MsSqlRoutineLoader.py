@@ -34,7 +34,7 @@ class MsSqlRoutineLoader(RoutineLoader):
 select scm.name  schema_name
 ,      tab.name  table_name
 ,      col.name  column_name
-,      typ.name  type_name
+,      typ.name  data_type
 ,      col.max_length
 ,      col.precision
 ,      col.scale
@@ -55,7 +55,8 @@ order by  scm.name
                 key += row['schema_name'] + '.'
             key += row['table_name'] + '.' + row['column_name'] + '%type@'
             key = key.lower()
-            value = row['type_name']
+
+            value = self._derive_data_type(row)
 
             self._replace_pairs[key] = value
 
@@ -93,5 +94,105 @@ and   prc.is_ms_shipped=0"""
                 sql = "drop procedure %s.%s" % (values['schema_name'], routine_name)
                 StaticDataLayer.execute_none(sql)
 
+    # ------------------------------------------------------------------------------------------------------------------
+    @staticmethod
+    def _derive_data_type(column: dict) -> int:
+        """
+        Returns the proper SQL declaration of a data type of a column.
+        :param column dict The column of which the field is based.
+        :returns SQL declaration of data type
+        """
+        data_type = column['data_type']
+
+        if data_type == 'bigint':
+            return data_type
+
+        if data_type == 'int':
+            return data_type
+
+        if data_type == 'smallint':
+            return data_type
+
+        if data_type == 'tinyint':
+            return data_type
+
+        if data_type == 'bit':
+            return data_type
+
+        if data_type == 'money':
+            return data_type
+
+        if data_type == 'smallmoney':
+            return data_type
+
+        if data_type == 'decimal':
+            return 'decimal(%d,%d)' % (column['precision'], column['scale'])
+
+        if data_type == 'numeric':
+            return 'decimal(%d,%d)' % (column['precision'], column['scale'])
+
+        if data_type == 'float':
+            return data_type
+
+        if data_type == 'real':
+            return data_type
+
+        if data_type == 'date':
+            return data_type
+
+        if data_type == 'datetime':
+            return data_type
+
+        if data_type == 'datetime2':
+            return data_type
+
+        if data_type == 'datetimeoffset':
+            return data_type
+
+        if data_type == 'smalldatetime':
+            return data_type
+
+        if data_type == 'time':
+            return data_type
+
+        if data_type == 'char':
+            return 'char(%d)' % column['max_length']
+
+        if data_type == 'varchar':
+            if column['max_length'] == -1:
+                return 'varchar(max)'
+
+            return 'varchar(%d)' % column['max_length']
+
+        if data_type == 'text':
+            return data_type
+
+        if data_type == 'nchar':
+            return 'nchar(%d)' % (column['max_length'] / 2)
+
+        if data_type == 'nvarchar':
+            if column['max_length'] == -1:
+                return 'nvarchar(max)'
+
+            return 'nvarchar(%d)' % (column['max_length'] / 2)
+
+        if data_type == 'ntext':
+            return data_type
+
+        if data_type == 'binary':
+            return data_type
+
+        if data_type == 'varbinary':
+            return 'varbinary(%d)' % column['max_length']
+
+        if data_type == 'image':
+            return data_type
+
+        if data_type == 'xml':
+            return data_type
+
+        raise Exception("Unexpected data type '%s'." % data_type)
+
 
 # ----------------------------------------------------------------------------------------------------------------------
+
