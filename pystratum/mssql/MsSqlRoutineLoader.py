@@ -1,3 +1,4 @@
+from pprint import pprint
 from pystratum.RoutineLoader import RoutineLoader
 from pystratum.mssql.StaticDataLayer import StaticDataLayer
 
@@ -38,10 +39,10 @@ select scm.name  schema_name
 ,      col.max_length
 ,      col.precision
 ,      col.scale
-from       sys.schemas     scm
-inner join sys.tables      tab  on  tab.[schema_id] = scm.[schema_id]
-inner join sys.all_columns col  on  col.[object_id] = tab.[object_id]
-inner join sys.types       typ  on  typ.user_type_id = col.system_type_id
+from sys.columns                  col
+inner join sys.types              typ  on  col.user_type_id = typ.user_type_id
+inner join sys.tables             tab  on  col.[object_id] = tab.[object_id]
+inner join sys.schemas            scm  on  tab.[schema_id] = scm.[schema_id]
 where tab.type in ('U','S','V')
 order by  scm.name
 ,         tab.name
@@ -189,6 +190,12 @@ and   prc.is_ms_shipped=0"""
             return data_type
 
         if data_type == 'xml':
+            return data_type
+
+        if data_type == 'geography':
+            return data_type
+
+        if data_type == 'geometry':
             return data_type
 
         raise Exception("Unexpected data type '%s'." % data_type)

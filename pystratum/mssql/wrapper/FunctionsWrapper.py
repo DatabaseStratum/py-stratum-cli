@@ -1,8 +1,8 @@
-from pystratum.mssql.wrapper.Wrapper import Wrapper
+from pystratum.mssql.wrapper.MsSqlWrapper import MsSqlWrapper
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-class FunctionsWrapper(Wrapper):
+class FunctionsWrapper(MsSqlWrapper):
     # ------------------------------------------------------------------------------------------------------------------
     # select instead of call
     def _write_result_handler(self, routine):

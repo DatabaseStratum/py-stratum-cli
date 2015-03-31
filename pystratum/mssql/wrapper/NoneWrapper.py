@@ -1,8 +1,8 @@
-from pystratum.mssql.wrapper.Wrapper import Wrapper
+from pystratum.mssql.wrapper.MsSqlWrapper import MsSqlWrapper
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-class NoneWrapper(Wrapper):
+class NoneWrapper(MsSqlWrapper):
     # ------------------------------------------------------------------------------------------------------------------
     def _write_result_handler(self, routine):
         self._write_line('return StaticDataLayer.execute_none(%s)' % self._generate_command(routine))
