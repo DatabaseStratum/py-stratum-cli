@@ -1,8 +1,8 @@
-from pystratum.mysql.wrapper.Wrapper import Wrapper
+from pystratum.mysql.wrapper.MySqlWrapper import MySqlWrapper
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-class RowsWithIndexWrapper(Wrapper):
+class RowsWithIndexWrapper(MySqlWrapper):
     # ------------------------------------------------------------------------------------------------------------------
     def _write_result_handler(self, routine):
         self._write_line('rows = StaticDataLayer.execute_sp_rows(%s)' % self._generate_command(routine))

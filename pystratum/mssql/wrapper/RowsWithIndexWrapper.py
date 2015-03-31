@@ -1,8 +1,8 @@
-from pystratum.mssql.wrapper.Wrapper import Wrapper
+from pystratum.mssql.wrapper.MsSqlWrapper import MsSqlWrapper
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-class RowsWithIndexWrapper(Wrapper):
+class RowsWithIndexWrapper(MsSqlWrapper):
     # ------------------------------------------------------------------------------------------------------------------
     def _write_result_handler(self, routine):
         self._write_line('rows = StaticDataLayer.execute_rows(%s)' % self._generate_command(routine))

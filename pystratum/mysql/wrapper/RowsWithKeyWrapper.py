@@ -1,8 +1,8 @@
-from pystratum.mysql.wrapper.Wrapper import Wrapper
+from pystratum.mysql.wrapper.MySqlWrapper import MySqlWrapper
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-class RowsWithKeyWrapper(Wrapper):
+class RowsWithKeyWrapper(MySqlWrapper):
     # ------------------------------------------------------------------------------------------------------------------
     def _write_result_handler(self, routine):
         self._write_line('ret = {}')

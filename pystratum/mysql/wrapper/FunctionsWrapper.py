@@ -1,8 +1,8 @@
-from pystratum.mysql.wrapper.Wrapper import Wrapper
+from pystratum.mysql.wrapper.MySqlWrapper import MySqlWrapper
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-class FunctionsWrapper(Wrapper):
+class FunctionsWrapper(MySqlWrapper):
     # ------------------------------------------------------------------------------------------------------------------
     # select instead of call
     def _write_result_handler(self, routine):
