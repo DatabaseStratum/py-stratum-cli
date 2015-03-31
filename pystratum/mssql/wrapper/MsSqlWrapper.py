@@ -9,6 +9,12 @@ class MsSqlWrapper(Wrapper):
     """
     # ------------------------------------------------------------------------------------------------------------------
     def is_lob_parameter(self, parameters):
+        """
+        Returns True of one of the parameters is a BLOB or CLOB. Otherwise, returns False.
+
+        :param parameters: The parameters of a stored routine.
+        :return:
+        """
         has_blob = False
 
         lookup = {'bigint': False,
@@ -21,23 +27,25 @@ class MsSqlWrapper(Wrapper):
                   'datetimeoffset': False,
                   'decimal': False,
                   'float': False,
-                  'image': False,
+                  'geography': True,
+                  'geometry': True,
+                  'image': True,
                   'int': False,
                   'money': False,
                   'nchar': False,
-                  'ntext': False,
+                  'ntext': True,
                   'numeric': False,
                   'nvarchar': False,
                   'real': False,
                   'smalldatetime': False,
                   'smallint': False,
                   'smallmoney': False,
-                  'text': False,
+                  'text': True,
                   'time': False,
                   'tinyint': False,
                   'varbinary': False,
                   'varchar': False,
-                  'xml': False}
+                  'xml': True}
 
         if parameters:
             for parameter_info in parameters:
@@ -113,6 +121,8 @@ class MsSqlWrapper(Wrapper):
                   'datetimeoffset': '%s',
                   'decimal': '%s',
                   'float': '%s',
+                  'geography': '%s',
+                  'geometry': '%s',
                   'image': '%s',
                   'int': '%s',
                   'money': '%s',
@@ -152,23 +162,25 @@ class MsSqlWrapper(Wrapper):
                      'datetimeoffset': '%s',
                      'decimal': '%s',
                      'float': '%s',
-                     'image': '%s',
+                     'image': lob,
+                     'geography': lob,
+                     'geometry': lob,
                      'int': '%s',
                      'money': '%s',
                      'nchar': '%s',
-                     'ntext': '%s',
+                     'ntext': lob,
                      'numeric': '%s',
                      'nvarchar': '%s',
                      'real': '%s',
                      'smalldatetime': '%s',
                      'smallint': '%s',
                      'smallmoney': '%s',
-                     'text': '%s',
+                     'text': lob,
                      'time': '%s',
                      'tinyint': '%s',
                      'varbinary': '%s',
                      'varchar': '%s',
-                     'xml': '%s'}
+                     'xml': lob}
 
         if data_type in templates:
             return templates[data_type]
