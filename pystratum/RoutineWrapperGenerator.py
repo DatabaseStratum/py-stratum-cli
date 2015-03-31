@@ -1,9 +1,8 @@
+import abc
 import configparser
 import json
 import os
-
 from pystratum.Util import Util
-from pystratum.mysql.wrapper import create_routine_wrapper
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -189,15 +188,13 @@ class RoutineWrapperGenerator():
         self._write_line('# ' + ('-'*118))
 
     # ------------------------------------------------------------------------------------------------------------------
+    @abc.abstractmethod
     def _write_routine_function(self, routine):
         """
         Generates a complete wrapper method for a stored routine.
         :param  The metadata of the stored routine.
         """
-        wrapper = create_routine_wrapper(routine, self._lob_as_string_flag)
-        # xxx tmp
-        if wrapper:
-            self._code += wrapper.write_routine_method(routine)
+        pass
 
 
 # ----------------------------------------------------------------------------------------------------------------------

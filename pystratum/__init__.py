@@ -86,12 +86,12 @@ def create_routine_wrapper_generator(rdbms: str):
     #       dependencies for the other RDBMSs are not required).
 
     if rdbms == 'mysql':
-        module = locate('pystratum.mysql.RoutineWrapperGenerator')
-        return module.RoutineWrapperGenerator()
+        module = locate('pystratum.mysql.MySqlRoutineWrapperGenerator')
+        return module.MySqlRoutineWrapperGenerator()
 
     if rdbms == 'mssql':
-        module = locate('pystratum.mssql.RoutineWrapperGenerator')
-        return module.RoutineWrapperGenerator()
+        module = locate('pystratum.mssql.MsSqlRoutineWrapperGenerator')
+        return module.MsSqlRoutineWrapperGenerator()
 
     raise Exception("Unknown RDBMS '%s'." % rdbms)
 
