@@ -143,10 +143,6 @@ class RoutineWrapperGenerator():
         self._metadata_filename = config.get('wrapper', 'metadata')
         self._lob_as_string_flag = config.get('wrapper', 'lob_as_string')
 
-        self._sql_mode = config.get('loader', 'sql_mode')
-        self._character_set = config.get('loader', 'character_set')
-        self._collate = config.get('loader', 'collate')
-
     # ------------------------------------------------------------------------------------------------------------------
     def _read_routine_metadata(self) -> dict:
         """

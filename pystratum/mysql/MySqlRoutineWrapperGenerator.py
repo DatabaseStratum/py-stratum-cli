@@ -8,6 +8,29 @@ class MySqlRoutineWrapperGenerator(RoutineWrapperGenerator):
     """
     Class for generating a class with wrapper methods for calling stored routines in a MySQL database.
     """
+    def __init__(self):
+        RoutineWrapperGenerator.__init__(self)
+
+        self._sql_mode = None
+        """
+        The SQL mode under which the stored routine will be loaded and run.
+
+        :type: string
+        """
+        self._character_set = None
+        """
+        The default character set under which the stored routine will be loaded and run.
+
+        :type: string
+        """
+
+        self._collate = None
+        """
+        The default collate under which the stored routine will be loaded and run.
+
+        :type: string
+        """
+
     # ------------------------------------------------------------------------------------------------------------------
     def _read_configuration_file(self):
         """
