@@ -1,8 +1,12 @@
 import csv
 import pymssql
+import sys
 
 
 # ----------------------------------------------------------------------------------------------------------------------
+from time import strftime, gmtime
+
+
 class StaticDataLayer:
     # ------------------------------------------------------------------------------------------------------------------
     __conn = None
@@ -13,9 +17,20 @@ class StaticDataLayer:
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
+    def my_msg_handler(msgstate, severity, srvname, procname, line, msgtext):
+        if severity > 0:
+            print("Error at line %d: %s" % (line, msgtext.decode("utf-8")), file=sys.stderr)
+        else:
+            print(msgtext.decode("utf-8"))
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @staticmethod
     def connect(server, user, password, database):
         # Connect to the SQL-Server
         StaticDataLayer.__conn = pymssql.connect(server, user, password, database)
+
+        # Install our own message handler.
+        StaticDataLayer.__conn._conn.set_msghandler(StaticDataLayer.my_msg_handler)
 
         # Set the default settings.
         cursor = StaticDataLayer.__conn.cursor()
@@ -133,8 +148,25 @@ class StaticDataLayer:
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
     def execute_log(sql, *params):
-        # todo methods for showing log
-        pass
+        cursor = StaticDataLayer.__conn.cursor()
+        cursor.execute(sql, params)
+
+        n = 0
+        next_set = True
+        while next_set:
+            stamp = strftime('%Y-%m-%d %H:%M:%S', gmtime())
+            for row in cursor:
+                print(stamp, end='')
+                for field in row:
+                    print(' %s' % field, end='')
+                print('')
+                n += 1
+
+            next_set = cursor.nextset()
+
+        cursor.close()
+
+        return n
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
