@@ -4,7 +4,7 @@ import abc
 # ----------------------------------------------------------------------------------------------------------------------
 class Wrapper:
     """
-    Parent class for classes that generate Python code, i.e. wrappers, for calling a stored routine.
+    Parent class for classes that generate Python code, i.e. wrappers, for calling a stored routines.
     """
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self, routine, lob_as_string_flag: bool):
@@ -79,8 +79,8 @@ class Wrapper:
         self._write_line('# ' + ('-' * tmp))
 
     # ------------------------------------------------------------------------------------------------------------------
-    @staticmethod
-    def is_lob_parameter(parameters) -> bool:
+    @abc.abstractmethod
+    def is_lob_parameter(self, parameters) -> bool:
         """
         Returns True of one of the parameters is a BLOB or CLOB. Otherwise, returns False.
 
@@ -147,5 +147,6 @@ class Wrapper:
             ret += parameter_info['name']
 
         return ret
+
 
 # ----------------------------------------------------------------------------------------------------------------------

@@ -8,42 +8,41 @@ class MsSqlWrapper(Wrapper):
     Parent class for classes that generate Python code, i.e. wrappers, for calling a stored routine.
     """
     # ------------------------------------------------------------------------------------------------------------------
-    @staticmethod
-    def is_blob_parameter(parameters):
+    def is_lob_parameter(self, parameters):
         has_blob = False
 
-        templates = {'bigint': False,
-                     'binary': False,
-                     'bit': False,
-                     'char': False,
-                     'date': False,
-                     'datetime': False,
-                     'datetime2': False,
-                     'datetimeoffset': False,
-                     'decimal': False,
-                     'float': False,
-                     'image': False,
-                     'int': False,
-                     'money': False,
-                     'nchar': False,
-                     'ntext': False,
-                     'numeric': False,
-                     'nvarchar': False,
-                     'real': False,
-                     'smalldatetime': False,
-                     'smallint': False,
-                     'smallmoney': False,
-                     'text': False,
-                     'time': False,
-                     'tinyint': False,
-                     'varbinary': False,
-                     'varchar': False,
-                     'xml': False}
+        lookup = {'bigint': False,
+                  'binary': False,
+                  'bit': False,
+                  'char': False,
+                  'date': False,
+                  'datetime': False,
+                  'datetime2': False,
+                  'datetimeoffset': False,
+                  'decimal': False,
+                  'float': False,
+                  'image': False,
+                  'int': False,
+                  'money': False,
+                  'nchar': False,
+                  'ntext': False,
+                  'numeric': False,
+                  'nvarchar': False,
+                  'real': False,
+                  'smalldatetime': False,
+                  'smallint': False,
+                  'smallmoney': False,
+                  'text': False,
+                  'time': False,
+                  'tinyint': False,
+                  'varbinary': False,
+                  'varchar': False,
+                  'xml': False}
 
         if parameters:
             for parameter_info in parameters:
-                if parameter_info['data_type'] in templates:
-                    has_blob = templates[parameter_info['data_type']]
+                if parameter_info['data_type'] in lookup:
+                    has_blob = lookup[parameter_info['data_type']]
                 else:
                     print("Unknown SQL type '%s'." % parameter_info['data_type'])
 
@@ -104,35 +103,35 @@ class MsSqlWrapper(Wrapper):
         :param data_type: The parameter type.
         :return: The format specifier.
         """
-        templates = {'bigint': '%s',
-                     'binary': '%s',
-                     'bit': '%s',
-                     'char': '%s',
-                     'date': '%s',
-                     'datetime': '%s',
-                     'datetime2': '%s',
-                     'datetimeoffset': '%s',
-                     'decimal': '%s',
-                     'float': '%s',
-                     'image': '%s',
-                     'int': '%s',
-                     'money': '%s',
-                     'nchar': '%s',
-                     'ntext': '%s',
-                     'numeric': '%s',
-                     'nvarchar': '%s',
-                     'real': '%s',
-                     'smalldatetime': '%s',
-                     'smallint': '%s',
-                     'smallmoney': '%s',
-                     'text': '%s',
-                     'time': '%s',
-                     'tinyint': '%s',
-                     'varbinary': '%s',
-                     'varchar': '%s',
-                     'xml': '%s'}
+        lookup = {'bigint': '%s',
+                  'binary': '%s',
+                  'bit': '%s',
+                  'char': '%s',
+                  'date': '%s',
+                  'datetime': '%s',
+                  'datetime2': '%s',
+                  'datetimeoffset': '%s',
+                  'decimal': '%s',
+                  'float': '%s',
+                  'image': '%s',
+                  'int': '%s',
+                  'money': '%s',
+                  'nchar': '%s',
+                  'ntext': '%s',
+                  'numeric': '%s',
+                  'nvarchar': '%s',
+                  'real': '%s',
+                  'smalldatetime': '%s',
+                  'smallint': '%s',
+                  'smallmoney': '%s',
+                  'text': '%s',
+                  'time': '%s',
+                  'tinyint': '%s',
+                  'varbinary': '%s',
+                  'varchar': '%s',
+                  'xml': '%s'}
 
-        if data_type in templates:
+        if data_type in lookup:
             return '%s'
 
         raise Exception('Unexpected data type %s.' % data_type)

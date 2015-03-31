@@ -8,8 +8,7 @@ class MySqlWrapper(Wrapper):
     Parent class for classes that generate Python code, i.e. wrappers, for calling a stored routine.
     """
     # ------------------------------------------------------------------------------------------------------------------
-    @staticmethod
-    def is_lob_parameter(parameters) -> bool:
+    def is_lob_parameter(self, parameters) -> bool:
         """
         Returns True of one of the parameters is a BLOB or CLOB. Otherwise, returns False.
 
@@ -18,40 +17,40 @@ class MySqlWrapper(Wrapper):
         """
         has_lob = False
 
-        lob_map = {'bigint': False,
-                   'binary': False,
-                   'bit': False,
-                   'char': False,
-                   'date': False,
-                   'datetime': False,
-                   'decimal': False,
-                   'double': False,
-                   'enum': False,
-                   'float': False,
-                   'int': False,
-                   'mediumint': False,
-                   'set': False,
-                   'smallint': False,
-                   'time': False,
-                   'timestamp': False,
-                   'tinyint': False,
-                   'varbinary': False,
-                   'varchar': False,
-                   'year': False,
+        lookup = {'bigint': False,
+                  'binary': False,
+                  'bit': False,
+                  'char': False,
+                  'date': False,
+                  'datetime': False,
+                  'decimal': False,
+                  'double': False,
+                  'enum': False,
+                  'float': False,
+                  'int': False,
+                  'mediumint': False,
+                  'set': False,
+                  'smallint': False,
+                  'time': False,
+                  'timestamp': False,
+                  'tinyint': False,
+                  'varbinary': False,
+                  'varchar': False,
+                  'year': False,
 
-                   'blob': True,
-                   'longblob': True,
-                   'longtext': True,
-                   'mediumblob': True,
-                   'mediumtext': True,
-                   'text': True,
-                   'tinyblob': True,
-                   'tinytext': True}
+                  'blob': True,
+                  'longblob': True,
+                  'longtext': True,
+                  'mediumblob': True,
+                  'mediumtext': True,
+                  'text': True,
+                  'tinyblob': True,
+                  'tinytext': True}
 
         if parameters:
             for parameter_info in parameters:
-                if parameter_info['data_type'] in lob_map:
-                    has_lob = lob_map[parameter_info['data_type']]
+                if parameter_info['data_type'] in lookup:
+                    has_lob = lookup[parameter_info['data_type']]
                 else:
                     raise Exception("Unexpected date type '%s'." % parameter_info['data_type'])
 
@@ -111,37 +110,37 @@ class MySqlWrapper(Wrapper):
         :param data_type: The parameter type.
         :return: The format specifier.
         """
-        templates = {'bigint': '%d',
-                     'binary': '%s',
-                     'bit': '%s',
-                     'blob': '%s',
-                     'char': '%s',
-                     'date': '%s',
-                     'datetime': '%s',
-                     'decimal': '%d',
-                     'double': '%d',
-                     'enum': '%s',
-                     'float': '%d',
-                     'int': '%d',
-                     'longblob': '%s',
-                     'longtext': '%s',
-                     'mediumblob': '%s',
-                     'mediumint': '%d',
-                     'mediumtext': '%s',
-                     'set': '%s',
-                     'smallint': '%d',
-                     'text': '%s',
-                     'time': '%s',
-                     'timestamp': '%s',
-                     'tinyblob': '%s',
-                     'tinyint': '%d',
-                     'tinytext': '%s',
-                     'varbinary': '%s',
-                     'varchar': '%s',
-                     'year': '%d'}
+        lookup = {'bigint': '%d',
+                  'binary': '%s',
+                  'bit': '%s',
+                  'blob': '%s',
+                  'char': '%s',
+                  'date': '%s',
+                  'datetime': '%s',
+                  'decimal': '%d',
+                  'double': '%d',
+                  'enum': '%s',
+                  'float': '%d',
+                  'int': '%d',
+                  'longblob': '%s',
+                  'longtext': '%s',
+                  'mediumblob': '%s',
+                  'mediumint': '%d',
+                  'mediumtext': '%s',
+                  'set': '%s',
+                  'smallint': '%d',
+                  'text': '%s',
+                  'time': '%s',
+                  'timestamp': '%s',
+                  'tinyblob': '%s',
+                  'tinyint': '%d',
+                  'tinytext': '%s',
+                  'varbinary': '%s',
+                  'varchar': '%s',
+                  'year': '%d'}
 
-        if data_type in templates:
-            return templates[data_type]
+        if data_type in lookup:
+            return lookup[data_type]
 
         raise Exception('Unexpected data type %s.' % data_type)
 
