@@ -34,8 +34,8 @@ class MySqlConstants(Constants):
                 for line in f:
                     line_number += 1
                     if line != "\n":
-                        p = re.compile(
-                            '\s*(?:([a-zA-Z0-9_]+)\.)?([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\s+(\d+)\s*(\*|[a-zA-Z0-9_]+)?\s*')
+                        p = re.compile('\s*(?:([a-zA-Z0-9_]+)\.)?([a-zA-Z0-9_]+)\.'
+                                       '([a-zA-Z0-9_]+)\s+(\d+)\s*(\*|[a-zA-Z0-9_]+)?\s*')
                         matches = p.findall(line)
 
                         if matches:
@@ -79,6 +79,7 @@ class MySqlConstants(Constants):
   ,      data_type
   ,      character_maximum_length
   ,      numeric_precision
+  ,      ordinal_position
   from   information_schema.COLUMNS
   where  table_schema = database()
   and    table_name  rlike '^[a-zA-Z0-9_]*$'
@@ -95,6 +96,7 @@ union all
   ,      data_type
   ,      character_maximum_length
   ,      numeric_precision
+  ,      ordinal_position
   from   information_schema.COLUMNS
   where  table_name  rlike '^[a-zA-Z0-9_]*$'
   and    column_name rlike '^[a-zA-Z0-9_]*$'
@@ -161,23 +163,25 @@ union all
             width1 = 0
             width2 = 0
 
-            for column_name, column in sorted(table.items()):
+            key_map = {}
+            for column_name, column in table.items():
+                key_map.update({column['ordinal_position']: column_name})
                 width1 = max(len(str(column['column_name'])), width1)
                 width2 = max(len(str(column['length'])), width2)
 
-            for column_name, column in sorted(table.items()):
-                if column['length'] is not None:
-                    if 'constant_name' in column:
+            for ord_position, column_name in sorted(key_map.items()):
+                if table[column_name]['length'] is not None:
+                    if 'constant_name' in table[column_name]:
                         line_format = "%%s.%%-%ds %%%dd %%s\n" % (int(width1), int(width2))
-                        content += line_format % (column['table_name'],
-                                                  column['column_name'],
-                                                  column['length'],
-                                                  column['constant_name'])
+                        content += line_format % (table[column_name]['table_name'],
+                                                  table[column_name]['column_name'],
+                                                  table[column_name]['length'],
+                                                  table[column_name]['constant_name'])
                     else:
                         line_format = "%%s.%%-%ds %%%dd\n" % (int(width1), int(width2))
-                        content += line_format % (column['table_name'],
-                                                  column['column_name'],
-                                                  column['length'])
+                        content += line_format % (table[column_name]['table_name'],
+                                                  table[column_name]['column_name'],
+                                                  table[column_name]['length'])
 
             content += "\n"
 
@@ -190,15 +194,15 @@ union all
         Gets all primary key labels from the MySQL database.
         """
         query_string = """
-SELECT t1.TABLE_NAME  `table_name`
+select t1.TABLE_NAME  `table_name`
 ,      t1.COLUMN_NAME `id`
 ,      t2.COLUMN_NAME `label`
-FROM       information_schema.COLUMNS t1
-INNER JOIN information_schema.COLUMNS t2 ON t1.TABLE_NAME = t2.TABLE_NAME
-WHERE t1.TABLE_SCHEMA = database()
-AND   t1.EXTRA        = 'auto_increment'
-AND   t2.TABLE_SCHEMA = database()
-AND   t2.COLUMN_NAME LIKE '%%\\_label'"""
+from       information_schema.COLUMNS t1
+inner join information_schema.COLUMNS t2 ON t1.TABLE_NAME = t2.TABLE_NAME
+where t1.TABLE_SCHEMA = database()
+and   t1.EXTRA        = 'auto_increment'
+and   t2.TABLE_SCHEMA = database()
+and   t2.COLUMN_NAME like '%%\\_label'"""
 
         tables = StaticDataLayer.execute_rows(query_string)
 
