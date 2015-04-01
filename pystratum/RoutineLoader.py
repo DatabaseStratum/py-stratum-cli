@@ -4,7 +4,6 @@ import re
 import sys
 import json
 import configparser
-
 from pystratum.RoutineLoaderHelper import RoutineLoaderHelper
 
 
@@ -48,6 +47,13 @@ class RoutineLoader:
         A map from placeholders to their actual values.
 
         :type: dict
+        """
+
+        self._source_encoding = None
+        """
+        The character set of the source files.
+
+        :type: string
         """
 
         self._source_directory = None

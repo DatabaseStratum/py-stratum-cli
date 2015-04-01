@@ -9,7 +9,7 @@ class MySqlRoutineLoaderHelper(RoutineLoaderHelper):
     """
     Class for loading a single stored routine into a MySQL instance from a (pseudo) SQL file.
     """
-     # -----------------------------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------------------------------
     def __init__(self,
                  routine_filename: str,
                  routine_file_extension: str,
@@ -50,7 +50,7 @@ class MySqlRoutineLoaderHelper(RoutineLoaderHelper):
         :type : string
         """
 
-     # -----------------------------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------------------------------
     def _must_reload(self) -> bool:
         """
         Returns True if the source file must be load or reloaded. Otherwise returns False.
@@ -252,8 +252,8 @@ and   t1.ROUTINE_NAME   = '%s'""" % self._routine_name
                         value += ' collation %s' % routine_parameter['collation']
 
                 self._parameters.append({'name': routine_parameter['parameter_name'],
-                                        'data_type': routine_parameter['parameter_type'],
-                                        'data_type_descriptor': value})
+                                         'data_type': routine_parameter['parameter_type'],
+                                         'data_type_descriptor': value})
 
     # ------------------------------------------------------------------------------------------------------------------
     def _drop_routine(self):
