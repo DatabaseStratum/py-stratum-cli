@@ -110,34 +110,34 @@ class MySqlWrapper(Wrapper):
         :param data_type: The parameter type.
         :return: The format specifier.
         """
-        lookup = {'bigint': '%d',
+        lookup = {'bigint': '%s',
                   'binary': '%s',
                   'bit': '%s',
                   'blob': '%s',
                   'char': '%s',
                   'date': '%s',
                   'datetime': '%s',
-                  'decimal': '%d',
-                  'double': '%d',
+                  'decimal': '%s',
+                  'double': '%s',
                   'enum': '%s',
-                  'float': '%d',
-                  'int': '%d',
+                  'float': '%s',
+                  'int': '%s',
                   'longblob': '%s',
                   'longtext': '%s',
                   'mediumblob': '%s',
-                  'mediumint': '%d',
+                  'mediumint': '%s',
                   'mediumtext': '%s',
                   'set': '%s',
-                  'smallint': '%d',
+                  'smallint': '%s',
                   'text': '%s',
                   'time': '%s',
                   'timestamp': '%s',
                   'tinyblob': '%s',
-                  'tinyint': '%d',
+                  'tinyint': '%s',
                   'tinytext': '%s',
                   'varbinary': '%s',
                   'varchar': '%s',
-                  'year': '%d'}
+                  'year': '%s'}
 
         if data_type in lookup:
             return lookup[data_type]
