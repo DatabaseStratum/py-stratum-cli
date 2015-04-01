@@ -13,6 +13,7 @@ class RoutineLoaderHelper:
     def __init__(self,
                  routine_filename: str,
                  routine_file_extension: str,
+                 routine_file_encoding: str,
                  metadata: dict,
                  replace_pairs: dict,
                  old_routine_info: dict):
@@ -29,6 +30,11 @@ class RoutineLoaderHelper:
         The source filename extension.
 
         :type : string
+        """
+
+        self._routine_file_encoding = routine_file_encoding
+        """
+        The encoding of the routine file.
         """
 
         self._old_metadata = metadata
@@ -167,7 +173,7 @@ class RoutineLoaderHelper:
 
             load = self._must_reload()
             if load:
-                with open(self._source_filename, 'r') as f:
+                with open(self._source_filename, 'r', encoding=self._routine_file_encoding) as f:
                     self._routine_source_code = f.read()
 
                 self._routine_source_code_lines = self._routine_source_code.split("\n")
