@@ -21,17 +21,24 @@ class MsSqlRoutineLoader(MsSqlConnection, RoutineLoader):
         pairs.
         """
         sql = """
-select scm.name  schema_name
-,      tab.name  table_name
-,      col.name  column_name
-,      typ.name  data_type
+
+select scm.name                   schema_name
+,      tab.name                   table_name
+,      col.name                   column_name
+,      isnull(stp.name,utp.name)  data_type
 ,      col.max_length
 ,      col.precision
 ,      col.scale
-from sys.columns                  col
-inner join sys.types              typ  on  col.user_type_id = typ.user_type_id
-inner join sys.tables             tab  on  col.[object_id] = tab.[object_id]
-inner join sys.schemas            scm  on  tab.[schema_id] = scm.[schema_id]
+from            sys.columns col
+inner join      sys.types   utp  on  utp.user_type_id = col.user_type_id and
+                                     utp.system_type_id = col.system_type_id
+left outer join sys.types   stp  on  utp.is_user_defined = 1 and
+                                     stp.is_user_defined = 0 and
+                                     utp.system_type_id = stp.system_type_id and
+                                     utp.user_type_id <> stp.user_type_id  and
+                                     stp.user_type_id = stp.system_type_id
+inner join      sys.tables  tab  on  col.object_id = tab.object_id
+inner join      sys.schemas scm  on  tab.schema_id = scm.schema_id
 where tab.type in ('U','S','V')
 order by  scm.name
 ,         tab.name
