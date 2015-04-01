@@ -9,7 +9,7 @@ class MsSqlRoutineLoaderHelper(RoutineLoaderHelper):
     """
     Class for loading a single stored routine into a SQL Server instance from a (pseudo) SQL file.
     """
-     # -----------------------------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------------------------------
     def __init__(self,
                  routine_filename: str,
                  routine_file_extension: str,
