@@ -1,4 +1,5 @@
 import os
+from pprint import pprint
 import re
 
 from pystratum.Util import Util
@@ -79,6 +80,7 @@ class MySqlConstants(Constants):
   ,      data_type
   ,      character_maximum_length
   ,      numeric_precision
+  ,      ordinal_position
   from   information_schema.COLUMNS
   where  table_schema = database()
   and    table_name  rlike '^[a-zA-Z0-9_]*$'
@@ -95,6 +97,7 @@ union all
   ,      data_type
   ,      character_maximum_length
   ,      numeric_precision
+  ,      ordinal_position
   from   information_schema.COLUMNS
   where  table_name  rlike '^[a-zA-Z0-9_]*$'
   and    column_name rlike '^[a-zA-Z0-9_]*$'
@@ -161,23 +164,25 @@ union all
             width1 = 0
             width2 = 0
 
-            for column_name, column in sorted(table.items()):
+            key_map = {}
+            for column_name, column in table.items():
+                key_map.update({column['ordinal_position']: column_name})
                 width1 = max(len(str(column['column_name'])), width1)
                 width2 = max(len(str(column['length'])), width2)
 
-            for column_name, column in sorted(table.items()):
-                if column['length'] is not None:
-                    if 'constant_name' in column:
+            for ord_position, column_name in sorted(key_map.items()):
+                if table[column_name]['length'] is not None:
+                    if 'constant_name' in table[column_name]:
                         line_format = "%%s.%%-%ds %%%dd %%s\n" % (int(width1), int(width2))
-                        content += line_format % (column['table_name'],
-                                                  column['column_name'],
-                                                  column['length'],
-                                                  column['constant_name'])
+                        content += line_format % (table[column_name]['table_name'],
+                                                  table[column_name]['column_name'],
+                                                  table[column_name]['length'],
+                                                  table[column_name]['constant_name'])
                     else:
                         line_format = "%%s.%%-%ds %%%dd\n" % (int(width1), int(width2))
-                        content += line_format % (column['table_name'],
-                                                  column['column_name'],
-                                                  column['length'])
+                        content += line_format % (table[column_name]['table_name'],
+                                                  table[column_name]['column_name'],
+                                                  table[column_name]['length'])
 
             content += "\n"
 

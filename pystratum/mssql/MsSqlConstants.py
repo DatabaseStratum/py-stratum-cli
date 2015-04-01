@@ -76,19 +76,20 @@ class MsSqlConstants(Constants):
         Retrieves metadata all columns in the MySQL schema.
         """
         query = """
-SELECT scm.name        schema_name
-,      tab.name        table_name
-,      col.name        column_name
-,      typ.name        data_type
+select scm.name  schema_name
+,      tab.name  table_name
+,      col.name  column_name
+,      typ.name  data_type
 ,      col.max_length
 ,      col.precision
 ,      col.scale
-FROM       sys.schemas     scm
-INNER JOIN sys.tables      tab  ON  tab.[schema_id] = scm.[schema_id]
-INNER JOIN sys.all_columns col  ON  col.[object_id] = tab.[object_id]
-INNER JOIN sys.types       typ  ON  typ.user_type_id = col.system_type_id
-WHERE tab.type IN ('U','S','V')
-ORDER BY  scm.name
+,      col.column_id
+from sys.columns                  col
+inner join sys.types              typ  on  col.user_type_id = typ.user_type_id
+inner join sys.tables             tab  on  col.[object_id] = tab.[object_id]
+inner join sys.schemas            scm  on  tab.[schema_id] = scm.[schema_id]
+where tab.type in ('U','S','V')
+order by  scm.name
 ,         tab.name
 ,         col.column_id"""
 
@@ -156,27 +157,29 @@ ORDER BY  scm.name
                 width1 = 0
                 width2 = 0
 
-                for column_name, column in sorted(table.items()):
+                key_map = {}
+                for column_name, column in table.items():
+                    key_map.update({column['column_id']: column_name})
                     width1 = max(len(str(column['column_name'])), width1)
                     width2 = max(len(str(column['length'])), width2)
 
-                for column_name, column in sorted(table.items()):
-                    if column['length'] is not None:
-                        if 'constant_name' in column:
+                for col_id, column_name in sorted(key_map.items()):
+                    if table[column_name]['length'] is not None:
+                        if 'constant_name' in table[column_name]:
                             line_format = "%%s.%%s.%%-%ds %%%dd %%s\n" % (int(width1), int(width2))
                             content += line_format % (schema_name,
-                                                      column['table_name'],
-                                                      column['column_name'],
-                                                      column['length'],
-                                                      column['constant_name'])
+                                                      table[column_name]['table_name'],
+                                                      table[column_name]['column_name'],
+                                                      table[column_name]['length'],
+                                                      table[column_name]['constant_name'])
                         else:
                             line_format = "%%s.%%s.%%-%ds %%%dd\n" % (int(width1), int(width2))
                             content += line_format % (schema_name,
-                                                      column['table_name'],
-                                                      column['column_name'],
-                                                      column['length'])
+                                                      table[column_name]['table_name'],
+                                                      table[column_name]['column_name'],
+                                                      table[column_name]['length'])
 
-                content += "\n"
+                content += "\n"""
 
         # Save the columns, width and constants to the filesystem.
         Util.write_two_phases(self._constants_filename, content)
@@ -334,6 +337,16 @@ where  nullif(tab.[%s],'') is not null""" \
 
         if data_type == 'xml':
             return 2147483647
+
+        if data_type == 'geography':
+            if column['max_length'] == -1:
+                # This is a varchar(max) data type.
+                return 2147483647
+
+        if data_type == 'geometry':
+            if column['max_length'] == -1:
+                # This is a varchar(max) data type.
+                return 2147483647
 
         raise Exception("Unexpected data type '%s'." % data_type)
 
