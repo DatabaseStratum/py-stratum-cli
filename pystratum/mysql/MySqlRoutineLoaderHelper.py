@@ -9,7 +9,46 @@ class MySqlRoutineLoaderHelper(RoutineLoaderHelper):
     """
     Class for loading a single stored routine into a MySQL instance from a (pseudo) SQL file.
     """
-    # ------------------------------------------------------------------------------------------------------------------
+     # -----------------------------------------------------------------------------------------------------------------
+    def __init__(self,
+                 routine_filename: str,
+                 routine_file_extension: str,
+                 metadata: dict,
+                 replace_pairs: dict,
+                 old_routine_info: dict,
+                 sql_mode: str,
+                 character_set: str,
+                 collate: str):
+
+        RoutineLoaderHelper.__init__(self,
+                                     routine_filename,
+                                     routine_file_extension,
+                                     metadata,
+                                     replace_pairs,
+                                     old_routine_info)
+
+        self._sql_mode = sql_mode
+        """
+        The SQL mode under which the stored routine will be loaded and run.
+
+        :type : string
+        """
+
+        self._character_set = character_set
+        """
+        The default character set under which the stored routine will be loaded and run.
+
+        :type : string
+        """
+
+        self._collate = collate
+        """
+        The default collate under which the stored routine will be loaded and run.
+
+        :type : string
+        """
+
+     # -----------------------------------------------------------------------------------------------------------------
     def _must_reload(self) -> bool:
         """
         Returns True if the source file must be load or reloaded. Otherwise returns False.

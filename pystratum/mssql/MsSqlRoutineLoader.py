@@ -1,5 +1,5 @@
-from pprint import pprint
 from pystratum.RoutineLoader import RoutineLoader
+from pystratum.mssql.MsSqlRoutineLoaderHelper import MsSqlRoutineLoaderHelper
 from pystratum.mssql.StaticDataLayer import StaticDataLayer
 
 
@@ -60,6 +60,22 @@ order by  scm.name
             value = self._derive_data_type(row)
 
             self._replace_pairs[key] = value
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def create_routine_loader_helper(self,
+                                     routine_name: str,
+                                     old_metadata: dict,
+                                     old_routine_info: dict) -> MsSqlRoutineLoaderHelper:
+        """
+        Factory for creating a Routine Loader Helper objects (i.e. objects loading a single stored routine into a RDBMS
+        instance from a (pseudo) SQL file).
+        :return:
+        """
+        return MsSqlRoutineLoaderHelper(self._source_file_names[routine_name],
+                                        self._source_file_extension,
+                                        old_metadata,
+                                        self._replace_pairs,
+                                        old_routine_info)
 
     # ------------------------------------------------------------------------------------------------------------------
     def _get_old_stored_routine_info(self):

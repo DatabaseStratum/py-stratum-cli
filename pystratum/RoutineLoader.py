@@ -132,16 +132,6 @@ class RoutineLoader:
         :type: string
         """
 
-        self._routine_loader_helper = None
-        """
-
-        :type : Object
-        """
-
-    # ------------------------------------------------------------------------------------------------------------------
-    def set_loader_helper(self, helper):
-        self._routine_loader_helper = helper
-
     # ------------------------------------------------------------------------------------------------------------------
     def main(self, config_filename: str, file_names=None) -> int:
         """
@@ -288,6 +278,19 @@ class RoutineLoader:
         pass
 
     # ------------------------------------------------------------------------------------------------------------------
+    @abc.abstractmethod
+    def create_routine_loader_helper(self,
+                                     routine_name: str,
+                                     old_metadata: dict,
+                                     old_routine_info: dict) -> object:
+        """
+        Factory for creating a Routine Loader Helper objects (i.e. objects loading a single stored routine into a RDBMS
+        instance from a (pseudo) SQL file).
+        :return:
+        """
+        pass
+
+    # ------------------------------------------------------------------------------------------------------------------
     def _load_stored_routines(self):
         """
         Loads all stored routines into the RDBMS instance instance.
@@ -303,15 +306,8 @@ class RoutineLoader:
             else:
                 old_routine_info = None
 
-            self._routine_loader_helper.reset_helper()
-            metadata = self._routine_loader_helper.load_stored_routine(self._source_file_names[routine_name],
-                                                                       self._source_file_extension,
-                                                                       old_metadata,
-                                                                       self._replace_pairs,
-                                                                       old_routine_info,
-                                                                       self._sql_mode,
-                                                                       self._character_set,
-                                                                       self._collate)
+            routine_loader_helper = self.create_routine_loader_helper(routine_name, old_metadata, old_routine_info)
+            metadata = routine_loader_helper.load_stored_routine()
 
             if not metadata:
                 self.error_file_names.add(self._source_file_names[routine_name])

@@ -1,4 +1,5 @@
 from pystratum.RoutineLoader import RoutineLoader
+from pystratum.mysql.MySqlRoutineLoaderHelper import MySqlRoutineLoaderHelper
 from pystratum.mysql.StaticDataLayer import StaticDataLayer
 
 
@@ -65,6 +66,25 @@ order by table_schema
                 value += ' character set ' + row['character_set_name']
 
             self._replace_pairs.update({key: value})
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def create_routine_loader_helper(self,
+                                     routine_name: str,
+                                     old_metadata: dict,
+                                     old_routine_info: dict) -> MySqlRoutineLoaderHelper:
+        """
+        Factory for creating a Routine Loader Helper objects (i.e. objects loading a single stored routine into a RDBMS
+        instance from a (pseudo) SQL file).
+        :return:
+        """
+        return MySqlRoutineLoaderHelper(self._source_file_names[routine_name],
+                                        self._source_file_extension,
+                                        old_metadata,
+                                        self._replace_pairs,
+                                        old_routine_info,
+                                        self._sql_mode,
+                                        self._character_set,
+                                        self._collate)
 
     # ------------------------------------------------------------------------------------------------------------------
     def _get_old_stored_routine_info(self):

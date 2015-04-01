@@ -50,30 +50,6 @@ def create_routine_loader(rdbms: str):
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-def create_routine_loader_helper(rdbms: str):
-    """
-    Factory for creating a Routine Loader Helper objects (i.e. objects loading a single stored routine into a RDBMS
-    instance from a (pseudo) SQL file).
-    :param rdbms: The target RDBMS (i.e. mysql or mssql).
-    :return:
-    """
-    # Note: We load modules and classes dynamically such that on the end user's system only the required modules
-    #       and other dependencies for the targeted RDBMS must be installed (and required modules and other
-    #       dependencies for the other RDBMSs are not required).
-
-    pass
-    if rdbms == 'mysql':
-        module = locate('pystratum.mysql.MySqlRoutineLoaderHelper')
-        return module.MySqlRoutineLoaderHelper()
-
-    if rdbms == 'mssql':
-        module = locate('pystratum.mssql.MsSqlRoutineLoaderHelper')
-        return module.MsSqlRoutineLoaderHelper()
-
-    raise Exception("Unknown RDBMS '%s'." % rdbms)
-
-
-# ----------------------------------------------------------------------------------------------------------------------
 def create_routine_wrapper_generator(rdbms: str):
     """
     Factory for creating a Constants objects (i.e. objects for generating a class with wrapper methods for calling
@@ -133,8 +109,6 @@ def main():
     if args.fast:
         # Fast mode: only load stored routines.
         loader = create_routine_loader(rdbms)
-        helper = create_routine_loader_helper(rdbms)
-        loader.set_loader_helper(helper)
         ret = loader.main(config_filename, file_names)
         exit(ret)
     else:
@@ -145,8 +119,6 @@ def main():
             exit(ret)
 
         loader = create_routine_loader(rdbms)
-        helper = create_routine_loader_helper(rdbms)
-        loader.set_loader_helper(helper)
         ret = loader.main(config_filename, file_names)
         if ret != 0:
             exit(ret)

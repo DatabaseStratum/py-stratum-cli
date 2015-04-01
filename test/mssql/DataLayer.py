@@ -31,11 +31,6 @@ class DataLayer(StaticDataLayer):
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def tst_parameter_types02(tst_bigint, tst_int, tst_smallint, tst_tinyint, tst_bit, tst_money, tst_smallmoney, tst_decimal, tst_numeric, tst_float, tst_real, tst_date, tst_datetime, tst_datetime2, tst_datetimeoffset, tst_smalldatetime, tst_time, tst_char, tst_varchar, tst_text, tst_nchar, tst_nvarchar, tst_ntext, tst_binary, tst_varbinary, tst_image, tst_xml):
-        return StaticDataLayer.execute_none('exec dbo.tst_parameter_types02 %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s', tst_bigint, tst_int, tst_smallint, tst_tinyint, tst_bit, tst_money, tst_smallmoney, tst_decimal, tst_numeric, tst_float, tst_real, tst_date, tst_datetime, tst_datetime2, tst_datetimeoffset, tst_smalldatetime, tst_time, tst_char, tst_varchar, tst_text, tst_nchar, tst_nvarchar, tst_ntext, tst_binary, tst_varbinary, tst_image, tst_xml)
-
-    # ------------------------------------------------------------------------------------------------------------------
-    @staticmethod
     def tst_test_function(p_a, p_b):
         return StaticDataLayer.execute_singleton1('select dbo.tst_test_function(%s, %s)', p_a, p_b)
 

@@ -10,22 +10,28 @@ class RoutineLoaderHelper:
     Class for loading a single stored routine into a RDBMS instance from a (pseudo) SQL file.
     """
     # ------------------------------------------------------------------------------------------------------------------
-    def __init__(self):
-        self._source_filename = None
+    def __init__(self,
+                 routine_filename: str,
+                 routine_file_extension: str,
+                 metadata: dict,
+                 replace_pairs: dict,
+                 old_routine_info: dict):
+
+        self._source_filename = routine_filename
         """
         The source filename holding the stored routine.
 
         :type : string
         """
 
-        self._routine_file_extension = None
+        self._routine_file_extension = routine_file_extension
         """
         The source filename extension.
 
         :type : string
         """
 
-        self._old_metadata = None
+        self._old_metadata = metadata
         """
         The old metadata of the stored routine.  Note: this data comes from the metadata file.
 
@@ -40,39 +46,18 @@ class RoutineLoaderHelper:
         :type : dict
         """
 
-        self._replace_pairs = None
+        self._replace_pairs = replace_pairs
         """
         A map from placeholders to their actual values.
 
         :type : dict
         """
 
-        self._old_routine_info = None
+        self._old_routine_info = old_routine_info
         """
         The old information about the stored routine. Note: this data comes from the metadata of the RDBMS instance.
 
         :type : dict
-        """
-
-        self._sql_mode = None
-        """
-        The SQL mode under which the stored routine will be loaded and run.
-
-        :type : string
-        """
-
-        self._character_set = None
-        """
-        The default character set under which the stored routine will be loaded and run.
-
-        :type : string
-        """
-
-        self._collate = None
-        """
-        The default collate under which the stored routine will be loaded and run.
-
-        :type : string
         """
 
         self._m_time = 0
@@ -160,67 +145,12 @@ class RoutineLoaderHelper:
         """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def reset_helper(self):
-        self._source_filename = None
-        self._routine_file_extension = None
-        self._old_metadata = None
-        self._metadata = {}
-        self._replace_pairs = None
-        self._old_routine_info = None
-        self._sql_mode = None
-        self._character_set = None
-        self._collate = None
-        self._m_time = 0
-        self._routine_name = None
-        self._routine_source_code = None
-        self._routine_source_code_lines = []
-        self._replace = {}
-        self._routine_type = None
-        self._designation_type = None
-        self._columns_types = None
-        self._fields = None
-        self._parameters = []
-        self._table_name = None
-        self._columns = None
-
-    # ------------------------------------------------------------------------------------------------------------------
-    def load_stored_routine(self,
-                            routine_filename: str,
-                            routine_file_extension: str,
-                            metadata: dict,
-                            replace_pairs: dict,
-                            old_routine_info: dict,
-                            sql_mode: str,
-                            character_set: str,
-                            collate: str) -> dict:
+    def load_stored_routine(self) -> dict:
         """
         Loads the stored routine into the instance of MySQL.
-
-        :param : routine_filename       string The source filename holding the stored routine.
-        :param : routine_file_extension string The source filename extension.
-        :param : metadata               dict   The old metadata of the stored routine.
-                                               Note: this data comes from the metadata file.
-        :param : replace_pairs          dict   A map from placeholders to their actual values.
-        :param : old_routine_info       dict   The old information about the stored routine.
-                                               Note: this data comes from the metadata of the RDBMS.
-        :param : sql_mode               string The SQL mode under which the stored routine will be loaded and run.
-        :param : character_set          string The default character set under which the stored routine
-                                               will be loaded and run.
-        :param : collate                string The default collate under which the stored routine
-                                               will be loaded and run.
-
         :return array|bool If the stored routine is loaded successfully the new mata data of the stored routine.
                            Otherwise False.
         """
-        self._source_filename = routine_filename
-        self._routine_file_extension = routine_file_extension
-        self._old_metadata = metadata
-        self._replace_pairs = replace_pairs
-        self._old_routine_info = old_routine_info
-        self._sql_mode = sql_mode
-        self._character_set = character_set
-        self._collate = collate
-
         try:
             self._routine_name = os.path.splitext(os.path.basename(self._source_filename))[0]
 
