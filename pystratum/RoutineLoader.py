@@ -1,55 +1,25 @@
 import abc
 import os
-from pprint import pprint
 import re
 import sys
 import json
 import configparser
 
-
-# ----------------------------------------------------------------------------------------------------------------------
 from pystratum.RoutineLoaderHelper import RoutineLoaderHelper
 
 
+# ----------------------------------------------------------------------------------------------------------------------
 class RoutineLoader:
     """
     Class for loading stored routines into a RDBMS instance from (pseudo) SQL files.
     """
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self):
-        self._character_set = None
-        """
-        The default character set under which the stored routine will be loaded and run.
-
-        :type: string
-        """
-
-        self._collate = None
-        """
-        The default collate under which the stored routine will be loaded and run.
-
-        :type: string
-        """
-
-        self._database = None
-        """
-        The database name.
-
-        :type: string
-        """
-
         self.error_file_names = set()
         """
         A set with source names that are not loaded into RDBMS instance.
 
         :type: set
-        """
-
-        self._host_name = None
-        """
-        The hostname required connection to the MySQL instance.
-
-        :type: string
         """
 
         self._metadata = {}
@@ -71,13 +41,6 @@ class RoutineLoader:
         Old metadata about all stored routines.
 
         :type: dict
-        """
-
-        self._password = None
-        """
-        Password required for connection to the MySQL instance.
-
-        :type: string
         """
 
         self._replace_pairs = {}
@@ -108,23 +71,9 @@ class RoutineLoader:
         :type: dict
         """
 
-        self._sql_mode = None
-        """
-        The SQL mode under which the stored routine will be loaded and run.
-
-        :type: string
-        """
-
         self._target_config_filename = None
         """
         The name of the configuration file of the target project.
-
-        :type: string
-        """
-
-        self._user_name = None
-        """
-        User name required for connection to the MySQL instance..
 
         :type: string
         """
@@ -226,23 +175,12 @@ class RoutineLoader:
         config = configparser.ConfigParser()
         config.read(config_filename)
 
-        rdbms = config.get('database', 'rdbms')
-        self._host_name = config.get('database', 'host_name')
-        self._user_name = config.get('database', 'user_name')
-        self._password = config.get('database', 'password')
-        self._database = config.get('database', 'database_name')
-
-        self._metadata_filename = config.get('wrapper', 'metadata')
-
         self._source_directory = config.get('loader', 'source_directory')
         self._source_file_extension = config.get('loader', 'extension')
         self._source_file_encoding = config.get('loader', 'encoding')
         self._target_config_filename = config.get('loader', 'config')
 
-        if rdbms == 'mysql':
-            self._sql_mode = config.get('loader', 'sql_mode')
-            self._character_set = config.get('loader', 'character_set')
-            self._collate = config.get('loader', 'collate')
+        self._metadata_filename = config.get('wrapper', 'metadata')
 
         self._constants_filename = config.get('constants', 'config')
 

@@ -6,7 +6,7 @@ from pystratum.Util import Util
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-class RoutineWrapperGenerator():
+class RoutineWrapperGenerator:
     """
     Class for generating a class with wrapper methods for calling stored routines in a MySQL database.
     """
@@ -17,19 +17,6 @@ class RoutineWrapperGenerator():
         The generated PHP code.
 
         :type: string
-        """
-        self._configuration_filename = None
-        """
-        The filename of the configuration file.
-
-        :type: var string
-        """
-
-        self._host_name = None
-        """
-        Host name or address.
-
-        @var string
         """
 
         self._lob_as_string_flag = False
@@ -53,20 +40,6 @@ class RoutineWrapperGenerator():
         :type: string
         """
 
-        self._password = None
-        """
-        The password.
-       
-        :type: string
-        """
-
-        self._user_name = None
-        """
-        The user name.
-       
-        :type: string
-        """
-
         self._wrapper_class_name = None
         """
         The class name (including namespace) of the routine wrapper.
@@ -81,20 +54,6 @@ class RoutineWrapperGenerator():
         :type: string
         """
 
-        self._password = None
-        """
-        Password required for logging in on to the MySQL instance.
-
-        :type: string
-        """
-
-        self._database = None
-        """
-        The database name.
-
-        :type: string
-        """
-
     # ------------------------------------------------------------------------------------------------------------------
     def run(self, configuration_filename) -> bool:
         """
@@ -103,8 +62,7 @@ class RoutineWrapperGenerator():
         :param configuration_filename The name of the configuration file.
         :return Returns 0 on success, 1 if one or more errors occurred.
         """
-        self._configuration_filename = configuration_filename
-        self._read_configuration_file()
+        self._read_configuration_file(configuration_filename)
 
         routines = self._read_routine_metadata()
 
@@ -124,17 +82,12 @@ class RoutineWrapperGenerator():
         return 0
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _read_configuration_file(self):
+    def _read_configuration_file(self, config_filename: str):
         """
         Reads parameters from the configuration file.
         """
         config = configparser.ConfigParser()
-        config.read(self._configuration_filename)
-
-        self._host_name = config.get('database', 'host_name')
-        self._user_name = config.get('database', 'user_name')
-        self._password = config.get('database', 'password')
-        self._database = config.get('database', 'database_name')
+        config.read(config_filename)
 
         self._parent_class_name = config.get('wrapper', 'parent_class')
         self._parent_class_namespace = config.get('wrapper', 'parent_class_namespace')

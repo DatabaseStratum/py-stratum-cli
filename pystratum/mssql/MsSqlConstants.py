@@ -2,16 +2,22 @@ import os
 import re
 
 from pystratum.Util import Util
+from pystratum.mssql.MsSqlConnection import MsSqlConnection
 from pystratum.mssql.StaticDataLayer import StaticDataLayer
 from pystratum.Constants import Constants
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-class MsSqlConstants(Constants):
+class MsSqlConstants(MsSqlConnection, Constants):
     """
     Class for creating constants based on column widths, and auto increment columns and labels for MS SQL Server
     databases.
     """
+    # ------------------------------------------------------------------------------------------------------------------
+    def __init__(self):
+        Constants.__init__(self)
+        MsSqlConnection.__init__(self)
+
     # ------------------------------------------------------------------------------------------------------------------
     def connect(self):
         StaticDataLayer.connect(self._host_name,
@@ -349,6 +355,15 @@ where  nullif(tab.[%s],'') is not null""" \
                 return 2147483647
 
         raise Exception("Unexpected data type '%s'." % data_type)
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def _read_configuration_file(self, config_filename: str):
+        """
+        Reads parameters from the configuration file.
+        :param config_filename string
+        """
+        Constants._read_configuration_file(self, config_filename)
+        MsSqlConnection._read_configuration_file(self, config_filename)
 
 
 # ----------------------------------------------------------------------------------------------------------------------

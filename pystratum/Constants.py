@@ -30,34 +30,6 @@ class Constants:
         :type: dict
         """
 
-        self._database = None
-        """
-        The database name.
-
-        :type: string
-        """
-
-        self._host_name = None
-        """
-        The hostname of the MySQL instance.
-
-        :type: string
-        """
-
-        self._password = None
-        """
-        Password required for logging in on to the MySQL instance.
-
-        :type: string
-        """
-
-        self._user_name = None
-        """
-        User name.
-
-        :type: string
-        """
-
         self._constants_filename = None
         """
         Filename with column names, their widths, and constant names.
@@ -144,11 +116,6 @@ class Constants:
         """
         config = configparser.ConfigParser()
         config.read(config_filename)
-
-        self._host_name = config.get('database', 'host_name')
-        self._user_name = config.get('database', 'user_name')
-        self._password = config.get('database', 'password')
-        self._database = config.get('database', 'database_name')
 
         self._constants_filename = config.get('constants', 'columns')
         self._prefix = config.get('constants', 'prefix')

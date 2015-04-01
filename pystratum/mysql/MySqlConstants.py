@@ -2,25 +2,20 @@ import os
 import re
 
 from pystratum.Util import Util
+from pystratum.mysql.MySqlConnection import MySqlConnection
 from pystratum.mysql.StaticDataLayer import StaticDataLayer
 from pystratum.Constants import Constants
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-class MySqlConstants(Constants):
+class MySqlConstants(MySqlConnection, Constants):
     """
     Class for creating constants based on column widths, and auto increment columns and labels for MySQL databases.
     """
     # ------------------------------------------------------------------------------------------------------------------
-    def connect(self):
-        StaticDataLayer.config['user'] = self._user_name
-        StaticDataLayer.config['password'] = self._password
-        StaticDataLayer.config['database'] = self._database
-        StaticDataLayer.connect()
-
-    # ------------------------------------------------------------------------------------------------------------------
-    def disconnect(self):
-        StaticDataLayer.disconnect()
+    def __init__(self):
+        Constants.__init__(self)
+        MySqlConnection.__init__(self)
 
     # ------------------------------------------------------------------------------------------------------------------
     def _get_old_columns(self):
@@ -275,5 +270,13 @@ where   nullif(`%s`,'') is not null""" % (table['id'],
 
         raise Exception("Unexpected type '%s'." % the_column['data_type'])
 
+    # ------------------------------------------------------------------------------------------------------------------
+    def _read_configuration_file(self, config_filename: str):
+        """
+        Reads parameters from the configuration file.
+        :param config_filename string
+        """
+        Constants._read_configuration_file(self, config_filename)
+        MySqlConnection._read_configuration_file(self, config_filename)
 
 # ----------------------------------------------------------------------------------------------------------------------

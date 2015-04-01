@@ -1,32 +1,18 @@
 from pystratum.RoutineLoader import RoutineLoader
+from pystratum.mysql.MySqlConnection import MySqlConnection
 from pystratum.mysql.MySqlRoutineLoaderHelper import MySqlRoutineLoaderHelper
 from pystratum.mysql.StaticDataLayer import StaticDataLayer
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-class MySqlRoutineLoader(RoutineLoader):
+class MySqlRoutineLoader(MySqlConnection, RoutineLoader):
     """
     Class for loading stored routines into a MySQL instance from (pseudo) SQL files.
     """
     # ------------------------------------------------------------------------------------------------------------------
-    def connect(self):
-        """
-        Connects to the MySQL instance.
-        """
-        StaticDataLayer.config['user'] = self._user_name
-        StaticDataLayer.config['password'] = self._password
-        StaticDataLayer.config['database'] = self._database
-        StaticDataLayer.config['charset'] = self._character_set
-        StaticDataLayer.config['collation'] = self._collate
-        StaticDataLayer.config['sql_mode'] = self._sql_mode
-        StaticDataLayer.connect()
-
-    # ------------------------------------------------------------------------------------------------------------------
-    def disconnect(self):
-        """
-        Disconnects from the MySQL instance.
-        """
-        StaticDataLayer.disconnect()
+    def __init__(self):
+        RoutineLoader.__init__(self)
+        MySqlConnection.__init__(self)
 
     # ------------------------------------------------------------------------------------------------------------------
     def _get_column_type(self):
@@ -83,8 +69,8 @@ order by table_schema
                                         self._replace_pairs,
                                         old_routine_info,
                                         self._sql_mode,
-                                        self._character_set,
-                                        self._collate)
+                                        self._character_set_client,
+                                        self._collation_connection)
 
     # ------------------------------------------------------------------------------------------------------------------
     def _get_old_stored_routine_info(self):
@@ -129,6 +115,15 @@ order by routine_name"""
                 print("Dropping %s %s" % (values['routine_type'], routine_name))
                 sql = "drop %s if exists %s" % (values['routine_type'], routine_name)
                 StaticDataLayer.execute_none(sql)
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def _read_configuration_file(self, config_filename: str):
+        """
+        Reads parameters from the configuration file.
+        :param config_filename string
+        """
+        RoutineLoader._read_configuration_file(self, config_filename)
+        MySqlConnection._read_configuration_file(self, config_filename)
 
 
 # ----------------------------------------------------------------------------------------------------------------------
