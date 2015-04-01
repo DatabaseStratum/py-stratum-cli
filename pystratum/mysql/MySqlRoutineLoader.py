@@ -73,9 +73,8 @@ order by table_schema
                                      old_metadata: dict,
                                      old_routine_info: dict) -> MySqlRoutineLoaderHelper:
         """
-        Factory for creating a Routine Loader Helper objects (i.e. objects loading a single stored routine into a RDBMS
-        instance from a (pseudo) SQL file).
-        :return:
+        Creates a Routine Loader Helper object.
+        :return: MySqlRoutineLoaderHelper
         """
         return MySqlRoutineLoaderHelper(self._source_file_names[routine_name],
                                         self._source_file_extension,

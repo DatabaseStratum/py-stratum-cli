@@ -67,9 +67,8 @@ order by  scm.name
                                      old_metadata: dict,
                                      old_routine_info: dict) -> MsSqlRoutineLoaderHelper:
         """
-        Factory for creating a Routine Loader Helper objects (i.e. objects loading a single stored routine into a RDBMS
-        instance from a (pseudo) SQL file).
-        :return:
+        Creates a Routine Loader Helper object.
+        :return: A MsSqlRoutineLoaderHelper object.
         """
         return MsSqlRoutineLoaderHelper(self._source_file_names[routine_name],
                                         self._source_file_extension,

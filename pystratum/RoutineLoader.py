@@ -8,6 +8,9 @@ import configparser
 
 
 # ----------------------------------------------------------------------------------------------------------------------
+from pystratum.RoutineLoaderHelper import RoutineLoaderHelper
+
+
 class RoutineLoader:
     """
     Class for loading stored routines into a RDBMS instance from (pseudo) SQL files.
@@ -282,10 +285,9 @@ class RoutineLoader:
     def create_routine_loader_helper(self,
                                      routine_name: str,
                                      old_metadata: dict,
-                                     old_routine_info: dict) -> object:
+                                     old_routine_info: dict) -> RoutineLoaderHelper:
         """
-        Factory for creating a Routine Loader Helper objects (i.e. objects loading a single stored routine into a RDBMS
-        instance from a (pseudo) SQL file).
+        Creates a Routine Loader Helper object.
         :return:
         """
         pass
