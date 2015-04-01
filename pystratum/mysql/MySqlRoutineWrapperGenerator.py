@@ -1,49 +1,25 @@
 import configparser
 from pystratum.RoutineWrapperGenerator import RoutineWrapperGenerator
+from pystratum.mysql.MySqlConnection import MySqlConnection
 from pystratum.mysql.wrapper import create_routine_wrapper
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-class MySqlRoutineWrapperGenerator(RoutineWrapperGenerator):
+class MySqlRoutineWrapperGenerator(MySqlConnection, RoutineWrapperGenerator):
     """
     Class for generating a class with wrapper methods for calling stored routines in a MySQL database.
     """
     def __init__(self):
+        MySqlConnection.__init__(self)
         RoutineWrapperGenerator.__init__(self)
 
-        self._sql_mode = None
-        """
-        The SQL mode under which the stored routine will be loaded and run.
-
-        :type: string
-        """
-        self._character_set = None
-        """
-        The default character set under which the stored routine will be loaded and run.
-
-        :type: string
-        """
-
-        self._collate = None
-        """
-        The default collate under which the stored routine will be loaded and run.
-
-        :type: string
-        """
-
     # ------------------------------------------------------------------------------------------------------------------
-    def _read_configuration_file(self):
+    def _read_configuration_file(self, config_filename: str):
         """
         Reads parameters from the configuration file.
         """
-        RoutineWrapperGenerator._read_configuration_file(self)
-
-        config = configparser.ConfigParser()
-        config.read(self._configuration_filename)
-
-        self._sql_mode = config.get('loader', 'sql_mode')
-        self._character_set = config.get('loader', 'character_set')
-        self._collate = config.get('loader', 'collate')
+        MySqlConnection._read_configuration_file(self, config_filename)
+        RoutineWrapperGenerator._read_configuration_file(self, config_filename)
 
     # ------------------------------------------------------------------------------------------------------------------
     def _write_routine_function(self, routine):

@@ -1,29 +1,18 @@
 from pystratum.RoutineLoader import RoutineLoader
+from pystratum.mssql.MsSqlConnection import MsSqlConnection
 from pystratum.mssql.MsSqlRoutineLoaderHelper import MsSqlRoutineLoaderHelper
 from pystratum.mssql.StaticDataLayer import StaticDataLayer
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-class MsSqlRoutineLoader(RoutineLoader):
+class MsSqlRoutineLoader(MsSqlConnection, RoutineLoader):
     """
     Class for loading stored routines into a MySQL instance from pseudo SQL files.
     """
     # ------------------------------------------------------------------------------------------------------------------
-    def connect(self):
-        """
-        Connects to the database.
-        """
-        StaticDataLayer.connect(self._host_name,
-                                self._user_name,
-                                self._password,
-                                self._database)
-
-    # ------------------------------------------------------------------------------------------------------------------
-    def disconnect(self):
-        """
-        Disconnects from the database.
-        """
-        StaticDataLayer.disconnect()
+    def __init__(self):
+        RoutineLoader.__init__(self)
+        MsSqlConnection.__init__(self)
 
     # ------------------------------------------------------------------------------------------------------------------
     def _get_column_type(self):
@@ -216,6 +205,14 @@ and   prc.is_ms_shipped=0"""
 
         raise Exception("Unexpected data type '%s'." % data_type)
 
+    # ------------------------------------------------------------------------------------------------------------------
+    def _read_configuration_file(self, config_filename: str):
+        """
+        Reads parameters from the configuration file.
+        :param config_filename string
+        """
+        RoutineLoader._read_configuration_file(self, config_filename)
+        MsSqlConnection._read_configuration_file(self, config_filename)
 
 # ----------------------------------------------------------------------------------------------------------------------
 
