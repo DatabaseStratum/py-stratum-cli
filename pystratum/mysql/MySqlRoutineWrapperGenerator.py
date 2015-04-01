@@ -28,9 +28,7 @@ class MySqlRoutineWrapperGenerator(MySqlConnection, RoutineWrapperGenerator):
         :param  The metadata of the stored routine.
         """
         wrapper = create_routine_wrapper(routine, self._lob_as_string_flag)
-        # xxx tmp
-        if wrapper:
-            self._code += wrapper.write_routine_method(routine)
+        self._code += wrapper.write_routine_method(routine)
 
 
 # ----------------------------------------------------------------------------------------------------------------------

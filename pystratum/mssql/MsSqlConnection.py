@@ -4,10 +4,15 @@ from pystratum.mssql.StaticDataLayer import StaticDataLayer
 
 # ----------------------------------------------------------------------------------------------------------------------
 class MsSqlConnection:
+    """
+    Class for connecting to SQL Server instances and reading SQl Server specific connection parameters from
+    configuration files.
+    """
+    # ------------------------------------------------------------------------------------------------------------------
     def __init__(self):
         self._host_name = None
         """
-        The hostname of the MySQL instance.
+        The hostname of the SQL Server instance.
 
         :type: string
         """
@@ -21,7 +26,7 @@ class MsSqlConnection:
 
         self._password = None
         """
-        Password required for logging in on to the MySQL instance.
+        Password required for singing on to the SQL Server instance.
 
         :type: string
         """
@@ -54,7 +59,7 @@ class MsSqlConnection:
     def _read_configuration_file(self, config_filename: str):
         """
         Reads parameters from the configuration file.
-        :param config_filename string
+        :param config_filename
         """
         config = configparser.ConfigParser()
         config.read(config_filename)

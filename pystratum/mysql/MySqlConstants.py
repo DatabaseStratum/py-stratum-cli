@@ -274,7 +274,7 @@ where   nullif(`%s`,'') is not null""" % (table['id'],
     def _read_configuration_file(self, config_filename: str):
         """
         Reads parameters from the configuration file.
-        :param config_filename string
+        :param config_filename
         """
         Constants._read_configuration_file(self, config_filename)
         MySqlConnection._read_configuration_file(self, config_filename)

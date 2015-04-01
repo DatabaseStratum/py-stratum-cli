@@ -4,6 +4,10 @@ from pystratum.mysql.StaticDataLayer import StaticDataLayer
 
 # ----------------------------------------------------------------------------------------------------------------------
 class MySqlConnection:
+    """
+    Class for connecting to MySQL instances and reading MySQL specific connection parameters from configuration files.
+    """
+    # ------------------------------------------------------------------------------------------------------------------
     def __init__(self):
         self._host_name = None
         """
@@ -89,7 +93,7 @@ class MySqlConnection:
     def _read_configuration_file(self, config_filename: str):
         """
         Reads parameters from the configuration file.
-        :param config_filename string
+        :param config_filename
         """
         config = configparser.ConfigParser()
         config.read(config_filename)
@@ -99,8 +103,8 @@ class MySqlConnection:
         self._password = config.get('database', 'password')
         self._host_name = config.get('database', 'host_name', fallback='localhost')
         self._port = int(config.get('database', 'port', fallback='3306'))
-        self._character_set_client = config.get('database', 'character_set_client')
-        self._collation_connection = config.get('database', 'collation_connection')
+        self._character_set_client = config.get('database', 'character_set_client', fallback='utf-8')
+        self._collation_connection = config.get('database', 'collation_connection', fallback='utf8_general_ci')
         self._sql_mode = config.get('database', 'sql_mode')
 
 

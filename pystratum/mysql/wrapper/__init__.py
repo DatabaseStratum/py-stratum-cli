@@ -7,20 +7,15 @@ from pystratum.mysql.wrapper.RowsWithIndexWrapper import RowsWithIndexWrapper
 from pystratum.mysql.wrapper.RowsWithKeyWrapper import RowsWithKeyWrapper
 from pystratum.mysql.wrapper.RowsWrapper import RowsWrapper
 from pystratum.mysql.wrapper.Singleton0Wrapper import Singleton0Wrapper
-
-
-# ----------------------------------------------------------------------------------------------------------------------
 from pystratum.mysql.wrapper.Singleton1Wrapper import Singleton1Wrapper
 
 
+# ----------------------------------------------------------------------------------------------------------------------
 def create_routine_wrapper(routine, lob_as_string_flag):
     """
     A factory for creating the appropriate object for generating a wrapper method for a stored routine.
     :return:
     """
-
-    wrapper = None
-
     if routine['designation'] == 'none':
         wrapper = NoneWrapper(routine, lob_as_string_flag)
     elif routine['designation'] == 'row0':
@@ -47,9 +42,8 @@ def create_routine_wrapper(routine, lob_as_string_flag):
     #    wrapper = BulkWrapper(routine, lob_as_string_flag)
     #elif routine['designation'] == 'bulk_insert':
     #    wrapper = BulkInsertWrapper(routine, lob_as_string_flag)
-
     else:
-        print("Unknown routine type '%s'." % routine['designation'])
+        raise Exception("Unknown routine type '%s'." % routine['designation'])
 
     return wrapper
 

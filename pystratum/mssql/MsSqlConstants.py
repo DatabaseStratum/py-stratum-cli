@@ -366,7 +366,7 @@ where  nullif(tab.[%s],'') is not null""" \
     def _read_configuration_file(self, config_filename: str):
         """
         Reads parameters from the configuration file.
-        :param config_filename string
+        :param config_filename
         """
         Constants._read_configuration_file(self, config_filename)
         MsSqlConnection._read_configuration_file(self, config_filename)
