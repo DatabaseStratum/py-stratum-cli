@@ -8,7 +8,7 @@ class MsSqlWrapper(Wrapper):
     Parent class for classes that generate Python code, i.e. wrappers, for calling a stored routine.
     """
     # ------------------------------------------------------------------------------------------------------------------
-    def is_lob_parameter(self, parameters):
+    def is_lob_parameter(self, parameters) -> bool:
         """
         Returns True of one of the parameters is a BLOB or CLOB. Otherwise, returns False.
 
