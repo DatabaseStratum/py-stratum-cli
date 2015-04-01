@@ -181,7 +181,7 @@ order by  scm.name
 
                 content += "\n"""
 
-        # Save the columns, width and constants to the filesystem.
+        # Save the columns, width, and constants to the filesystem.
         Util.write_two_phases(self._constants_filename, content)
 
     # ------------------------------------------------------------------------------------------------------------------
