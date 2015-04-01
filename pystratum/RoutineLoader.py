@@ -236,6 +236,7 @@ class RoutineLoader:
 
         self._source_directory = config.get('loader', 'source_directory')
         self._source_file_extension = config.get('loader', 'extension')
+        self._source_file_encoding = config.get('loader', 'encoding')
         self._target_config_filename = config.get('loader', 'config')
 
         if rdbms == 'mysql':
