@@ -117,7 +117,7 @@ class StaticDataLayer:
         :return: The number of affected rows.
         """
         cursor = MySQLCursor(StaticDataLayer.connection)
-        itr = cursor.execute(sql, *params, multi=True)
+        itr = cursor.execute(sql, params, multi=True)
         result = itr.__next__()
         n = result.rowcount
         cursor.close()
