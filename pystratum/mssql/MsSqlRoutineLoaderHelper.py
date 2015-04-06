@@ -106,7 +106,7 @@ class MsSqlRoutineLoaderHelper(RoutineLoaderHelper):
 
         self._unset_magic_constants()
 
-        if self._stored_routine_exist:
+        if self._old_routine_info:
             if self._old_metadata and self._old_metadata['designation'] == self._metadata['designation']:
                 p = re.compile("(create\\s+(procedure|function))", re.IGNORECASE)
                 matches = p.findall(routine_source)
@@ -117,8 +117,6 @@ class MsSqlRoutineLoaderHelper(RoutineLoaderHelper):
                           self._source_filename)
             else:
                 self._drop_routine()
-        else:
-            self._drop_routine()
 
         StaticDataLayer.execute_none(routine_source)
 
@@ -250,26 +248,6 @@ order by par.parameter_id""" % (self._routines_schema_name, self._routine_name)
                 raise Exception("Unknown routine type '%s'." % self._old_routine_info['type'])
 
             StaticDataLayer.execute_none(sql)
-
-    # ------------------------------------------------------------------------------------------------------------------
-    def _stored_routine_exist(self)-> int:
-        sql = """if exists( select *
-                            from sys.objects
-                            where type_desc = '%s'
-                            and name = '%s' )
-                    select 1
-                 else
-                    select 0
-                 end;"""
-
-        if self._old_routine_info['type'].strip() == 'P':
-            sql = sql % ('SQL_STORED_PROCEDURE', self._routine_name)
-        elif self._old_routine_info['type'].strip() == 'FN':
-            sql = sql % ('SQL_SCALAR_FUNCTION',  self._routine_name)
-        else:
-            raise Exception("Unknown routine type '%s'." % self._old_routine_info['type'])
-
-        return StaticDataLayer.execute_singleton1(sql)
 
     # ------------------------------------------------------------------------------------------------------------------
     def _update_metadata(self):
