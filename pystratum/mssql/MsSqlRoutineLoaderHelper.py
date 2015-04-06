@@ -1,3 +1,4 @@
+from pprint import pprint
 import re
 import sys
 from pystratum.RoutineLoaderHelper import RoutineLoaderHelper
@@ -61,7 +62,7 @@ class MsSqlRoutineLoaderHelper(RoutineLoaderHelper):
         :return Returns True on success, False otherwise.
         """
         ret = True
-        p = re.compile("create\\s+(procedure|function)\\s+(?:(\w+)\.([a-zA-Z0-9_]+))")
+        p = re.compile("create\\s+(procedure|function)\\s+(?:(\w+)\.([a-zA-Z0-9_]+))", re.IGNORECASE)
         matches = p.findall(self._routine_source_code)
 
         if matches:
@@ -104,7 +105,20 @@ class MsSqlRoutineLoaderHelper(RoutineLoaderHelper):
         routine_source = "\n".join(routine_source)
 
         self._unset_magic_constants()
-        self._drop_routine()
+
+        if self._stored_routine_exist:
+            if self._old_metadata and self._old_metadata['designation'] == self._metadata['designation']:
+                p = re.compile("(create\\s+(procedure|function))", re.IGNORECASE)
+                matches = p.findall(routine_source)
+                if matches:
+                    routine_source = routine_source.replace(matches[0][0], 'alter %s' % matches[0][1])
+                else:
+                    print("Error: Unable to find the stored routine type in modified source of file '%s'." %
+                          self._source_filename)
+            else:
+                self._drop_routine()
+        else:
+            self._drop_routine()
 
         StaticDataLayer.execute_none(routine_source)
 
@@ -190,7 +204,7 @@ order by par.parameter_id""" % (self._routines_schema_name, self._routine_name)
         key = self._routine_source_code_lines.index('as')
 
         if key != -1:
-            p = re.compile('\s*--\s+type:\s*(\w+)\s*(.+)?\s*')
+            p = re.compile('\s*--\s+type:\s*(\w+)\s*(.+)?\s*', re.IGNORECASE)
             matches = p.findall(self._routine_source_code_lines[key - 1])
 
             if matches:
@@ -226,30 +240,36 @@ order by par.parameter_id""" % (self._routines_schema_name, self._routine_name)
         Drops the stored routine if it exists.
         """
         if self._old_routine_info:
-            sql = """
-if exists
-    ( select *
-      from sys.objects
-      where type_desc = '%s'
-      and name = '%s' )
-      drop %s [%s].[%s];
-"""
             if self._old_routine_info['type'].strip() == 'P':
-                sql = sql % ('SQL_STORED_PROCEDURE',
-                             self._routine_name,
-                             'PROC',
-                             self._old_routine_info['schema_name'],
-                             self._routine_name)
+                sql = """drop PROC [%s].[%s];""" % (self._old_routine_info['schema_name'],
+                                                    self._routine_name)
             elif self._old_routine_info['type'].strip() == 'FN':
-                sql = sql % ('SQL_SCALAR_FUNCTION',
-                             self._routine_name,
-                             'FUNCTION',
-                             self._old_routine_info['schema_name'],
-                             self._routine_name)
+                sql = """drop FUNCTION [%s].[%s];""" % (self._old_routine_info['schema_name'],
+                                                        self._routine_name)
             else:
                 raise Exception("Unknown routine type '%s'." % self._old_routine_info['type'])
 
             StaticDataLayer.execute_none(sql)
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def _stored_routine_exist(self)-> int:
+        sql = """if exists( select *
+                            from sys.objects
+                            where type_desc = '%s'
+                            and name = '%s' )
+                    select 1
+                 else
+                    select 0
+                 end;"""
+
+        if self._old_routine_info['type'].strip() == 'P':
+            sql = sql % ('SQL_STORED_PROCEDURE', self._routine_name)
+        elif self._old_routine_info['type'].strip() == 'FN':
+            sql = sql % ('SQL_SCALAR_FUNCTION',  self._routine_name)
+        else:
+            raise Exception("Unknown routine type '%s'." % self._old_routine_info['type'])
+
+        return StaticDataLayer.execute_singleton1(sql)
 
     # ------------------------------------------------------------------------------------------------------------------
     def _update_metadata(self):
