@@ -1,3 +1,4 @@
+from pprint import pprint
 from pystratum.RoutineLoader import RoutineLoader
 from pystratum.mssql.MsSqlConnection import MsSqlConnection
 from pystratum.mssql.MsSqlRoutineLoaderHelper import MsSqlRoutineLoaderHelper
@@ -102,9 +103,15 @@ and   prc.is_ms_shipped=0"""
         """
         for routine_name, values in self._old_stored_routines_info.items():
             if routine_name not in self._source_file_names:
-                # todo improve drop fun and proc
-                print("Dropping %s.%s" % (values['schema_name'], routine_name))
-                sql = "drop procedure %s.%s" % (values['schema_name'], routine_name)
+                if values['type'].strip() == 'P':
+                    print("Dropping procedure %s.%s" % (values['schema_name'], routine_name))
+                    sql = "drop procedure [%s].[%s]" % (values['schema_name'], routine_name)
+                elif values['type'].strip() == 'FN':
+                    print("Dropping function %s.%s" % (values['schema_name'], routine_name))
+                    sql = "drop function [%s].[%s]" % (values['schema_name'], routine_name)
+                else:
+                    raise Exception("Unknown routine type '%s'." % values['type'])
+
                 StaticDataLayer.execute_none(sql)
 
     # ------------------------------------------------------------------------------------------------------------------
