@@ -1,4 +1,3 @@
-from pprint import pprint
 import re
 import sys
 from pystratum.RoutineLoaderHelper import RoutineLoaderHelper
@@ -33,6 +32,7 @@ class MsSqlRoutineLoaderHelper(RoutineLoaderHelper):
 
         :type : string
         """
+
     # ------------------------------------------------------------------------------------------------------------------
     def _must_reload(self) -> bool:
         """
@@ -239,11 +239,9 @@ order by par.parameter_id""" % (self._routines_schema_name, self._routine_name)
         """
         if self._old_routine_info:
             if self._old_routine_info['type'].strip() == 'P':
-                sql = """drop PROC [%s].[%s];""" % (self._old_routine_info['schema_name'],
-                                                    self._routine_name)
+                sql = "drop procedure [%s].[%s]" % (self._old_routine_info['schema_name'], self._routine_name)
             elif self._old_routine_info['type'].strip() == 'FN':
-                sql = """drop FUNCTION [%s].[%s];""" % (self._old_routine_info['schema_name'],
-                                                        self._routine_name)
+                sql = "drop function [%s].[%s]" % (self._old_routine_info['schema_name'], self._routine_name)
             else:
                 raise Exception("Unknown routine type '%s'." % self._old_routine_info['type'])
 
