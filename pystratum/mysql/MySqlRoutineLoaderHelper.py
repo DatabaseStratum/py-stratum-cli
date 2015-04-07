@@ -14,9 +14,9 @@ class MySqlRoutineLoaderHelper(RoutineLoaderHelper):
                  routine_filename: str,
                  routine_file_extension: str,
                  routine_file_encoding: str,
-                 metadata: dict,
+                 pystratum_old_metadata: dict,
                  replace_pairs: dict,
-                 old_routine_info: dict,
+                 rdbms_old_metadata: dict,
                  sql_mode: str,
                  character_set: str,
                  collate: str):
@@ -25,9 +25,9 @@ class MySqlRoutineLoaderHelper(RoutineLoaderHelper):
                                      routine_filename,
                                      routine_file_extension,
                                      routine_file_encoding,
-                                     metadata,
+                                     pystratum_old_metadata,
                                      replace_pairs,
-                                     old_routine_info)
+                                     rdbms_old_metadata)
 
         self._sql_mode = sql_mode
         """
@@ -56,27 +56,27 @@ class MySqlRoutineLoaderHelper(RoutineLoaderHelper):
         Returns True if the source file must be load or reloaded. Otherwise returns False.
         :return bool
         """
-        if not self._old_metadata:
+        if not self._pystratum_old_metadata:
             return True
 
-        if self._old_metadata['timestamp'] != self._m_time:
+        if self._pystratum_old_metadata['timestamp'] != self._m_time:
             return True
 
-        if self._old_metadata['replace']:
-            for key, value in self._old_metadata['replace'].items():
+        if self._pystratum_old_metadata['replace']:
+            for key, value in self._pystratum_old_metadata['replace'].items():
                 if key.lower() not in self._replace_pairs or self._replace_pairs[key.lower()] != value:
                     return True
 
-        if not self._old_routine_info:
+        if not self._rdbms_old_metadata:
             return True
 
-        if self._old_routine_info['sql_mode'] != self._sql_mode:
+        if self._rdbms_old_metadata['sql_mode'] != self._sql_mode:
             return True
 
-        if self._old_routine_info['character_set_client'] != self._character_set:
+        if self._rdbms_old_metadata['character_set_client'] != self._character_set:
             return True
 
-        if self._old_routine_info['collation_connection'] != self._collate:
+        if self._rdbms_old_metadata['collation_connection'] != self._collate:
             return True
 
         return False
@@ -260,8 +260,8 @@ and   t1.ROUTINE_NAME   = '%s'""" % self._routine_name
         """
         Drops the stored routine if it exists.
         """
-        if self._old_routine_info:
-            sql = "drop %s if exists %s" % (self._old_routine_info['routine_type'], self._routine_name)
+        if self._rdbms_old_metadata:
+            sql = "drop %s if exists %s" % (self._rdbms_old_metadata['routine_type'], self._routine_name)
             StaticDataLayer.execute_none(sql)
 
 

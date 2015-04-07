@@ -1,4 +1,3 @@
-from pprint import pprint
 from pystratum.RoutineLoader import RoutineLoader
 from pystratum.mssql.MsSqlConnection import MsSqlConnection
 from pystratum.mssql.MsSqlRoutineLoaderHelper import MsSqlRoutineLoaderHelper
@@ -61,8 +60,8 @@ order by  scm.name
     # ------------------------------------------------------------------------------------------------------------------
     def create_routine_loader_helper(self,
                                      routine_name: str,
-                                     old_metadata: dict,
-                                     old_routine_info: dict) -> MsSqlRoutineLoaderHelper:
+                                     pystratum_old_metadata: dict,
+                                     rdbms_old_metadata: dict) -> MsSqlRoutineLoaderHelper:
         """
         Creates a Routine Loader Helper object.
         :return: A MsSqlRoutineLoaderHelper object.
@@ -70,9 +69,9 @@ order by  scm.name
         return MsSqlRoutineLoaderHelper(self._source_file_names[routine_name],
                                         self._source_file_extension,
                                         self._source_file_encoding,
-                                        old_metadata,
+                                        pystratum_old_metadata,
                                         self._replace_pairs,
-                                        old_routine_info)
+                                        rdbms_old_metadata)
 
     # ------------------------------------------------------------------------------------------------------------------
     def _get_old_stored_routine_info(self):
@@ -91,9 +90,9 @@ and   prc.is_ms_shipped=0"""
 
         rows = StaticDataLayer.execute_rows(query)
 
-        self._old_stored_routines_info = {}
+        self._rdbms_old_metadata = {}
         for row in rows:
-            self._old_stored_routines_info[row['procedure_name']] = row
+            self._rdbms_old_metadata[row['procedure_name']] = row
 
     # ------------------------------------------------------------------------------------------------------------------
     def _drop_obsolete_routines(self):
@@ -101,7 +100,7 @@ and   prc.is_ms_shipped=0"""
         Drops obsolete stored routines (i.e. stored routines that exits in the current schema but for
         which we don't have a source file).
         """
-        for routine_name, values in self._old_stored_routines_info.items():
+        for routine_name, values in self._rdbms_old_metadata.items():
             if routine_name not in self._source_file_names:
                 if values['type'].strip() == 'P':
                     print("Dropping procedure %s.%s" % (values['schema_name'], routine_name))

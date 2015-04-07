@@ -14,17 +14,17 @@ class MsSqlRoutineLoaderHelper(RoutineLoaderHelper):
                  routine_filename: str,
                  routine_file_extension: str,
                  routine_file_encoding: str,
-                 metadata: dict,
+                 pystratum_old_metadata: dict,
                  replace_pairs: dict,
-                 old_routine_info: dict):
+                 rdbms_old_metadata: dict):
 
         RoutineLoaderHelper.__init__(self,
                                      routine_filename,
                                      routine_file_extension,
                                      routine_file_encoding,
-                                     metadata,
+                                     pystratum_old_metadata,
                                      replace_pairs,
-                                     old_routine_info)
+                                     rdbms_old_metadata)
 
         self._routines_schema_name = None
         """
@@ -39,18 +39,18 @@ class MsSqlRoutineLoaderHelper(RoutineLoaderHelper):
         Returns True if the source file must be load or reloaded. Otherwise returns False.
         :return bool
         """
-        if not self._old_metadata:
+        if not self._pystratum_old_metadata:
             return True
 
-        if self._old_metadata['timestamp'] != self._m_time:
+        if self._pystratum_old_metadata['timestamp'] != self._m_time:
             return True
 
-        if self._old_metadata['replace']:
-            for key, value in self._old_metadata['replace'].items():
+        if self._pystratum_old_metadata['replace']:
+            for key, value in self._pystratum_old_metadata['replace'].items():
                 if key.lower() not in self._replace_pairs or self._replace_pairs[key.lower()] != value:
                     return True
 
-        if not self._old_routine_info:
+        if not self._rdbms_old_metadata:
             return True
 
         return False
@@ -106,8 +106,8 @@ class MsSqlRoutineLoaderHelper(RoutineLoaderHelper):
 
         self._unset_magic_constants()
 
-        if self._old_routine_info:
-            if self._old_metadata and self._old_metadata['designation'] == self._metadata['designation']:
+        if self._rdbms_old_metadata:
+            if self._pystratum_old_metadata and self._pystratum_old_metadata['designation'] == self._pystratum_metadata['designation']:
                 p = re.compile("(create\\s+(procedure|function))", re.IGNORECASE)
                 matches = p.findall(routine_source)
                 if matches:
@@ -237,13 +237,13 @@ order by par.parameter_id""" % (self._routines_schema_name, self._routine_name)
         """
         Drops the stored routine if it exists.
         """
-        if self._old_routine_info:
-            if self._old_routine_info['type'].strip() == 'P':
-                sql = "drop procedure [%s].[%s]" % (self._old_routine_info['schema_name'], self._routine_name)
-            elif self._old_routine_info['type'].strip() == 'FN':
-                sql = "drop function [%s].[%s]" % (self._old_routine_info['schema_name'], self._routine_name)
+        if self._rdbms_old_metadata:
+            if self._rdbms_old_metadata['type'].strip() == 'P':
+                sql = "drop procedure [%s].[%s]" % (self._rdbms_old_metadata['schema_name'], self._routine_name)
+            elif self._rdbms_old_metadata['type'].strip() == 'FN':
+                sql = "drop function [%s].[%s]" % (self._rdbms_old_metadata['schema_name'], self._routine_name)
             else:
-                raise Exception("Unknown routine type '%s'." % self._old_routine_info['type'])
+                raise Exception("Unknown routine type '%s'." % self._rdbms_old_metadata['type'])
 
             StaticDataLayer.execute_none(sql)
 
@@ -256,7 +256,7 @@ order by par.parameter_id""" % (self._routines_schema_name, self._routine_name)
         RoutineLoaderHelper._update_metadata(self)
 
         # Update SQL Server specific metadata.
-        self._metadata.update({'schema_name': self._routines_schema_name})
+        self._pystratum_metadata.update({'schema_name': self._routines_schema_name})
 
 
 # ----------------------------------------------------------------------------------------------------------------------
