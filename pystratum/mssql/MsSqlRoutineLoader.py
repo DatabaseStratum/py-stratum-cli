@@ -68,7 +68,6 @@ order by  scm.name
         :return: A MsSqlRoutineLoaderHelper object.
         """
         return MsSqlRoutineLoaderHelper(self._source_file_names[routine_name],
-                                        self._source_file_extension,
                                         self._source_file_encoding,
                                         old_metadata,
                                         self._replace_pairs,
