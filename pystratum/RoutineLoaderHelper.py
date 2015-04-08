@@ -12,7 +12,6 @@ class RoutineLoaderHelper:
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self,
                  routine_filename: str,
-                 routine_file_extension: str,
                  routine_file_encoding: str,
                  pystratum_old_metadata: dict,
                  replace_pairs: dict,
@@ -21,13 +20,6 @@ class RoutineLoaderHelper:
         self._source_filename = routine_filename
         """
         The source filename holding the stored routine.
-
-        :type : string
-        """
-
-        self._routine_file_extension = routine_file_extension
-        """
-        The source filename extension.
 
         :type : string
         """

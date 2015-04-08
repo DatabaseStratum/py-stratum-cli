@@ -63,7 +63,6 @@ order by table_schema
         :return: MySqlRoutineLoaderHelper
         """
         return MySqlRoutineLoaderHelper(self._source_file_names[routine_name],
-                                        self._source_file_extension,
                                         self._source_file_encoding,
                                         pystratum_old_metadata,
                                         self._replace_pairs,
