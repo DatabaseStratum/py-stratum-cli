@@ -51,7 +51,7 @@ order by table_schema
             if row['character_set_name']:
                 value += ' character set ' + row['character_set_name']
 
-            self._replace_pairs.update({key: value})
+            self._replace_pairs[key] = value
 
     # ------------------------------------------------------------------------------------------------------------------
     def create_routine_loader_helper(self,
@@ -63,7 +63,6 @@ order by table_schema
         :return: MySqlRoutineLoaderHelper
         """
         return MySqlRoutineLoaderHelper(self._source_file_names[routine_name],
-                                        self._source_file_extension,
                                         self._source_file_encoding,
                                         pystratum_old_metadata,
                                         self._replace_pairs,
@@ -90,7 +89,7 @@ order by routine_name"""
         rows = StaticDataLayer.execute_rows(query)
         self._rdbms_old_metadata = {}
         for row in rows:
-            self._rdbms_old_metadata.update({row['routine_name']: row})
+            self._old_stored_routines_info[row['routine_name']] = row
 
     # ------------------------------------------------------------------------------------------------------------------
     def _get_correct_sql_mode(self):

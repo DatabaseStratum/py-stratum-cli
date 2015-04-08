@@ -70,11 +70,11 @@ class MsSqlConstants(MsSqlConnection, Constants):
                                     if column_name in self._old_columns[schema_name][table_name]:
                                         pass
                                     else:
-                                        self._old_columns[schema_name][table_name].update({column_name: column_info})
+                                        self._old_columns[schema_name][table_name][column_name] = column_info
                                 else:
-                                    self._old_columns[schema_name].update({table_name: {column_name: column_info}})
+                                    self._old_columns[schema_name][table_name] = {column_name: column_info}
                             else:
-                                self._old_columns.update({schema_name: {table_name: {column_name: column_info}}})
+                                self._old_columns[schema_name] = {table_name: {column_name: column_info}}
 
     # ------------------------------------------------------------------------------------------------------------------
     def _get_columns(self):
@@ -115,11 +115,11 @@ order by  scm.name
                     if row['column_name'] in self._columns[row['schema_name']][row['table_name']]:
                         pass
                     else:
-                        self._columns[row['schema_name']][row['table_name']].update({row['column_name']: row})
+                        self._columns[row['schema_name']][row['table_name']][row['column_name']] = row
                 else:
-                    self._columns[row['schema_name']].update({row['table_name']: {row['column_name']: row}})
+                    self._columns[row['schema_name']][row['table_name']] = {row['column_name']: row}
             else:
-                self._columns.update({row['schema_name']: {row['table_name']: {row['column_name']: row}}})
+                self._columns[row['schema_name']] = {row['table_name']: {row['column_name']: row}}
 
     # ------------------------------------------------------------------------------------------------------------------
     def _enhance_columns(self):
@@ -135,13 +135,11 @@ order by  scm.name
                         if 'constant_name' in column:
                             if column['constant_name'].strip() == '*':
                                 constant_name = str(self._prefix + column['column_name']).upper()
-                                self._old_columns[schema_name][table_name][column_name].update(
-                                    {'constant_name': constant_name})
+                                self._old_columns[schema_name][table_name][column_name]['constant_name'] = constant_name
                             else:
                                 constant_name = str(
                                     self._old_columns[schema_name][table_name][column_name]['constant_name']).upper()
-                                self._old_columns[schema_name][table_name][column_name].update(
-                                    {'constant_name': constant_name})
+                                self._old_columns[schema_name][table_name][column_name]['constant_name'] = constant_name
 
     # ------------------------------------------------------------------------------------------------------------------
     def _merge_columns(self):
@@ -153,8 +151,7 @@ order by  scm.name
                 for table_name, table in sorted(schema.items()):
                     for column_name, column in sorted(table.items()):
                         if 'constant_name' in column:
-                            self._columns[schema_name][table_name][column_name].update(
-                                {'constant_name': column['constant_name']})
+                            self._columns[schema_name][table_name][column_name]['constant_name'] = column['constant_name']
 
     # ------------------------------------------------------------------------------------------------------------------
     def _write_columns(self):
@@ -171,7 +168,7 @@ order by  scm.name
 
                 key_map = {}
                 for column_name, column in table.items():
-                    key_map.update({column['column_id']: column_name})
+                    key_map[column['column_id']] = column_name
                     width1 = max(len(str(column['column_name'])), width1)
                     width2 = max(len(str(column['length'])), width2)
 
@@ -232,7 +229,7 @@ where  nullif(tab.[%s],'') is not null""" \
             rows = StaticDataLayer.execute_rows(query_string)
             for row in rows:
                 if row['label'] not in self._labels:
-                    self._labels.update({row['label']: row['id']})
+                    self._labels[row['label']] = row['id']
                 else:
                     # todo improve exception.
                     Exception("Duplicate label '%s'")
@@ -246,10 +243,10 @@ where  nullif(tab.[%s],'') is not null""" \
             for table_name, table in sorted(schema.items()):
                 for column_name, column in sorted(table.items()):
                     if 'constant_name' in column:
-                        self._constants.update({column['constant_name']: column['length']})
+                        self._constants[column['constant_name']] = column['length']
 
         for label, label_id in sorted(self._labels.items()):
-            self._constants.update({label: label_id})
+            self._constants[label] = label_id
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod

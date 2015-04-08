@@ -12,7 +12,6 @@ class MySqlRoutineLoaderHelper(RoutineLoaderHelper):
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self,
                  routine_filename: str,
-                 routine_file_extension: str,
                  routine_file_encoding: str,
                  pystratum_old_metadata: dict,
                  replace_pairs: dict,
@@ -23,7 +22,6 @@ class MySqlRoutineLoaderHelper(RoutineLoaderHelper):
 
         RoutineLoaderHelper.__init__(self,
                                      routine_filename,
-                                     routine_file_extension,
                                      routine_file_encoding,
                                      pystratum_old_metadata,
                                      replace_pairs,

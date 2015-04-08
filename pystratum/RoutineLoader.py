@@ -343,7 +343,7 @@ class RoutineLoader:
                             value = matches[1]
                             if name in self._replace_pairs:
                                 raise Exception("Duplicate placeholder '%s'" % name)
-                            self._replace_pairs.update({name: value})
+                            self._replace_pairs[name] = value
 
 
 # ----------------------------------------------------------------------------------------------------------------------

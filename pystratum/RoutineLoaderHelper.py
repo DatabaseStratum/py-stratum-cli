@@ -12,7 +12,6 @@ class RoutineLoaderHelper:
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self,
                  routine_filename: str,
-                 routine_file_extension: str,
                  routine_file_encoding: str,
                  pystratum_old_metadata: dict,
                  replace_pairs: dict,
@@ -21,13 +20,6 @@ class RoutineLoaderHelper:
         self._source_filename = routine_filename
         """
         The source filename holding the stored routine.
-
-        :type : string
-        """
-
-        self._routine_file_extension = routine_file_extension
-        """
-        The source filename extension.
 
         :type : string
         """
@@ -239,7 +231,7 @@ class RoutineLoaderHelper:
         if ret:
             for placeholder in placeholders:
                 if placeholder not in self._replace:
-                    self._replace.update({placeholder: self._replace_pairs[placeholder.lower()]})
+                    self._replace['placeholder'] = self._replace_pairs[placeholder.lower()]
 
         return ret
 
@@ -286,15 +278,15 @@ class RoutineLoaderHelper:
         """
         Updates the metadata of the stored routine.
         """
-        self._pystratum_metadata.update({'routine_name': self._routine_name})
-        self._pystratum_metadata.update({'designation': self._designation_type})
-        self._pystratum_metadata.update({'table_name': self._table_name})
-        self._pystratum_metadata.update({'parameters': self._parameters})
-        self._pystratum_metadata.update({'columns': self._columns})
-        self._pystratum_metadata.update({'fields': self._fields})
-        self._pystratum_metadata.update({'column_types': self._columns_types})
-        self._pystratum_metadata.update({'timestamp': self._m_time})
-        self._pystratum_metadata.update({'replace': self._replace})
+        self._metadata['routine_name'] = self._routine_name
+        self._metadata['designation'] = self._designation_type
+        self._metadata['table_name'] = self._table_name
+        self._metadata['parameters'] = self._parameters
+        self._metadata['columns'] = self._columns
+        self._metadata['fields'] = self._fields
+        self._metadata['column_types'] = self._columns_types
+        self._metadata['timestamp'] = self._m_time
+        self._metadata['replace'] = self._replace
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod

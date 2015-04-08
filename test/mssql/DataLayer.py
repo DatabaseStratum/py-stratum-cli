@@ -69,11 +69,11 @@ class DataLayer(StaticDataLayer):
                     if row['tst_c03'] in ret[row['tst_c01']][row['tst_c02']]:
                         pass
                     else:
-                        ret[row['tst_c01']][row['tst_c02']].update({row['tst_c03']: row})
+                        ret[row['tst_c01']][row['tst_c02']][row['tst_c03']] = row
                 else:
-                    ret[row['tst_c01']].update({row['tst_c02']: {row['tst_c03']: row}})
+                    ret[row['tst_c01']][row['tst_c02']] = {row['tst_c03']: row}
             else:
-                ret.update({row['tst_c01']: {row['tst_c02']: {row['tst_c03']: row}}})
+                ret[row['tst_c01']] = {row['tst_c02']: {row['tst_c03']: row}}
 
         return ret
 

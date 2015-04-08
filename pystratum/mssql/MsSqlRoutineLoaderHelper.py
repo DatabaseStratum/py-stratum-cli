@@ -12,7 +12,6 @@ class MsSqlRoutineLoaderHelper(RoutineLoaderHelper):
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self,
                  routine_filename: str,
-                 routine_file_extension: str,
                  routine_file_encoding: str,
                  pystratum_old_metadata: dict,
                  replace_pairs: dict,
@@ -20,7 +19,6 @@ class MsSqlRoutineLoaderHelper(RoutineLoaderHelper):
 
         RoutineLoaderHelper.__init__(self,
                                      routine_filename,
-                                     routine_file_extension,
                                      routine_file_encoding,
                                      pystratum_old_metadata,
                                      replace_pairs,
@@ -228,7 +226,7 @@ order by par.parameter_id""" % (self._routines_schema_name, self._routine_base_n
         RoutineLoaderHelper._update_metadata(self)
 
         # Update SQL Server specific metadata.
-        self._pystratum_metadata.update({'schema_name': self._routines_schema_name})
+        self._metadata['schema_name'] = self._routines_schema_name
 
         # Update SQL Server specific metadata.
         self._pystratum_metadata.update({'routine_base_name': self._routine_base_name})
