@@ -286,15 +286,15 @@ class RoutineLoaderHelper:
         """
         Updates the metadata of the stored routine.
         """
-        self._metadata.update({'routine_name': self._routine_name})
-        self._metadata.update({'designation': self._designation_type})
-        self._metadata.update({'table_name': self._table_name})
-        self._metadata.update({'parameters': self._parameters})
-        self._metadata.update({'columns': self._columns})
-        self._metadata.update({'fields': self._fields})
-        self._metadata.update({'column_types': self._columns_types})
-        self._metadata.update({'timestamp': self._m_time})
-        self._metadata.update({'replace': self._replace})
+        self._metadata['routine_name'] = self._routine_name
+        self._metadata['designation'] = self._designation_type
+        self._metadata['table_name'] = self._table_name
+        self._metadata['parameters'] = self._parameters
+        self._metadata['columns'] = self._columns
+        self._metadata['fields'] = self._fields
+        self._metadata['column_types'] = self._columns_types
+        self._metadata['timestamp'] = self._m_time
+        self._metadata['replace'] = self._replace
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod

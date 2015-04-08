@@ -256,7 +256,7 @@ order by par.parameter_id""" % (self._routines_schema_name, self._routine_name)
         RoutineLoaderHelper._update_metadata(self)
 
         # Update SQL Server specific metadata.
-        self._metadata.update({'schema_name': self._routines_schema_name})
+        self._metadata['schema_name'] = self._routines_schema_name
 
 
 # ----------------------------------------------------------------------------------------------------------------------
