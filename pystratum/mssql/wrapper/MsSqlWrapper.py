@@ -1,4 +1,5 @@
 import abc
+from pprint import pprint
 from pystratum.wrapper.Wrapper import Wrapper
 
 
@@ -74,9 +75,9 @@ class MsSqlWrapper(Wrapper):
         """
         if routine['parameters']:
             if routine['designation'] == 'function':
-                sql = "'select %s.%s(%s)', %s"
+                sql = "'select [%s].[%s](%s)', %s"
             else:
-                sql = "'exec %s.%s %s', %s"
+                sql = "'exec [%s].[%s] %s', %s"
 
             parameters = ''
             placeholders = ''
@@ -88,17 +89,17 @@ class MsSqlWrapper(Wrapper):
                 placeholders += self._get_parameter_format_specifier(parameter['data_type'])
 
             ret = sql % (routine['schema_name'],
-                         routine['routine_name'],
+                         routine['routine_base_name'],  # routine_base_name
                          placeholders,
                          parameters)
         else:
             if routine['designation'] == 'function':
-                sql = "'select %s.%s()'"
+                sql = "'select [%s].[%s]()'"
             else:
-                sql = "'exec %s.%s'"
+                sql = "'exec [%s].[%s]'"
 
             ret = sql % (routine['schema_name'],
-                         routine['routine_name'])
+                         routine['routine_base_name'])
 
         return ret
 

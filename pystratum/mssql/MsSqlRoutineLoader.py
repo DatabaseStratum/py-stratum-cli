@@ -47,10 +47,7 @@ order by  scm.name
         rows = StaticDataLayer.execute_rows(sql)
 
         for row in rows:
-            key = '@'
-            if row['schema_name']:
-                key += row['schema_name'] + '.'
-            key += row['table_name'] + '.' + row['column_name'] + '%type@'
+            key = '@%s.%s.%s%%type@' % (row['schema_name'], row['table_name'], row['column_name'])
             key = key.lower()
 
             value = self._derive_data_type(row)
@@ -92,7 +89,7 @@ and   prc.is_ms_shipped=0"""
 
         self._rdbms_old_metadata = {}
         for row in rows:
-            self._rdbms_old_metadata[row['procedure_name']] = row
+            self._rdbms_old_metadata[row['schema_name'] + '.' + row['procedure_name']] = row
 
     # ------------------------------------------------------------------------------------------------------------------
     def _drop_obsolete_routines(self):

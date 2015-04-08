@@ -10,7 +10,7 @@ class Row0Test(StratumTestCase):
         """
         Stored routine with designation type row0 must return null.
         """
-        ret = DataLayer.tst_test_row0(0)
+        ret = DataLayer.dbo_tst_test_row0(0)
         self.assertIsNone(ret)
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -18,7 +18,7 @@ class Row0Test(StratumTestCase):
         """
         Stored routine with designation type row0 must return 1 row.
         """
-        ret = DataLayer.tst_test_row0(1)
+        ret = DataLayer.dbo_tst_test_row0(1)
         self.assertIsInstance(ret, dict)
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -28,6 +28,6 @@ class Row0Test(StratumTestCase):
         @expectedException Exception
         """
         with self.assertRaises(Exception):
-            DataLayer.tst_test_row0(2)
+            DataLayer.dbo_tst_test_row0(2)
 
 # ----------------------------------------------------------------------------------------------------------------------

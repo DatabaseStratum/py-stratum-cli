@@ -10,7 +10,7 @@ class Row1Test(StratumTestCase):
         """
         Stored routine with designation type row1 must return 1 row and 1 row only.
         """
-        ret = DataLayer.tst_test_row1(1)
+        ret = DataLayer.dbo_tst_test_row1(1)
         self.assertIsInstance(ret, dict)
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -20,7 +20,7 @@ class Row1Test(StratumTestCase):
         @expectedException Exception
         """
         with self.assertRaises(Exception):
-            DataLayer.tst_test_row1(0)
+            DataLayer.dbo_tst_test_row1(0)
 
     # ------------------------------------------------------------------------------------------------------------------
     def test3(self):
@@ -29,6 +29,6 @@ class Row1Test(StratumTestCase):
         @expectedException Exception
         """
         with self.assertRaises(Exception):
-            DataLayer.tst_test_row1(2)
+            DataLayer.dbo_tst_test_row1(2)
 
 # ----------------------------------------------------------------------------------------------------------------------

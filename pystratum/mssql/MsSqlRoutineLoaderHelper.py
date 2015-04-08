@@ -33,6 +33,13 @@ class MsSqlRoutineLoaderHelper(RoutineLoaderHelper):
         :type : string
         """
 
+        self._routine_base_name = None
+        """
+        The name of the stored routine without schema name.
+
+        :type : string
+        """
+
     # ------------------------------------------------------------------------------------------------------------------
     def _must_reload(self) -> bool:
         """
@@ -68,8 +75,9 @@ class MsSqlRoutineLoaderHelper(RoutineLoaderHelper):
         if matches:
             self._routine_type = matches[0][0].lower()
             self._routines_schema_name = matches[0][1]
+            self._routine_base_name = matches[0][2]
 
-            if self._routine_name != matches[0][2]:
+            if self._routine_name != matches[0][1] + '.' + matches[0][2]:
                 print("Error: Stored routine name '%s' does not match filename in file '%s'." % (
                     matches[0][2], self._source_filename))
                 ret = False
@@ -125,43 +133,7 @@ class MsSqlRoutineLoaderHelper(RoutineLoaderHelper):
         """
         Gets the column names and column types of the current table for bulk insert.
         """
-        query = """
-select 1 from
-information_schema.TABLES
-where TABLE_SCHEMA = database()
-and   TABLE_NAME   = '%s'""" % self._table_name
-
-        table_is_non_temporary = StaticDataLayer.execute_rows(query)
-
-        if len(table_is_non_temporary) == 0:
-            query = 'call %s()' % self._routine_name
-            StaticDataLayer.execute_none(query)
-
-        query = "describe `%s`" % self._table_name
-        columns = StaticDataLayer.execute_rows(query)
-
-        tmp_column_types = []
-        tmp_fields = []
-
-        n1 = 0
-        for column in columns:
-            p = re.compile('(\\w+)')
-            c_type = p.findall(column['Type'])
-            tmp_column_types.append(c_type[0])
-            tmp_fields.append(column['Field'])
-            n1 += 1
-
-        n2 = len(self._columns)
-
-        if len(table_is_non_temporary) == 0:
-            query = "drop temporary table `%s`" % self._table_name
-            StaticDataLayer.execute_none(query)
-
-        if n1 != n2:
-            raise Exception("Number of fields %d and number of columns %d don't match." % (n1, n2))
-
-        self._columns_types = tmp_column_types
-        self._fields = tmp_fields
+        pass
 
     # ------------------------------------------------------------------------------------------------------------------
     def _get_routine_parameters_info(self):
@@ -177,7 +149,7 @@ inner join sys.all_parameters par  on  par.[object_id] = prc.[object_id]
 inner join sys.types          typ  on  typ.user_type_id = par.system_type_id
 where scm.name = '%s'
 and   prc.name = '%s'
-order by par.parameter_id""" % (self._routines_schema_name, self._routine_name)
+order by par.parameter_id""" % (self._routines_schema_name, self._routine_base_name)
 
         routine_parameters = StaticDataLayer.execute_rows(query)
 
@@ -239,9 +211,9 @@ order by par.parameter_id""" % (self._routines_schema_name, self._routine_name)
         """
         if self._rdbms_old_metadata:
             if self._rdbms_old_metadata['type'].strip() == 'P':
-                sql = "drop procedure [%s].[%s]" % (self._rdbms_old_metadata['schema_name'], self._routine_name)
+                sql = "drop procedure [%s].[%s]" % (self._rdbms_old_metadata['schema_name'], self._routine_base_name)
             elif self._rdbms_old_metadata['type'].strip() == 'FN':
-                sql = "drop function [%s].[%s]" % (self._rdbms_old_metadata['schema_name'], self._routine_name)
+                sql = "drop function [%s].[%s]" % (self._rdbms_old_metadata['schema_name'], self._routine_base_name)
             else:
                 raise Exception("Unknown routine type '%s'." % self._rdbms_old_metadata['type'])
 
@@ -257,6 +229,10 @@ order by par.parameter_id""" % (self._routines_schema_name, self._routine_name)
 
         # Update SQL Server specific metadata.
         self._pystratum_metadata.update({'schema_name': self._routines_schema_name})
+
+        # Update SQL Server specific metadata.
+        self._pystratum_metadata.update({'routine_base_name': self._routine_base_name})
+
 
 
 # ----------------------------------------------------------------------------------------------------------------------

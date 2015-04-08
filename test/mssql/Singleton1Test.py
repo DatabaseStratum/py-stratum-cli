@@ -10,7 +10,7 @@ class Singleton1Test(StratumTestCase):
         """
         Stored routine with designation type singleton1 must return 1 value and 1 value only.
         """
-        ret = DataLayer.tst_test_singleton1(1)
+        ret = DataLayer.dbo_tst_test_singleton1(1)
         self.assertEqual(1, ret)
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -20,7 +20,7 @@ class Singleton1Test(StratumTestCase):
         @expectedException Exception
         """
         with self.assertRaises(Exception):
-            DataLayer.tst_test_singleton1(0)
+            DataLayer.dbo_tst_test_singleton1(0)
 
     # ------------------------------------------------------------------------------------------------------------------
     def test3(self):
@@ -29,6 +29,6 @@ class Singleton1Test(StratumTestCase):
         @expectedException Exception
         """
         with self.assertRaises(Exception):
-            DataLayer.tst_test_singleton1(2)
+            DataLayer.dbo_tst_test_singleton1(2)
 
 # ----------------------------------------------------------------------------------------------------------------------
