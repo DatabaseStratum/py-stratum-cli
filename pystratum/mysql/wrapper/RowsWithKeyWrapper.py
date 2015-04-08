@@ -36,15 +36,17 @@ class RowsWithKeyWrapper(MySqlWrapper):
             while j < i - 1:
                 part1 += "[row['%s']]" % routine['columns'][j]
                 j += 1
+            part1 += "[row['%s']]" % routine['columns'][j]
 
             part2 = ''
             j = i - 1
             while j < num_of_dict:
-                part2 += "{row['%s']: " % routine['columns'][j]
+                if j+1 != i:
+                    part2 += "{row['%s']: " % routine['columns'][j]
                 j += 1
-            part2 += 'row' + ('}' * (num_of_dict - i + 1))
+            part2 += "row" + ('}' * (num_of_dict - i))
 
-            line = "ret%s.update(%s)" % (part1, part2)
+            line = "ret%s = %s" % (part1, part2)
             self._write_line(line)
             self._indent_level_down()
             if i > 1:

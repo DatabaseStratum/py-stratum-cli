@@ -239,7 +239,7 @@ class RoutineLoaderHelper:
         if ret:
             for placeholder in placeholders:
                 if placeholder not in self._replace:
-                    self._replace.update({placeholder: self._replace_pairs[placeholder.lower()]})
+                    self._replace['placeholder'] = self._replace_pairs[placeholder.lower()]
 
         return ret
 
