@@ -21,21 +21,21 @@ class RoutineLoader:
         :type: set
         """
 
-        self._metadata = {}
+        self._pystratum_metadata = {}
         """
         The meta data of all stored routines.
 
         :type: dict
         """
 
-        self._metadata_filename = None
+        self._pystratum_metadata_filename = None
         """
         The filename of the file with the metadata of all stored routines.
 
         :type: string
         """
 
-        self._old_stored_routines_info = {}
+        self._rdbms_old_metadata = {}
         """
         Old metadata about all stored routines.
 
@@ -186,7 +186,7 @@ class RoutineLoader:
         self._source_file_encoding = config.get('loader', 'encoding')
         self._target_config_filename = config.get('loader', 'config')
 
-        self._metadata_filename = config.get('wrapper', 'metadata')
+        self._pystratum_metadata_filename = config.get('wrapper', 'metadata')
 
         self._constants_filename = config.get('constants', 'config')
 
@@ -213,9 +213,9 @@ class RoutineLoader:
         """
         Reads the metadata of stored routines from the metadata file.
         """
-        if os.path.isfile(self._metadata_filename):
-            with open(self._metadata_filename, 'r') as f:
-                self._metadata = json.load(f)
+        if os.path.isfile(self._pystratum_metadata_filename):
+            with open(self._pystratum_metadata_filename, 'r') as f:
+                self._pystratum_metadata = json.load(f)
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
@@ -229,8 +229,8 @@ class RoutineLoader:
     @abc.abstractmethod
     def create_routine_loader_helper(self,
                                      routine_name: str,
-                                     old_metadata: dict,
-                                     old_routine_info: dict) -> RoutineLoaderHelper:
+                                     pystratum_old_metadata: dict,
+                                     rdbms_old_metadata: dict) -> RoutineLoaderHelper:
         """
         Creates a Routine Loader Helper object.
         :return:
@@ -243,13 +243,13 @@ class RoutineLoader:
         Loads all stored routines into the RDBMS instance instance.
         """
         for routine_name in sorted(self._source_file_names):
-            if routine_name in self._metadata:
-                old_metadata = self._metadata[routine_name]
+            if routine_name in self._pystratum_metadata:
+                old_metadata = self._pystratum_metadata[routine_name]
             else:
                 old_metadata = None
 
-            if routine_name in self._old_stored_routines_info:
-                old_routine_info = self._old_stored_routines_info[routine_name]
+            if routine_name in self._rdbms_old_metadata:
+                old_routine_info = self._rdbms_old_metadata[routine_name]
             else:
                 old_routine_info = None
 
@@ -258,10 +258,10 @@ class RoutineLoader:
 
             if not metadata:
                 self.error_file_names.add(self._source_file_names[routine_name])
-                if routine_name in self._metadata:
-                    del (self._metadata[routine_name])
+                if routine_name in self._pystratum_metadata:
+                    del (self._pystratum_metadata[routine_name])
             else:
-                self._metadata[routine_name] = metadata
+                self._pystratum_metadata[routine_name] = metadata
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
@@ -294,18 +294,18 @@ class RoutineLoader:
         """
         clean = {}
         for key, source_filename in self._source_file_names.items():
-            if key in self._metadata:
-                clean[key] = self._metadata[key]
+            if key in self._pystratum_metadata:
+                clean[key] = self._pystratum_metadata[key]
 
-        self._metadata = clean
+        self._pystratum_metadata = clean
 
     # ------------------------------------------------------------------------------------------------------------------
     def _write_stored_routine_metadata(self):
         """
         Writes the metadata of all stored routines to the metadata file.
         """
-        with open(self._metadata_filename, 'w') as f:
-            json.dump(self._metadata, f, indent=4, sort_keys=True)
+        with open(self._pystratum_metadata_filename, 'w') as f:
+            json.dump(self._pystratum_metadata, f, indent=4, sort_keys=True)
 
     # ------------------------------------------------------------------------------------------------------------------
     def find_source_files_from_list(self, file_names):

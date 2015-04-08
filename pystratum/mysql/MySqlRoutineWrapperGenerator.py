@@ -1,4 +1,3 @@
-import configparser
 from pystratum.RoutineWrapperGenerator import RoutineWrapperGenerator
 from pystratum.mysql.MySqlConnection import MySqlConnection
 from pystratum.mysql.wrapper import create_routine_wrapper

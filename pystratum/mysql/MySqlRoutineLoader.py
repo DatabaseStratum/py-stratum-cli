@@ -56,8 +56,8 @@ order by table_schema
     # ------------------------------------------------------------------------------------------------------------------
     def create_routine_loader_helper(self,
                                      routine_name: str,
-                                     old_metadata: dict,
-                                     old_routine_info: dict) -> MySqlRoutineLoaderHelper:
+                                     pystratum_old_metadata: dict,
+                                     rdbms_old_metadata: dict) -> MySqlRoutineLoaderHelper:
         """
         Creates a Routine Loader Helper object.
         :return: MySqlRoutineLoaderHelper
@@ -65,9 +65,9 @@ order by table_schema
         return MySqlRoutineLoaderHelper(self._source_file_names[routine_name],
                                         self._source_file_extension,
                                         self._source_file_encoding,
-                                        old_metadata,
+                                        pystratum_old_metadata,
                                         self._replace_pairs,
-                                        old_routine_info,
+                                        rdbms_old_metadata,
                                         self._sql_mode,
                                         self._character_set_client,
                                         self._collation_connection)
@@ -88,7 +88,7 @@ where ROUTINE_SCHEMA = database()
 order by routine_name"""
 
         rows = StaticDataLayer.execute_rows(query)
-        self._old_stored_routines_info = {}
+        self._rdbms_old_metadata = {}
         for row in rows:
             self._old_stored_routines_info[row['routine_name']] = row
 
@@ -110,7 +110,7 @@ order by routine_name"""
         Drops obsolete stored routines (i.e. stored routines that exits in the current schema but for
         which we don't have a source file).
         """
-        for routine_name, values in self._old_stored_routines_info.items():
+        for routine_name, values in self._rdbms_old_metadata.items():
             if routine_name not in self._source_file_names:
                 print("Dropping %s %s" % (values['routine_type'], routine_name))
                 sql = "drop %s if exists %s" % (values['routine_type'], routine_name)
