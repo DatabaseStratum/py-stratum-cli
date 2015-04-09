@@ -79,7 +79,6 @@ class Wrapper:
         self._write_line('# ' + ('-' * tmp))
 
     # ------------------------------------------------------------------------------------------------------------------
-    @abc.abstractmethod
     def is_lob_parameter(self, parameters) -> bool:
         """
         Returns True of one of the parameters is a BLOB or CLOB. Otherwise, returns False.
