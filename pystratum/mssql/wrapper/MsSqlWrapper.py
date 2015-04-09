@@ -1,5 +1,4 @@
 import abc
-from pprint import pprint
 from pystratum.wrapper.Wrapper import Wrapper
 
 
