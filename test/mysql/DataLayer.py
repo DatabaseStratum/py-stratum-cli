@@ -67,11 +67,18 @@ class DataLayer(StaticDataLayer):
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
     def tst_test_rows_with_index1(p_count):
+        ret = {}
         rows = StaticDataLayer.execute_sp_rows("call tst_test_rows_with_index1(%s)", p_count)
-        if rows:
-            return {rows[0]['tst_c01']: {rows[0]['tst_c02']: rows}}
-        else:
-            return {}
+        for row in rows:
+            if row['tst_c01'] in ret:
+                if row['tst_c02'] in ret[row['tst_c01']]:
+                    pass
+                else:
+                    ret[row['tst_c01']][row['tst_c02']] = rows
+            else:
+                ret[row['tst_c01']] = {row['tst_c02']: rows}
+
+        return ret
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod

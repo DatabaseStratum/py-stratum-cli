@@ -12,9 +12,10 @@ class RowsWithIndexTest(StratumTestCase):
         """
         rows = DataLayer.tst_test_rows_with_index1(100)
         self.assertIsInstance(rows, dict)
-        self.assertTrue('a' in rows)
-        self.assertTrue('b' in rows['a'])
-        self.assertNotEqual(0, len(rows['a']['b']))
+        self.assertIn('a', rows)
+        self.assertIn('b', rows['a'])
+        self.assertIsInstance(rows['a']['b'], list)
+        self.assertEqual(3, len(rows['a']['b']))
 
     # ------------------------------------------------------------------------------------------------------------------
     def test2(self):
