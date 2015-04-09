@@ -231,7 +231,7 @@ class RoutineLoaderHelper:
         if ret:
             for placeholder in placeholders:
                 if placeholder not in self._replace:
-                    self._replace['placeholder'] = self._replace_pairs[placeholder.lower()]
+                    self._replace[placeholder] = self._replace_pairs[placeholder.lower()]
 
         return ret
 
@@ -278,15 +278,15 @@ class RoutineLoaderHelper:
         """
         Updates the metadata of the stored routine.
         """
-        self._metadata['routine_name'] = self._routine_name
-        self._metadata['designation'] = self._designation_type
-        self._metadata['table_name'] = self._table_name
-        self._metadata['parameters'] = self._parameters
-        self._metadata['columns'] = self._columns
-        self._metadata['fields'] = self._fields
-        self._metadata['column_types'] = self._columns_types
-        self._metadata['timestamp'] = self._m_time
-        self._metadata['replace'] = self._replace
+        self._pystratum_metadata['routine_name'] = self._routine_name
+        self._pystratum_metadata['designation'] = self._designation_type
+        self._pystratum_metadata['table_name'] = self._table_name
+        self._pystratum_metadata['parameters'] = self._parameters
+        self._pystratum_metadata['columns'] = self._columns
+        self._pystratum_metadata['fields'] = self._fields
+        self._pystratum_metadata['column_types'] = self._columns_types
+        self._pystratum_metadata['timestamp'] = self._m_time
+        self._pystratum_metadata['replace'] = self._replace
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod

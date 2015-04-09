@@ -76,8 +76,8 @@ class MsSqlRoutineLoaderHelper(RoutineLoaderHelper):
             self._routine_base_name = matches[0][2]
 
             if self._routine_name != matches[0][1] + '.' + matches[0][2]:
-                print("Error: Stored routine name '%s' does not match filename in file '%s'." % (
-                    matches[0][2], self._source_filename))
+                print("Error: Stored routine name '%s.%s' does not match filename in file '%s'." % (
+                    matches[0][1], matches[0][2], self._source_filename))
                 ret = False
         else:
             ret = False
@@ -226,10 +226,10 @@ order by par.parameter_id""" % (self._routines_schema_name, self._routine_base_n
         RoutineLoaderHelper._update_metadata(self)
 
         # Update SQL Server specific metadata.
-        self._metadata['schema_name'] = self._routines_schema_name
+        self._pystratum_metadata['schema_name'] = self._routines_schema_name
 
         # Update SQL Server specific metadata.
-        self._pystratum_metadata.update({'routine_base_name': self._routine_base_name})
+        self._pystratum_metadata['routine_base_name'] = self._routine_base_name
 
 
 

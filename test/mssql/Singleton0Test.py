@@ -10,7 +10,7 @@ class Singleton0Test(StratumTestCase):
         """
         Stored routine with designation type singleton0 must return null.
         """
-        ret = DataLayer.dbo_tst_test_singleton0(0)
+        ret = DataLayer.tst_test_singleton0(0)
         self.assertIsNone(ret)
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -18,7 +18,7 @@ class Singleton0Test(StratumTestCase):
         """
         Stored routine with designation type singleton0 must return 1 value.
         """
-        ret = DataLayer.dbo_tst_test_singleton0(1)
+        ret = DataLayer.tst_test_singleton0(1)
         self.assertIsInstance(ret, (str, int, float))
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -27,6 +27,6 @@ class Singleton0Test(StratumTestCase):
         An exception must be thrown when a stored routine with designation type singleton0 returns more than 1 values.
         """
         with self.assertRaises(Exception):
-            DataLayer.dbo_tst_test_singleton0(3)
+            DataLayer.tst_test_singleton0(3)
 
 # ----------------------------------------------------------------------------------------------------------------------

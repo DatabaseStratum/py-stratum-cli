@@ -58,6 +58,17 @@ class MsSqlWrapper(Wrapper):
         return has_blob
 
     # ------------------------------------------------------------------------------------------------------------------
+    def _write_routine_method_without_lob(self, routine):
+
+        self._write_line()
+        self._write_separator()
+        self._write_line('@staticmethod')
+        self._write_line('def %s(%s):' % (str(routine['routine_base_name']), str(self._get_wrapper_args(routine))))
+        self._write_result_handler(routine)
+
+        return self._code
+
+    # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
     def _write_result_handler(self, routine):
         """

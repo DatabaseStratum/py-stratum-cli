@@ -10,7 +10,7 @@ class FunctionTest(StratumTestCase):
         """
         Stored routine with designation type function executes a stored function and return result.
         """
-        ret = DataLayer.dbo_tst_test_function(2, 3)
+        ret = DataLayer.tst_test_function(2, 3)
         self.assertEqual(5, ret)
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -18,7 +18,7 @@ class FunctionTest(StratumTestCase):
         """
         Stored routine with designation type function execute stored function and return result.
         """
-        ret = DataLayer.dbo_tst_test_function(3, 4)
+        ret = DataLayer.tst_test_function(3, 4)
         self.assertNotEqual(5, ret)
 
 # ----------------------------------------------------------------------------------------------------------------------
