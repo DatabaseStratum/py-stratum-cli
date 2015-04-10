@@ -31,7 +31,10 @@ class RowsWithKeyWrapper(Wrapper):
             self._write_line(line)
             i += 1
 
-        self._write_line('pass')
+        line = "raise Exception('Duplicate key for %%s.' %% str((%s)))" %\
+               ", ".join(["row['%s']" % column_name for column_name in routine['columns']])
+
+        self._write_line(line)
         self._indent_level_down()
 
         i = num_of_dict
