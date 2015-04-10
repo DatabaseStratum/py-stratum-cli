@@ -72,11 +72,11 @@ class DataLayer(StaticDataLayer):
         for row in rows:
             if row['tst_c01'] in ret:
                 if row['tst_c02'] in ret[row['tst_c01']]:
-                    pass
+                    ret[row['tst_c01']][row['tst_c02']].append(row)
                 else:
-                    ret[row['tst_c01']][row['tst_c02']] = rows
+                    ret[row['tst_c01']][row['tst_c02']] = [row]
             else:
-                ret[row['tst_c01']] = {row['tst_c02']: rows}
+                ret[row['tst_c01']] = {row['tst_c02']: [row]}
 
         return ret
 
