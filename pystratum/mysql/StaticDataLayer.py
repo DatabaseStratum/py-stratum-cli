@@ -1,4 +1,5 @@
 from time import strftime, gmtime
+
 from mysql.connector import DataError, MySQLConnection, InterfaceError
 from mysql.connector.cursor import MySQLCursorBufferedDict, MySQLCursorBuffered, MySQLCursor
 
@@ -49,10 +50,19 @@ class StaticDataLayer:
     @staticmethod
     def commit() -> None:
         """
-        Commit the current transaction.
+        Commits the current transaction.
         See http://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlconnection-commit.html
         """
         StaticDataLayer.connection.commit()
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @staticmethod
+    def rollback() -> None:
+        """
+        Rolls back the current transaction.
+        See http://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlconnection-rollback.html
+        """
+        StaticDataLayer.connection.rollback()
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
