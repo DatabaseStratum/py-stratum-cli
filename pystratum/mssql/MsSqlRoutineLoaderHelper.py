@@ -232,5 +232,4 @@ order by par.parameter_id""" % (self._routines_schema_name, self._routine_base_n
         self._pystratum_metadata['routine_base_name'] = self._routine_base_name
 
 
-
 # ----------------------------------------------------------------------------------------------------------------------
