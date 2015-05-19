@@ -113,7 +113,7 @@ class Wrapper:
 
     # ------------------------------------------------------------------------------------------------------------------
     def _write_routine_method_with_lob(self, routine):
-        return ''
+        return self._write_routine_method_without_lob(routine)
 
     # ------------------------------------------------------------------------------------------------------------------
     def _write_routine_method_without_lob(self, routine):
