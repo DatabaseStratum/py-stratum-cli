@@ -128,22 +128,26 @@ class StaticDataLayer:
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def execute_csv(sql, filename):
+    def execute_csv(sql, filename, dialect='unix', encoding='utf-8'):
         # Open the CSV file.
-        file = open(filename, 'w')
-        csv_file = csv.writer(file, dialect='unix')
+        file = open(filename, 'w', encoding=encoding)
+        csv_file = csv.writer(file, dialect=dialect)
 
         # Run the query.
-        cursor = StaticDataLayer.__conn.cursor()
+        cursor = StaticDataLayer.__conn.cursor(as_dict=False)
         cursor.execute(sql)
 
         # Store all rows in CSV format in the file.
+        n = 0
         for row in cursor:
             csv_file.writerow(row)
+            n += 1
 
         # Close the CSV file and the cursor.
         file.close()
         cursor.close()
+
+        return n
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
