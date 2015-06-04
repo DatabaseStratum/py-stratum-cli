@@ -76,7 +76,7 @@ order by  scm.name
         """
         query = """
 select scm.name  schema_name
-,      prc.name  procedure_name
+,      prc.name  routine_name
 ,      prc.[type]  [type]
 from       sys.all_objects  prc
 inner join sys.schemas     scm  on   scm.schema_id = prc.schema_id
@@ -88,7 +88,7 @@ and   prc.is_ms_shipped=0"""
 
         self._rdbms_old_metadata = {}
         for row in rows:
-            self._rdbms_old_metadata[row['schema_name'] + '.' + row['procedure_name']] = row
+            self._rdbms_old_metadata[row['schema_name'] + '.' + row['routine_name']] = row
 
     # ------------------------------------------------------------------------------------------------------------------
     def _drop_obsolete_routines(self):
@@ -99,11 +99,11 @@ and   prc.is_ms_shipped=0"""
         for routine_name, values in self._rdbms_old_metadata.items():
             if routine_name not in self._source_file_names:
                 if values['type'].strip() == 'P':
-                    print("Dropping procedure %s.%s" % (values['schema_name'], routine_name))
-                    sql = "drop procedure [%s].[%s]" % (values['schema_name'], routine_name)
+                    print("Dropping procedure %s.%s" % (values['schema_name'], values['routine_name']))
+                    sql = "drop procedure [%s].[%s]" % (values['schema_name'], values['routine_name'])
                 elif values['type'].strip() in ('FN', 'TF'):
-                    print("Dropping function %s.%s" % (values['schema_name'], routine_name))
-                    sql = "drop function [%s].[%s]" % (values['schema_name'], routine_name)
+                    print("Dropping function %s.%s" % (values['schema_name'], values['routine_name']))
+                    sql = "drop function [%s].[%s]" % (values['schema_name'], values['routine_name'])
                 else:
                     raise Exception("Unknown routine type '%s'." % values['type'])
 
