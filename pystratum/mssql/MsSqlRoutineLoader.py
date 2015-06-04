@@ -99,11 +99,11 @@ and   prc.is_ms_shipped=0"""
         for routine_name, values in self._rdbms_old_metadata.items():
             if routine_name not in self._source_file_names:
                 if values['type'].strip() == 'P':
-                    print("Dropping procedure %s.%s" % (values['schema_name'], routine_name))
-                    sql = "drop procedure [%s].[%s]" % (values['schema_name'], routine_name)
+                    print("Dropping procedure %s.%s" % (values['schema_name'], values['procedure_name']))
+                    sql = "drop procedure [%s].[%s]" % (values['schema_name'], values['procedure_name'])
                 elif values['type'].strip() == 'FN':
-                    print("Dropping function %s.%s" % (values['schema_name'], routine_name))
-                    sql = "drop function [%s].[%s]" % (values['schema_name'], routine_name)
+                    print("Dropping function %s.%s" % (values['schema_name'], values['procedure_name']))
+                    sql = "drop function [%s].[%s]" % (values['schema_name'], values['procedure_name'])
                 else:
                     raise Exception("Unknown routine type '%s'." % values['type'])
 
