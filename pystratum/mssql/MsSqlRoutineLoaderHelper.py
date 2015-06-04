@@ -210,7 +210,7 @@ order by par.parameter_id""" % (self._routines_schema_name, self._routine_base_n
         if self._rdbms_old_metadata:
             if self._rdbms_old_metadata['type'].strip() == 'P':
                 sql = "drop procedure [%s].[%s]" % (self._rdbms_old_metadata['schema_name'], self._routine_base_name)
-            elif self._rdbms_old_metadata['type'].strip() == 'FN':
+            elif self._rdbms_old_metadata['type'].strip() in ('FN', 'TF'):
                 sql = "drop function [%s].[%s]" % (self._rdbms_old_metadata['schema_name'], self._routine_base_name)
             else:
                 raise Exception("Unknown routine type '%s'." % self._rdbms_old_metadata['type'])

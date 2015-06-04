@@ -80,7 +80,7 @@ select scm.name  schema_name
 ,      prc.[type]  [type]
 from       sys.all_objects  prc
 inner join sys.schemas     scm  on   scm.schema_id = prc.schema_id
-where prc.type in ('P','FN')
+where prc.type in ('P','FN','TF')
 and   scm.name <> 'sys'
 and   prc.is_ms_shipped=0"""
 
@@ -101,7 +101,7 @@ and   prc.is_ms_shipped=0"""
                 if values['type'].strip() == 'P':
                     print("Dropping procedure %s.%s" % (values['schema_name'], routine_name))
                     sql = "drop procedure [%s].[%s]" % (values['schema_name'], routine_name)
-                elif values['type'].strip() == 'FN':
+                elif values['type'].strip() in ('FN', 'TF'):
                     print("Dropping function %s.%s" % (values['schema_name'], routine_name))
                     sql = "drop function [%s].[%s]" % (values['schema_name'], routine_name)
                 else:
