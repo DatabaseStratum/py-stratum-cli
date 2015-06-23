@@ -145,7 +145,11 @@ union all
             for table_name, table in sorted(self._old_columns.items()):
                 for column_name, column in sorted(table.items()):
                     if 'constant_name' in column:
-                        self._columns[table_name][column_name]['constant_name'] = column['constant_name']
+                        try:
+                            self._columns[table_name][column_name]['constant_name'] = column['constant_name']
+                        except KeyError:
+                            # Either the column or table is not present anymore.
+                            pass
 
     # ------------------------------------------------------------------------------------------------------------------
     def _write_columns(self):

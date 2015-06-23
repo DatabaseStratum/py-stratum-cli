@@ -151,7 +151,12 @@ order by  scm.name
                 for table_name, table in sorted(schema.items()):
                     for column_name, column in sorted(table.items()):
                         if 'constant_name' in column:
-                            self._columns[schema_name][table_name][column_name]['constant_name'] = column['constant_name']
+                            try:
+                                self._columns[schema_name][table_name][column_name]['constant_name'] = \
+                                    column['constant_name']
+                            except KeyError:
+                                # Either the column, table, or whole schema is not present anymore.
+                                pass
 
     # ------------------------------------------------------------------------------------------------------------------
     def _write_columns(self):
