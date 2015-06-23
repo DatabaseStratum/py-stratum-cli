@@ -75,9 +75,9 @@ order by  scm.name
         Retrieves information about all stored routines in the current schema.
         """
         query = """
-select scm.name  schema_name
-,      prc.name  routine_name
-,      prc.[type]  [type]
+select scm.name    schema_name
+,      prc.name    routine_name
+,      prc.[type]  routine_type
 from       sys.all_objects  prc
 inner join sys.schemas     scm  on   scm.schema_id = prc.schema_id
 where prc.type in ('P','FN','TF')
@@ -98,10 +98,10 @@ and   prc.is_ms_shipped=0"""
         """
         for routine_name, values in self._rdbms_old_metadata.items():
             if routine_name not in self._source_file_names:
-                if values['type'].strip() == 'P':
+                if values['routine_type'].strip() == 'P':
                     print("Dropping procedure %s.%s" % (values['schema_name'], values['routine_name']))
                     sql = "drop procedure [%s].[%s]" % (values['schema_name'], values['routine_name'])
-                elif values['type'].strip() in ('FN', 'TF'):
+                elif values['routine_type'].strip() in ('FN', 'TF'):
                     print("Dropping function %s.%s" % (values['schema_name'], values['routine_name']))
                     sql = "drop function [%s].[%s]" % (values['schema_name'], values['routine_name'])
                 else:
