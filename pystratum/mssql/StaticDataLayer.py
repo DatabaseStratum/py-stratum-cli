@@ -1,12 +1,12 @@
 import csv
-import pymssql
+import re
 import sys
+from time import strftime, gmtime
+
+import pymssql
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-from time import strftime, gmtime
-
-
 class StaticDataLayer:
     # ------------------------------------------------------------------------------------------------------------------
     __conn = None
@@ -15,13 +15,37 @@ class StaticDataLayer:
     :type: "Object"
     """
 
+    _suppress_bogus_messages = True
+    """
+    If set bogus messages like:
+    * "Warning: Null value is eliminated by an aggregate or other SET operation."
+    * The module ... depends on the missing object .... The module will still be created; however, it cannot run
+      successfully until the object exists.
+    :type: bool
+    """
+
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
     def my_msg_handler(msgstate, severity, srvname, procname, line, msgtext):
         if severity > 0:
             print("Error at line %d: %s" % (line, msgtext.decode("utf-8")), file=sys.stderr)
         else:
-            print(msgtext.decode("utf-8"))
+            msg = msgtext.decode("utf-8")
+
+            # Suppress bogus messages if flag is set.
+            if StaticDataLayer._suppress_bogus_messages:
+                # @todo Make this method more flexible by using two lists. One with strings and one on regex to
+                # suppress.
+                if msg == 'Warning: Null value is eliminated by an aggregate or other SET operation.':
+                    return
+
+                if re.match(
+                        "^The module \'.*\' depends on the missing object \'.*\'. The module will still be created; "
+                        "however, it cannot run successfully until the object exists.$",
+                        msg):
+                    return
+
+            print(msg)
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -177,6 +201,5 @@ class StaticDataLayer:
     def execute_table(sql: str, *params):
         # todo methods for showing table
         pass
-
 
 # ----------------------------------------------------------------------------------------------------------------------
