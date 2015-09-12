@@ -7,9 +7,10 @@ from test.mysql.DataLayer import DataLayer
 class TableTest(StratumTestCase):
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test1(self):
+    def _test1(self):
         """
         Stored routine with designation type table must show table.
+        @todo implement designation type table
         """
         template_table = """
 +---------+---------+---------+---------+---------------------+------+------+

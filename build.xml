@@ -74,6 +74,14 @@
         <exec command="twine upload dist/PyStratum-${VERSION}.tar.gz" passthru="true" checkreturn="true"/>
     </target>
 
+    <!-- Runs all unit tests for MySQL-->
+    <target name="my-unit">
+        <delete file="etc/mysql/test_routines.json" quiet="true"/>
+        <exec command="cat test/mysql/create_test.sql | mysql -utest -ptest test" passthru="true" checkreturn="true"/>
+        <exec command="bin/stratum.py -c etc/mysql/test_stratum.cfg" passthru="true" checkreturn="true"/>
+        <exec command="python3 -m unittest test/mysql/*.py" passthru="true" checkreturn="true"/>
+    </target>
+
     <!-- Default target -->
     <target name="build">
         <echo msg="And Now for Something Completely Different"/>
