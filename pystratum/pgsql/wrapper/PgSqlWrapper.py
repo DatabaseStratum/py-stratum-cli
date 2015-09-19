@@ -95,10 +95,10 @@ class PgSqlWrapper(Wrapper):
         :param str data_type: The parameter type.
         :return str: The format specifier.
         """
-        lookup = {'bigint': '%s',
-                  'integer': '%s',
+        lookup = {'bigint': '%s::bigint',
+                  'integer': '%s::int',
                   'bit': '%s',
-                  'smallint': '%s',
+                  'smallint': '%s::smallint',
                   'money': '%s',
                   'numeric': '%s',
                   'real': '%s',
@@ -106,8 +106,8 @@ class PgSqlWrapper(Wrapper):
                   'character varying': '%s',
                   'timestamp without time zone': '%s',
                   'time without time zone': '%s',
-                  'boolean': '%s',
-                  'date': '%s',
+                  'boolean': '%s::bool',
+                  'date': '%s::date',
                   'bytea': '%s',
                   'text': '%s'
                   }
