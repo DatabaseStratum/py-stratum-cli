@@ -328,13 +328,13 @@ class StaticDataLayer:
         cursor = StaticDataLayer.connection.cursor()
 
         # Create temporary table for logging.
-        cursor.callproc('ref_log_init')
+        cursor.callproc(StaticDataLayer.sp_log_init)
 
         # Execute the stored procedure.
         cursor.execute(sql, params)
 
         # Fetch the log messages.
-        cursor.callproc('ref_log_fetch')
+        cursor.callproc(StaticDataLayer.sp_log_fetch)
         portal = StaticDataLayer.connection.cursor(cursor.fetchone()[0])
         messages = portal.fetchall()
         portal.close()
