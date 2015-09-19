@@ -12,7 +12,7 @@ setup(
 
     version='0.9.8',
 
-    description='A stored procedure and function loader, wrapper generator for MySQL and MS-SQL',
+    description='A stored procedure and function loader, wrapper generator for MySQL, SQL Server, and PostgresSQL',
     long_description=long_description,
 
     url='https://github.com/SetBased/py-stratum',
