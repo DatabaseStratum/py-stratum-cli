@@ -1,0 +1,14 @@
+/**
+ * Test for designation type log.
+ */
+create function tst_test_log()
+returns void
+as $$
+-- type: log
+begin
+ select 'Hello, world';
+
+ select 'Hello, world';
+end;
+$$ language plpgsql;
+

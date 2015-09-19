@@ -5,13 +5,13 @@ bin/phing
 bin/yuicompressor.jar
 composer.lock
 dist/
-etc/mysql/test_columns.txt
-etc/mysql/test_config.txt
-etc/mysql/test_routines.json
-vendor/
 etc/mssql/test_columns.txt
 etc/mssql/test_config.txt
 etc/mssql/test_routines.json
 etc/mysql/test_columns.txt
 etc/mysql/test_config.txt
 etc/mysql/test_routines.json
+etc/pgsql/test_columns.txt
+etc/pgsql/test_config.txt
+etc/pgsql/test_routines.json
+vendor/

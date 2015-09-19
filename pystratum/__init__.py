@@ -16,12 +16,16 @@ def create_constants(rdbms: str):
     #       dependencies for the other RDBMSs are not required).
 
     if rdbms == 'mysql':
-        module = locate('pystratum.mysql.MySqlConstants')
+        module = locate('pystratum.mysql.PgSqlConstants')
         return module.MySqlConstants()
 
     if rdbms == 'mssql':
         module = locate('pystratum.mssql.MsSqlConstants')
         return module.MsSqlConstants()
+
+    if rdbms == 'pgsql':
+        module = locate('pystratum.pgsql.PgSqlConstants')
+        return module.PgSqlConstants()
 
     raise Exception("Unknown RDBMS '%s'." % rdbms)
 
@@ -39,12 +43,16 @@ def create_routine_loader(rdbms: str):
     #       dependencies for the other RDBMSs are not required).
 
     if rdbms == 'mysql':
-        module = locate('pystratum.mysql.MySqlRoutineLoader')
+        module = locate('pystratum.mysql.PgSqlRoutineLoader')
         return module.MySqlRoutineLoader()
 
     if rdbms == 'mssql':
         module = locate('pystratum.mssql.MsSqlRoutineLoader')
         return module.MsSqlRoutineLoader()
+
+    if rdbms == 'pgsql':
+        module = locate('pystratum.pgsql.PgSqlRoutineLoader')
+        return module.PgSqlRoutineLoader()
 
     raise Exception("Unknown RDBMS '%s'." % rdbms)
 
@@ -68,6 +76,10 @@ def create_routine_wrapper_generator(rdbms: str):
     if rdbms == 'mssql':
         module = locate('pystratum.mssql.MsSqlRoutineWrapperGenerator')
         return module.MsSqlRoutineWrapperGenerator()
+
+    if rdbms == 'pgsql':
+        module = locate('pystratum.pgsql.PgSqlRoutineWrapperGenerator')
+        return module.PgSqlRoutineWrapperGenerator()
 
     raise Exception("Unknown RDBMS '%s'." % rdbms)
 

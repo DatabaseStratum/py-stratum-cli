@@ -1,0 +1,22 @@
+/**
+ * Test for designation type rows_with_key.
+ *
+ * @param p_count Number of rows selected.
+ */
+create function tst_test_rows_with_key1( p_count int )
+returns refcursor
+as $$
+declare
+  cur refcursor;
+-- type: rows_with_key tst_c01,tst_c02,tst_c03
+begin
+  open cur
+  for
+  select *
+  from   "TST_FOO2"
+  where  tst_c00 <= p_count
+  ;
+
+  return cur;
+end;
+$$ language plpgsql;
