@@ -10,14 +10,14 @@ class StaticDataLayer:
     Class for connecting to a MySQL instance and running SQL statements and stored routines.
     """
     config = {
-        'database': None,
-        'user': '',
-        'password': '',
-        'host': '127.0.0.1',
-        'port': 3306,
-        'charset': 'utf8',
+        'database':  None,
+        'user':      '',
+        'password':  '',
+        'host':      '127.0.0.1',
+        'port':      3306,
+        'charset':   'utf8',
         'collation': 'utf8_general_ci',
-        'sql_mode': 'STRICT_ALL_TABLES'
+        'sql_mode':  'STRICT_ALL_TABLES'
     }
     """
     The parameters for connection to the MySQL instance. See
@@ -33,22 +33,19 @@ class StaticDataLayer:
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def start_transaction(consistent_snapshot: bool=False,
-                          isolation_level: str='READ-COMMITTED',
-                          readonly: bool=None) -> None:
+    def start_transaction(consistent_snapshot=False, isolation_level='READ-COMMITTED', readonly=None):
         """
         Starts a transaction.
         See http://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlconnection-start-transaction.html
-
-        :param consistent_snapshot:
-        :param isolation_level:
-        :param readonly:
+        :param bool consistent_snapshot:
+        :param str isolation_level:
+        :param bool readonly:
         """
         StaticDataLayer.connection.start_transaction(consistent_snapshot, isolation_level, readonly)
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def commit() -> None:
+    def commit():
         """
         Commits the current transaction.
         See http://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlconnection-commit.html
@@ -57,7 +54,7 @@ class StaticDataLayer:
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def rollback() -> None:
+    def rollback():
         """
         Rolls back the current transaction.
         See http://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlconnection-rollback.html
@@ -66,17 +63,17 @@ class StaticDataLayer:
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def connect(config: dict=config) -> None:
+    def connect(config=config):
         """
         Connects to a MySQL instance. See http://dev.mysql.com/doc/connector-python/en/connector-python-connectargs.html
         for a complete overview of all possible keys in config.
-        :param config: The connection parameters.
+        :param dict config: The connection parameters.
         """
         StaticDataLayer.connection = MySQLConnection(**config)
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def disconnect() -> None:
+    def disconnect():
         """
         Disconnects from the MySQL instance.
         See http://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlconnection-disconnect.html.
@@ -85,13 +82,12 @@ class StaticDataLayer:
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def execute_none(sql: str, *params) -> int:
+    def execute_none(sql: str, *params):
         """
         Executes a query that does not select any rows.
-
-        :param sql: The SQL statement.
+        :param str sql: The SQL statement.
         :param params: The values for the statement.
-        :return: The number of affected rows.
+        :return: int The number of affected rows.
         """
         cursor = MySQLCursor(StaticDataLayer.connection)
         cursor.execute(sql, params)
@@ -104,8 +100,7 @@ class StaticDataLayer:
     def execute_rows(sql: str, *params) -> list:
         """
         Executes a query that selects 0 or more rows.
-
-        :param sql: The SQL statement.
+        :param str sql: The SQL statement.
         :param params: The arguments for the statement.
         :return: The selected rows (an empty list if no rows are selected).
         """
@@ -121,8 +116,7 @@ class StaticDataLayer:
     def execute_sp_none(sql: str, *params) -> int:
         """
         Executes a stored procedure that does not select any rows.
-
-        :param sql: The SQL call the the stored procedure.
+        :param str sql: The SQL call the the stored procedure.
         :param params: The arguments for the stored procedure.
         :return: The number of affected rows.
         """
@@ -139,8 +133,7 @@ class StaticDataLayer:
     def execute_sp_row0(sql: str, *params):
         """
         Executes a stored procedure that selects 0 or 1 row.
-
-        :param sql: The SQL call the the stored procedure.
+        :param str sql: The SQL call the the stored procedure.
         :param params: The arguments for the stored procedure.
         :return: The selected row or None.
         """
@@ -166,8 +159,7 @@ class StaticDataLayer:
     def execute_sp_row1(sql: str, *params) -> dict:
         """
         Executes a stored procedure that selects 1 row.
-
-        :param sql: The SQL call the the stored procedure.
+        :param str sql: The SQL call the the stored procedure.
         :param params: The arguments for the stored procedure.
         :return: The selected row.
         """
@@ -193,8 +185,7 @@ class StaticDataLayer:
     def execute_sp_rows(sql: str, *params) -> list:
         """
         Executes a stored procedure that selects 0 or more rows.
-
-        :param sql: The SQL call the the stored procedure.
+        :param str sql: The SQL call the the stored procedure.
         :param params: The arguments for the stored procedure.
         :return: The selected rows (an empty list if no rows are selected).
         """
@@ -211,8 +202,7 @@ class StaticDataLayer:
     def execute_sp_singleton0(sql, *params):
         """
         Executes a stored procedure that selects 0 or 1 row with 1 column.
-
-        :param sql: The SQL call the the stored procedure.
+        :param str sql: The SQL call the the stored procedure.
         :param params: The arguments for the stored procedure.
         :return: The value of selected column or None.
         """
@@ -237,9 +227,8 @@ class StaticDataLayer:
     @staticmethod
     def execute_singleton1(sql: str, *params):
         """
-        Executes a stored procedure that selects 1 row with 1 column.
-
-        :param sql: The SQL call the the stored procedure.
+        Executes SQL statement that selects 1 row with 1 column.
+        :param str sql: The SQL call the the stored procedure.
         :param params: The arguments for the stored procedure.
         :return: The value of the selected column.
         """
@@ -260,13 +249,13 @@ class StaticDataLayer:
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def execute_sp_singleton1(sql: str, *params):
+    def execute_sp_singleton1(sql, *params):
         """
-        Executes a stored procedure that selects 1 row with 1 column.
-
-        :param sql: The SQL call the the stored procedure.
+        Executes a stored routine with designation type "table", i.e a stored routine that is expected to select 1 row
+        with 1 column.
+        :param str sql: The SQL call the the stored procedure.
         :param params: The arguments for the stored procedure.
-        :return: The value of the selected column.
+        :rtype: object The value of the selected column.
         """
         cursor = MySQLCursorBuffered(StaticDataLayer.connection)
         itr = cursor.execute(sql, params, multi=True)
@@ -288,12 +277,24 @@ class StaticDataLayer:
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
     def execute_sp_table(sql: str, *params):
+        """
+        Executes a stored routine with designation type "table". 
+        :param str sql: The SQL statement for calling the stored routine.
+        :param params: The arguments for calling the stored routine.
+        :return: int The number of rows.
+        """
         # todo methods for showing table
         pass
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
     def execute_sp_log(sql, *params):
+        """
+        Executes a stored routine with designation type "log". 
+        :param str sql: The SQL statement for calling the stored routine.
+        :param params: The arguments for calling the stored routine.
+        :return: int The number of log messages. 
+        """
         cursor = MySQLCursorBuffered(StaticDataLayer.connection)
         itr = cursor.execute(sql, params, multi=True)
 
@@ -315,12 +316,5 @@ class StaticDataLayer:
         cursor.close()
 
         return n
-
-    # ------------------------------------------------------------------------------------------------------------------
-    @staticmethod
-    def execute_sp_table(sql: str, *params):
-        # todo methods for showing table
-        pass
-
 
 # ----------------------------------------------------------------------------------------------------------------------

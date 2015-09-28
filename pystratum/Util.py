@@ -3,6 +3,9 @@ import os
 
 # ----------------------------------------------------------------------------------------------------------------------
 class Util:
+    """
+    A helper class with miscellaneous functions that don;t belong somewhere else.
+    """
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
     def write_two_phases(the_filename, the_data):
@@ -21,15 +24,15 @@ class Util:
         """
         write_flag = True
         if os.path.exists(the_filename):
-            with open(the_filename, 'r') as f:
-                old_data = f.read()
+            with open(the_filename, 'r') as file:
+                old_data = file.read()
                 if the_data == old_data:
                     write_flag = False
 
         if write_flag:
             tmp_filename = the_filename + '.tmp'
-            with open(tmp_filename, 'w+') as f:
-                f.write(the_data)
+            with open(tmp_filename, 'w+') as file:
+                file.write(the_data)
             os.replace(tmp_filename, the_filename)
             print("Wrote: '%s'." % the_filename)
 

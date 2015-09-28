@@ -4,7 +4,6 @@ import re
 import sys
 import json
 import configparser
-from pystratum.RoutineLoaderHelper import RoutineLoaderHelper
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -17,85 +16,75 @@ class RoutineLoader:
         self.error_file_names = set()
         """
         A set with source names that are not loaded into RDBMS instance.
-
         :type: set
         """
 
         self._pystratum_metadata = {}
         """
         The meta data of all stored routines.
-
         :type: dict
         """
 
         self._pystratum_metadata_filename = None
         """
         The filename of the file with the metadata of all stored routines.
-
         :type: string
         """
 
         self._rdbms_old_metadata = {}
         """
         Old metadata about all stored routines.
-
         :type: dict
         """
 
         self._replace_pairs = {}
         """
         A map from placeholders to their actual values.
-
         :type: dict
         """
 
-        self._source_encoding = None
+        self._source_file_encoding = None
         """
         The character set of the source files.
-
         :type: string
         """
 
         self._source_directory = None
         """
         Path where source files can be found.
-
         :type: string
         """
 
         self._source_file_extension = None
         """
         The extension of the source files.
-
         :type: string
         """
 
         self._source_file_names = {}
         """
         All found source files.
-
         :type: dict
         """
 
         self._target_config_filename = None
         """
         The name of the configuration file of the target project.
-
         :type: string
         """
 
         self._constants_filename = None
         """
-
         :type: string
         """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def main(self, config_filename: str, file_names=None) -> int:
+    def main(self, config_filename, file_names=None):
         """
         Loads stored routines into the current schema.
-        :param config_filename: The name of the configuration file of the current project
-        :param file_names: The sources that must be loaded. If empty all sources (if required) will loaded.
+
+        :param str config_filename: The name of the configuration file of the current project
+        :param list file_names: The sources that must be loaded. If empty all sources (if required) will loaded.
         :rtype : int The status of exit.
         """
         if file_names:
@@ -134,11 +123,12 @@ class RoutineLoader:
         pass
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _load_list(self, config_filename: str, file_names: list):
+    def _load_list(self, config_filename, file_names):
         """
         Loads all stored routines in a list into the RDBMS instance.
-        :param config_filename The filename of the configuration file.
-        :param file_names The list of files to be loaded.
+
+        :param str config_filename: The filename of the configuration file.
+        :param list file_names: The list of files to be loaded.
         """
         self._read_configuration_file(config_filename)
         self.connect()
@@ -153,10 +143,10 @@ class RoutineLoader:
         self.disconnect()
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _load_all(self, config_filename: str):
+    def _load_all(self, config_filename):
         """
         Loads all stored routines into the RDBMS instance.
-        :param config_filename string The filename of the configuration file.
+        :param str config_filename: string The filename of the configuration file.
         """
         self._read_configuration_file(config_filename)
         self.connect()
@@ -173,10 +163,10 @@ class RoutineLoader:
         self.disconnect()
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _read_configuration_file(self, config_filename: str):
+    def _read_configuration_file(self, config_filename):
         """
         Reads parameters from the configuration file.
-        :param config_filename string
+        :param str config_filename: string
         """
         config = configparser.ConfigParser()
         config.read(config_filename)
@@ -195,7 +185,7 @@ class RoutineLoader:
         """
         Searches recursively for all source files in a directory.
         """
-        for dir_path, dir_names, files in os.walk(self._source_directory):
+        for dir_path, _, files in os.walk(self._source_directory):
             for name in files:
                 if name.lower().endswith(self._source_file_extension):
                     basename = os.path.splitext(os.path.basename(name))[0]
@@ -214,8 +204,8 @@ class RoutineLoader:
         Reads the metadata of stored routines from the metadata file.
         """
         if os.path.isfile(self._pystratum_metadata_filename):
-            with open(self._pystratum_metadata_filename, 'r') as f:
-                self._pystratum_metadata = json.load(f)
+            with open(self._pystratum_metadata_filename, 'r') as file:
+                self._pystratum_metadata = json.load(file)
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
@@ -227,13 +217,14 @@ class RoutineLoader:
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
-    def create_routine_loader_helper(self,
-                                     routine_name: str,
-                                     pystratum_old_metadata: dict,
-                                     rdbms_old_metadata: dict) -> RoutineLoaderHelper:
+    def create_routine_loader_helper(self, routine_name, pystratum_old_metadata, rdbms_old_metadata):
         """
         Creates a Routine Loader Helper object.
-        :return:
+
+        :param str routine_name:
+        :param dict pystratum_old_metadata:
+        :param dict rdbms_old_metadata:
+        :rtype: pystratum.RoutineLoaderHelper.RoutineLoaderHelper
         """
         pass
 
@@ -259,7 +250,7 @@ class RoutineLoader:
             if not metadata:
                 self.error_file_names.add(self._source_file_names[routine_name])
                 if routine_name in self._pystratum_metadata:
-                    del (self._pystratum_metadata[routine_name])
+                    del self._pystratum_metadata[routine_name]
             else:
                 self._pystratum_metadata[routine_name] = metadata
 
@@ -293,7 +284,7 @@ class RoutineLoader:
         Removes obsolete entries from the metadata of all stored routines.
         """
         clean = {}
-        for key, source_filename in self._source_file_names.items():
+        for key, _ in self._source_file_names.items():
             if key in self._pystratum_metadata:
                 clean[key] = self._pystratum_metadata[key]
 
@@ -311,7 +302,8 @@ class RoutineLoader:
     def find_source_files_from_list(self, file_names):
         """
         Finds all source files that actually exists from a list of file names.
-        :param file_names list The list of file names.
+
+        :param list file_names: The list of file names.
         """
         for file_name in file_names:
             if os.path.exists(file_name):
@@ -331,11 +323,11 @@ class RoutineLoader:
         Temp solution for replace constants.
         """
         if os.path.exists(self._constants_filename):
-            with open(self._constants_filename, 'r') as f:
-                for line in f:
+            with open(self._constants_filename, 'r') as file:
+                for line in file:
                     if line.strip() != "\n":
-                        p = re.compile('(?:(\w+)\s*=\s*(\w+))')
-                        matches = p.findall(line)
+                        pattern = re.compile('(?:(\w+)\s*=\s*(\w+))')
+                        matches = pattern.findall(line)
 
                         if matches:
                             matches = matches[0]
@@ -344,6 +336,5 @@ class RoutineLoader:
                             if name in self._replace_pairs:
                                 raise Exception("Duplicate placeholder '%s'" % name)
                             self._replace_pairs[name] = value
-
 
 # ----------------------------------------------------------------------------------------------------------------------

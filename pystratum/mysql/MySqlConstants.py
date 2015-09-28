@@ -24,9 +24,9 @@ class MySqlConstants(MySqlConnection, Constants):
         and the constant name (if assigned) and stores this data in old_columns.
         """
         if os.path.exists(self._constants_filename):
-            with open(self._constants_filename, 'r') as f:
+            with open(self._constants_filename, 'r') as file:
                 line_number = 0
-                for line in f:
+                for line in file:
                     line_number += 1
                     if line != "\n":
                         p = re.compile('\s*(?:([a-zA-Z0-9_]+)\.)?([a-zA-Z0-9_]+)\.'

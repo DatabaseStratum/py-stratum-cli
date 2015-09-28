@@ -249,6 +249,7 @@ where   nullif(\"%s\",'') is not null""" % (table['id'],
                         'smallint': 6,
                         'bit': column['character_maximum_length'],
                         'money': None,  # @todo max-length
+                        'boolean': None,  # @todo max-length
                         'double': column['numeric_precision'],
                         'numeric': column['numeric_precision'],
                         'real': None,  # @todo max-length
