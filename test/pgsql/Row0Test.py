@@ -30,4 +30,12 @@ class Row0Test(StratumTestCase):
         with self.assertRaises(Exception):
             DataLayer.tst_test_row0a(2)
 
+    # ------------------------------------------------------------------------------------------------------------------
+    def test4(self):
+        """
+        Test column tst_c00 is selected correctly.
+        """
+        ret = DataLayer.tst_test_row0a(1)
+        self.assertEqual(1, ret['tst_c00'])
+
 # ----------------------------------------------------------------------------------------------------------------------

@@ -82,6 +82,14 @@
         <exec command="python3 -m unittest test/mysql/*.py" passthru="true" checkreturn="true"/>
     </target>
 
+    <!-- Runs all unit tests for PostgreSQL-->
+    <target name="pg-unit">
+        <delete file="etc/mysql/test_routines.json" quiet="true"/>
+        <exec command="cat test/pgsql/ddl/create_tables.sql | psql -Utest cbi" passthru="true" checkreturn="true"/>
+        <exec command="bin/stratum.py -c etc/pgsql/test_stratum.cfg" passthru="true" checkreturn="true"/>
+        <exec command="python3 -m unittest test/pgsql/*.py" passthru="true" checkreturn="true"/>
+    </target>
+
     <!-- Default target -->
     <target name="build">
         <echo msg="And Now for Something Completely Different"/>
