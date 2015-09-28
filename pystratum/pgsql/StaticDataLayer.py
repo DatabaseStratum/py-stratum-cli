@@ -202,7 +202,7 @@ class StaticDataLayer:
             raise Exception("Number of rows selected by query below is %d. Expected 1.\n%s" %
                             (n, sql))
 
-        return dict(zip(column_names, ret))
+        return ret
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
