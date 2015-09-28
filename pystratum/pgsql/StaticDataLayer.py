@@ -391,17 +391,17 @@ class StaticDataLayer:
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def copy_expert(sql, table, size=8192):
+    def copy_expert(sql, file, size=8192):
         """
         Submit a user-composed COPY statement.
 
         :param str sql: The COPY statement to execute.
-        :param str table: A file-like object to read or write (according to sql).
+        :param T file: A file-like object to read or write (according to sql).
         :param int size: Size of the read buffer to be used in COPY FROM.
         "return int: The number of rows copied.
         """
         cursor = StaticDataLayer.connection.cursor()
-        cursor.copy_expert(sql, table, size)
+        cursor.copy_expert(sql, file, size)
         n = cursor.rowcount
         cursor.close()
 

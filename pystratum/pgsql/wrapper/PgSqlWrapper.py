@@ -1,4 +1,5 @@
 import abc
+
 from pystratum.wrapper.Wrapper import Wrapper
 
 
@@ -10,29 +11,29 @@ class PgSqlWrapper(Wrapper):
     # ------------------------------------------------------------------------------------------------------------------
     def is_lob_parameter(self, parameters):
         """
-        Returns True of one of the parameters is a BLOB or CLOB. Otherwise, returns False.
+        Returns True if one of the parameters is a BLOB or CLOB. Otherwise, returns False.
 
         :param parameters: The parameters of a stored routine.
         :return bool:
         """
         has_lob = False
 
-        lookup = {'bigint': False,
-                  'integer': False,
-                  'bit': False,
-                  'smallint': False,
-                  'money': False,
-                  'numeric': False,
-                  'real': False,
-                  'character': False,
-                  'character varying': False,
+        lookup = {'bigint':                      False,
+                  'integer':                     False,
+                  'bit':                         False,
+                  'smallint':                    False,
+                  'money':                       False,
+                  'numeric':                     False,
+                  'real':                        False,
+                  'character':                   False,
+                  'character varying':           False,
                   'timestamp without time zone': False,
-                  'time without time zone': False,
-                  'date': False,
-                  'boolean': False,
+                  'time without time zone':      False,
+                  'date':                        False,
+                  'boolean':                     False,
 
-                  'bytea': True,
-                  'text': True}
+                  'bytea':                       True,
+                  'text':                        True}
 
         if parameters:
             for parameter_info in parameters:
@@ -95,27 +96,25 @@ class PgSqlWrapper(Wrapper):
         :param str data_type: The parameter type.
         :return str: The format specifier.
         """
-        lookup = {'bigint': '%s::bigint',
-                  'integer': '%s::int',
-                  'bit': '%s',
-                  'smallint': '%s::smallint',
-                  'money': '%s',
-                  'numeric': '%s',
-                  'real': '%s',
-                  'character': '%s',
-                  'character varying': '%s',
+        lookup = {'bigint':                      '%s::bigint',
+                  'integer':                     '%s::int',
+                  'bit':                         '%s',
+                  'smallint':                    '%s::smallint',
+                  'money':                       '%s',
+                  'numeric':                     '%s',
+                  'real':                        '%s',
+                  'character':                   '%s',
+                  'character varying':           '%s',
                   'timestamp without time zone': '%s',
-                  'time without time zone': '%s',
-                  'boolean': '%s::bool',
-                  'date': '%s::date',
-                  'bytea': '%s',
-                  'text': '%s'
-                  }
+                  'time without time zone':      '%s',
+                  'boolean':                     '%s::bool',
+                  'date':                        '%s::date',
+                  'bytea':                       '%s',
+                  'text':                        '%s'}
 
         if data_type in lookup:
             return lookup[data_type]
 
         raise Exception('Unexpected data type %s.' % data_type)
-
 
 # ---------------------------------------------------------------------------------------------------------------------

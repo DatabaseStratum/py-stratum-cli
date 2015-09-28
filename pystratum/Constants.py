@@ -1,5 +1,6 @@
 import configparser
 import abc
+
 from pystratum.Util import Util
 
 
@@ -18,7 +19,6 @@ class Constants:
         self._constants = {}
         """
         All constants.
-
         :type: dict
         """
 
@@ -26,49 +26,42 @@ class Constants:
         """
         The previous column names, widths, and constant names (i.e. the content of $myConstantsFilename upon
         starting this program).
-
         :type: dict
         """
 
         self._constants_filename = None
         """
         Filename with column names, their widths, and constant names.
-
-        :type: string
+        :type: str
         """
 
         self._prefix = None
         """
         The prefix used for designations a unknown constants.
-
-        :type: string
+        :type: str
         """
 
         self._template_config_filename = None
         """
         Template filename under which the file is generated with the constants.
-
-        :type: string
+        :type: str
         """
 
         self._config_filename = None
         """
         The destination filename with constants.
-
-        :type: string
+        :type: str
         """
 
         self._columns = {}
         """
         All columns in the MySQL schema.
-
         :type: dict
         """
 
         self._labels = {}
         """
         All primary key labels, their widths and constant names.
-
         :type: dict
         """
 

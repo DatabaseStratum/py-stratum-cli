@@ -7,7 +7,7 @@ from pystratum.pgsql.StaticDataLayer import StaticDataLayer
 # ----------------------------------------------------------------------------------------------------------------------
 class PgSqlRoutineLoader(PgSqlConnection, RoutineLoader):
     """
-    Class for loading stored routines into a MySQL instance from (pseudo) SQL files.
+    Class for loading stored routines into a PostgreSQL instance from (pseudo) SQL files.
     """
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self):

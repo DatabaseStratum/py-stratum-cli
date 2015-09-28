@@ -6,7 +6,7 @@ from pystratum.pgsql.wrapper import create_routine_wrapper
 # ----------------------------------------------------------------------------------------------------------------------
 class PgSqlRoutineWrapperGenerator(PgSqlConnection, RoutineWrapperGenerator):
     """
-    Class for generating a class with wrapper methods for calling stored routines in a MySQL database.
+    Class for generating a class with wrapper methods for calling stored routines in a PostgreSQL database.
     """
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self):
