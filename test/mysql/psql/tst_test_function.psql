@@ -10,5 +10,5 @@ returns int
 no sql
 -- type: function
 begin
-  return p_a + p_b;
+  return p_a + 2* p_b;
 end
