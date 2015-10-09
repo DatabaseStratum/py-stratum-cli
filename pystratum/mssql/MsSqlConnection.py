@@ -58,8 +58,7 @@ class MsSqlConnection(Connection.Connection):
     # ------------------------------------------------------------------------------------------------------------------
     def _read_configuration_file(self, filename: str):
         """
-        Reads parameters from the configuration file. Checks the supplement files, and sets values to attributes
-        of class.
+        Reads connections parameters from the configuration file.
 
         :param str filename: The path to the configuration file.
         """
