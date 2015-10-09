@@ -1,7 +1,5 @@
-import configparser
 from pystratum.mssql.StaticDataLayer import StaticDataLayer
 from pystratum import Connection
-
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -58,13 +56,14 @@ class MsSqlConnection(Connection.Connection):
         StaticDataLayer.disconnect()
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _read_configuration_file(self, config_filename: str):
+    def _read_configuration_file(self, filename: str):
         """
         Reads parameters from the configuration file. Checks the supplement files, and sets values to attributes
-        of class
-        :param config_filename
+        of class.
+
+        :param str filename: The path to the configuration file.
         """
-        config, config_supplement = self._read_configuration(config_filename)
+        config, config_supplement = self._read_configuration(filename)
 
         self._host_name = self._get_option(config, config_supplement, 'database', 'host_name')
         self._user_name = self._get_option(config, config_supplement, 'database', 'user_name')
