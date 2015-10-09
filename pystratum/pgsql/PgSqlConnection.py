@@ -1,10 +1,12 @@
 import configparser
+import os
 
 from pystratum.pgsql.StaticDataLayer import StaticDataLayer
+from pystratum import Connection
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-class PgSqlConnection:
+class PgSqlConnection(Connection.Connection):
     """
     Class for connecting to PostgreSQL instances and reading PostgreSQL specific connection parameters from 
     configuration files.
@@ -76,17 +78,17 @@ class PgSqlConnection:
     # ------------------------------------------------------------------------------------------------------------------
     def _read_configuration_file(self, config_filename):
         """
-        Reads parameters from the configuration file.
+        Reads parameters from the configuration file. Checks the supplement files, and sets values to attributes
+        of class
         :param str config_filename:
         """
-        config = configparser.ConfigParser()
-        config.read(config_filename)
+        config, config_supplement = self._read_configuration(config_filename)
 
-        self._database = config.get('database', 'database_name')
-        self._user_name = config.get('database', 'user_name')
-        self._password = config.get('database', 'password')
-        self._schema = config.get('database', 'schema')
-        self._host_name = config.get('database', 'host_name', fallback='localhost')
-        self._port = int(config.get('database', 'port', fallback='5432'))
+        self._database = self._get_option(config, config_supplement, 'database', 'database_name')
+        self._user_name = self._get_option(config, config_supplement, 'database', 'user_name')
+        self._password = self._get_option(config, config_supplement, 'database', 'password')
+        self._schema = self._get_option(config, config_supplement, 'database', 'schema')
+        self._host_name = self._get_option(config, config_supplement, 'database', 'host_name', fallback='localhost')
+        self._port = int(self._get_option(config, config_supplement, 'database', 'port', fallback='5432'))
 
 # ----------------------------------------------------------------------------------------------------------------------
