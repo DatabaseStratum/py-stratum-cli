@@ -18,22 +18,22 @@ class PgSqlWrapper(Wrapper):
         """
         has_lob = False
 
-        lookup = {'bigint':                      False,
-                  'integer':                     False,
-                  'bit':                         False,
-                  'smallint':                    False,
-                  'money':                       False,
-                  'numeric':                     False,
-                  'real':                        False,
-                  'character':                   False,
-                  'character varying':           False,
+        lookup = {'bigint': False,
+                  'integer': False,
+                  'bit': False,
+                  'smallint': False,
+                  'money': False,
+                  'numeric': False,
+                  'real': False,
+                  'character': False,
+                  'character varying': False,
                   'timestamp without time zone': False,
-                  'time without time zone':      False,
-                  'date':                        False,
-                  'boolean':                     False,
+                  'time without time zone': False,
+                  'date': False,
+                  'boolean': False,
 
-                  'bytea':                       True,
-                  'text':                        True}
+                  'bytea': True,
+                  'text': True}
 
         if parameters:
             for parameter_info in parameters:
@@ -68,7 +68,7 @@ class PgSqlWrapper(Wrapper):
         i = 0
         l = 0
         for parameter in routine['parameters']:
-            re_type = self._get_parameter_format_specifier(parameter['data_type'])
+            re_type = self._get_parameter_format_specifier(parameter)
             if parameters:
                 parameters += ', '
                 placeholders += ', '
@@ -89,32 +89,33 @@ class PgSqlWrapper(Wrapper):
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def _get_parameter_format_specifier(data_type):
+    def _get_parameter_format_specifier(parameter):
         """
         Returns the appropriate format specifier for a parameter type.
 
         :param str data_type: The parameter type.
         :return str: The format specifier.
         """
+
         lookup = {'bigint':                      '%s::bigint',
                   'integer':                     '%s::int',
-                  'bit':                         '%s',
+                  'bit':                         '%s::bit(4)',
                   'smallint':                    '%s::smallint',
-                  'money':                       '%s',
-                  'numeric':                     '%s',
-                  'real':                        '%s',
-                  'character':                   '%s',
-                  'character varying':           '%s',
-                  'timestamp without time zone': '%s',
-                  'time without time zone':      '%s',
+                  'money':                       '%s::money',
+                  'numeric':                     '%s::numeric',
+                  'real':                        '%s::real',
+                  'character':                   '%s::char',
+                  'character varying':           '%s::varchar',
+                  'timestamp without time zone': '%s::timestamp',
+                  'time without time zone':      '%s::timestamp',
                   'boolean':                     '%s::bool',
                   'date':                        '%s::date',
-                  'bytea':                       '%s',
-                  'text':                        '%s'}
+                  'bytea':                       '%s::bytea',
+                  'text':                        '%s::text'}
 
-        if data_type in lookup:
-            return lookup[data_type]
+        if parameter['data_type'] in lookup:
+            return lookup[parameter['data_type']]
 
-        raise Exception('Unexpected data type %s.' % data_type)
+        raise Exception('Unexpected data type %s.' % parameter['data_type'])
 
 # ---------------------------------------------------------------------------------------------------------------------

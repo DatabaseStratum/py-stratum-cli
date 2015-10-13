@@ -1,0 +1,11 @@
+/**
+ * Test for argument type date
+ */
+create function tst_test_argument_date( p_date date )
+returns date
+as $$
+-- type: function
+begin
+  return p_date;
+end;
+$$ language plpgsql;

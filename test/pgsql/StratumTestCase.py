@@ -9,7 +9,7 @@ from test.pgsql.DataLayer import DataLayer
 class StratumTestCase(unittest.TestCase):
     # ------------------------------------------------------------------------------------------------------------------
     def setUp(self):
-        DataLayer.connect('localhost', 'cbi', 'test', 'test', 'test')
+        DataLayer.connect('localhost', 'test', 'test', 'test', 'test')
 
         self.held, sys.stdout = sys.stdout, StringIO()
 

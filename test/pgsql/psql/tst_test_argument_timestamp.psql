@@ -1,0 +1,11 @@
+/**
+ * Test for argument type timestamp
+ */
+create function tst_test_argument_timestamp( p_ts timestamp )
+returns timestamp
+as $$
+-- type: function
+begin
+  return p_ts;
+end;
+$$ language plpgsql;
