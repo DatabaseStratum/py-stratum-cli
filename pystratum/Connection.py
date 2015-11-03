@@ -26,7 +26,7 @@ class Connection:
         else:
             return_value = config.get(section, option, fallback=fallback)
 
-        if fallback is not None and return_value is None:
+        if fallback is None and return_value is None:
             raise KeyError("Option '%s' is not found in section '%s'." % (option, section))
 
         return return_value
