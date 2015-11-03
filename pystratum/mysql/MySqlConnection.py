@@ -70,10 +70,10 @@ class MySqlConnection(Connection.Connection):
         """
         Connects to the MySQL instance.
         """
-        StaticDataLayer.config['database'] = self._database
+        StaticDataLayer.config['host'] = self._host
         StaticDataLayer.config['user'] = self._user
         StaticDataLayer.config['password'] = self._password
-        StaticDataLayer.config['host'] = self._host
+        StaticDataLayer.config['database'] = self._database
         StaticDataLayer.config['port'] = self._port
         StaticDataLayer.config['charset'] = self._character_set_client
         StaticDataLayer.config['collation'] = self._collation_connection
