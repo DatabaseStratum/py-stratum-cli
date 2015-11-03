@@ -10,7 +10,7 @@ class PgSqlConnection(Connection.Connection):
     """
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self):
-        self._host_name = None
+        self._host = None
         """
         The hostname of the PostgreSQL instance.
 
@@ -24,7 +24,7 @@ class PgSqlConnection(Connection.Connection):
         :type: string
         """
 
-        self._user_name = None
+        self._user = None
         """
         User name.
 
@@ -57,10 +57,10 @@ class PgSqlConnection(Connection.Connection):
         """
         Connects to the PostgreSQL instance.
         """
-        StaticDataLayer.connect(self._host_name,
+        StaticDataLayer.connect(self._host,
                                 self._database,
                                 self._schema,
-                                self._user_name,
+                                self._user,
                                 self._password,
                                 self._port)
 
@@ -81,11 +81,11 @@ class PgSqlConnection(Connection.Connection):
         """
         config, config_supplement = self._read_configuration(filename)
 
-        self._database = self._get_option(config, config_supplement, 'database', 'database_name')
-        self._user_name = self._get_option(config, config_supplement, 'database', 'user_name')
+        self._host = self._get_option(config, config_supplement, 'database', 'host', fallback='localhost')
+        self._user = self._get_option(config, config_supplement, 'database', 'user')
         self._password = self._get_option(config, config_supplement, 'database', 'password')
+        self._database = self._get_option(config, config_supplement, 'database', 'database')
         self._schema = self._get_option(config, config_supplement, 'database', 'schema')
-        self._host_name = self._get_option(config, config_supplement, 'database', 'host_name', fallback='localhost')
         self._port = int(self._get_option(config, config_supplement, 'database', 'port', fallback='5432'))
 
 # ----------------------------------------------------------------------------------------------------------------------

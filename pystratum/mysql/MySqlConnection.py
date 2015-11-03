@@ -9,7 +9,7 @@ class MySqlConnection(Connection.Connection):
     """
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self):
-        self._host_name = None
+        self._host = None
         """
         The hostname of the MySQL instance.
 
@@ -23,7 +23,7 @@ class MySqlConnection(Connection.Connection):
         :type: string
         """
 
-        self._user_name = None
+        self._user = None
         """
         User name.
 
@@ -71,9 +71,9 @@ class MySqlConnection(Connection.Connection):
         Connects to the MySQL instance.
         """
         StaticDataLayer.config['database'] = self._database
-        StaticDataLayer.config['user'] = self._user_name
+        StaticDataLayer.config['user'] = self._user
         StaticDataLayer.config['password'] = self._password
-        StaticDataLayer.config['host'] = self._host_name
+        StaticDataLayer.config['host'] = self._host
         StaticDataLayer.config['port'] = self._port
         StaticDataLayer.config['charset'] = self._character_set_client
         StaticDataLayer.config['collation'] = self._collation_connection
@@ -98,10 +98,10 @@ class MySqlConnection(Connection.Connection):
         """
         config, config_supplement = self._read_configuration(filename)
 
-        self._database = self._get_option(config, config_supplement, 'database', 'database_name')
-        self._user_name = self._get_option(config, config_supplement, 'database', 'user_name')
+        self._host = self._get_option(config, config_supplement, 'database', 'host_name', fallback='localhost')
+        self._user = self._get_option(config, config_supplement, 'database', 'user')
         self._password = self._get_option(config, config_supplement, 'database', 'password')
-        self._host_name = self._get_option(config, config_supplement, 'database', 'host_name', fallback='localhost')
+        self._database = self._get_option(config, config_supplement, 'database', 'database')
         self._port = int(self._get_option(config, config_supplement, 'database', 'port', fallback='3306'))
         self._character_set_client = self._get_option(config, config_supplement, 'database', 'character_set_client',
                                                       fallback='utf-8')

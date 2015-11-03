@@ -10,14 +10,14 @@ class MsSqlConnection(Connection.Connection):
     """
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self):
-        self._host_name = None
+        self._host = None
         """
         The hostname of the SQL Server instance.
 
         :type: string
         """
 
-        self._user_name = None
+        self._user = None
         """
         User name.
 
@@ -43,8 +43,8 @@ class MsSqlConnection(Connection.Connection):
         """
         Connects to the database.
         """
-        StaticDataLayer.connect(self._host_name,
-                                self._user_name,
+        StaticDataLayer.connect(self._host,
+                                self._user,
                                 self._password,
                                 self._database)
 
@@ -64,10 +64,10 @@ class MsSqlConnection(Connection.Connection):
         """
         config, config_supplement = self._read_configuration(filename)
 
-        self._host_name = self._get_option(config, config_supplement, 'database', 'host_name')
-        self._user_name = self._get_option(config, config_supplement, 'database', 'user_name')
+        self._host = self._get_option(config, config_supplement, 'database', 'host')
+        self._user = self._get_option(config, config_supplement, 'database', 'user')
         self._password = self._get_option(config, config_supplement, 'database', 'password')
-        self._database = self._get_option(config, config_supplement, 'database', 'database_name')
+        self._database = self._get_option(config, config_supplement, 'database', 'database')
 
 
 # ----------------------------------------------------------------------------------------------------------------------

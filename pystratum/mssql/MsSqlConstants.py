@@ -19,17 +19,6 @@ class MsSqlConstants(MsSqlConnection, Constants):
         MsSqlConnection.__init__(self)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def connect(self):
-        StaticDataLayer.connect(self._host_name,
-                                self._user_name,
-                                self._password,
-                                self._database)
-
-    # ------------------------------------------------------------------------------------------------------------------
-    def disconnect(self):
-        StaticDataLayer.disconnect()
-
-    # ------------------------------------------------------------------------------------------------------------------
     def _get_old_columns(self):
         """
         Reads from file constants_filename the previous table and column names, the width of the column,
