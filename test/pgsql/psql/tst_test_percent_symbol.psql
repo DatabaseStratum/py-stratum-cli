@@ -1,0 +1,20 @@
+/**
+ * Test for stored function with percent symbols.
+ */
+create function tst_test_percent_symbol()
+returns refcursor
+as $$
+declare
+  cur refcursor;
+-- type: rows
+begin
+  open cur
+  for
+  select *
+  from  "TST_FOO2"
+  where  tst_c00 like '%'
+  ;
+
+  return cur;
+end;
+$$ language plpgsql;

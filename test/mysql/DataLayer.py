@@ -61,6 +61,11 @@ class DataLayer(StaticDataLayer):
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
+    def tst_test_percent_symbol():
+        return StaticDataLayer.execute_sp_rows("call tst_test_percent_symbol()")
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @staticmethod
     def tst_test_row0a(p_count):
         return StaticDataLayer.execute_sp_row0("call tst_test_row0a(%s)", p_count)
 

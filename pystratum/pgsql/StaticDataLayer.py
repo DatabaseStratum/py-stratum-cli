@@ -112,7 +112,10 @@ class StaticDataLayer:
         :param tuple params: The values for the statement.
         """
         cursor = StaticDataLayer.connection.cursor()
-        cursor.execute(sql, params)
+        if params:
+            cursor.execute(sql, params)
+        else:
+            cursor.execute(sql)
         cursor.close()
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -126,7 +129,10 @@ class StaticDataLayer:
         :return list[dict]: The selected rows (an empty list if no rows are selected).
         """
         cursor = StaticDataLayer.connection.cursor(cursor_factory=RealDictCursor)
-        cursor.execute(sql, params)
+        if params:
+            cursor.execute(sql, params)
+        else:
+            cursor.execute(sql)
         rows = cursor.fetchall()
         cursor.close()
 
@@ -142,7 +148,10 @@ class StaticDataLayer:
         :param iterable params: The arguments for the statement.
         """
         cursor = StaticDataLayer.connection.cursor()
-        cursor.execute(sql, params)
+        if params:
+            cursor.execute(sql, params)
+        else:
+            cursor.execute(sql)
         cursor.close()
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -156,7 +165,11 @@ class StaticDataLayer:
         :return None|dict: The selected row or None.
         """
         cursor = StaticDataLayer.connection.cursor()
-        cursor.execute(sql, params)
+
+        if params:
+            cursor.execute(sql, params)
+        else:
+            cursor.execute(sql)
         portal = StaticDataLayer.connection.cursor(cursor.fetchone()[0])
         rows = portal.fetchall()
         n = len(rows)
@@ -185,10 +198,13 @@ class StaticDataLayer:
         :return dict: The selected row.
         """
         cursor = StaticDataLayer.connection.cursor()
-        cursor.execute(sql, params)
+        if params:
+            cursor.execute(sql, params)
+        else:
+            cursor.execute(sql)
         portal = StaticDataLayer.connection.cursor(cursor.fetchone()[0])
         rows = portal.fetchall()
-        column_names = StaticDataLayer._get_column_name(portal)
+        StaticDataLayer._get_column_name(portal)
         n = len(rows)
         if n == 1:
             column_names = StaticDataLayer._get_column_name(portal)
@@ -215,7 +231,10 @@ class StaticDataLayer:
         :return list[disc]: The selected rows (an empty list if no rows are selected).
         """
         cursor = StaticDataLayer.connection.cursor()
-        cursor.execute(sql, params)
+        if params:
+            cursor.execute(sql, params)
+        else:
+            cursor.execute(sql)
         portal = StaticDataLayer.connection.cursor(cursor.fetchone()[0])
         tmp = portal.fetchall()
         column_names = StaticDataLayer._get_column_name(portal)
@@ -239,7 +258,10 @@ class StaticDataLayer:
         :return T|None: The value of selected column or None.
         """
         cursor = StaticDataLayer.connection.cursor()
-        cursor.execute(sql, params)
+        if params:
+            cursor.execute(sql, params)
+        else:
+            cursor.execute(sql)
         portal = StaticDataLayer.connection.cursor(cursor.fetchone()[0])
         rows = portal.fetchall()
         n = len(rows)
@@ -267,7 +289,10 @@ class StaticDataLayer:
         :return T: The value of the selected column.
         """
         cursor = StaticDataLayer.connection.cursor()
-        cursor.execute(sql, params)
+        if params:
+            cursor.execute(sql, params)
+        else:
+            cursor.execute(sql)
         n = cursor.rowcount
         if n == 1:
             ret = cursor.fetchone()[0]
@@ -292,7 +317,10 @@ class StaticDataLayer:
         :return T: The value of the selected column.
         """
         cursor = StaticDataLayer.connection.cursor()
-        cursor.execute(sql, params)
+        if params:
+            cursor.execute(sql, params)
+        else:
+            cursor.execute(sql)
         portal = StaticDataLayer.connection.cursor(cursor.fetchone()[0])
         rows = portal.fetchall()
         n = len(rows)
@@ -331,7 +359,10 @@ class StaticDataLayer:
         cursor.callproc(StaticDataLayer.sp_log_init)
 
         # Execute the stored procedure.
-        cursor.execute(sql, params)
+        if params:
+            cursor.execute(sql, params)
+        else:
+            cursor.execute(sql)
 
         # Fetch the log messages.
         cursor.callproc(StaticDataLayer.sp_log_fetch)
