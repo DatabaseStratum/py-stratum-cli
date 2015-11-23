@@ -7,9 +7,9 @@
  * @link
  */
 -- ---------------------------------------------------------------------------------------------------------------------
-drop table if exists "TST_FOO1";
+drop table if exists "tst_foo1";
 
-CREATE TABLE "TST_FOO1" (
+CREATE TABLE "tst_foo1" (
   "tst_bigint" BIGINT,
   "tst_int" INTEGER,
   "tst_smallint" SMALLINT,
@@ -29,18 +29,18 @@ CREATE TABLE "TST_FOO1" (
 );
 
 -- ---------------------------------------------------------------------------------------------------------------------
-drop table if exists "TST_FOO2";
+drop table if exists "tst_foo2";
 
-CREATE TABLE "TST_FOO2" (
+CREATE TABLE "tst_foo2" (
   "tst_c00" INTEGER NOT NULL,
   "tst_c01" VARCHAR(10),
   "tst_c02" VARCHAR(10),
   "tst_c03" VARCHAR(10),
   "tst_c04" VARCHAR(10),
-  CONSTRAINT "PK_TST_FOO2" PRIMARY KEY ("tst_c00")
+  CONSTRAINT "PK_tst_foo2" PRIMARY KEY ("tst_c00")
 );
 
-insert into "TST_FOO2"( tst_c00
+insert into "tst_foo2"( tst_c00
 ,                     tst_c01
 ,                     tst_c02
 ,                     tst_c03
@@ -63,9 +63,9 @@ values( 1
 ;
 
 -- ---------------------------------------------------------------------------------------------------------------------
-drop table if exists "TST_TABLE";
+drop table if exists "tst_table";
 
-CREATE TABLE "TST_TABLE" (
+CREATE TABLE "tst_table" (
   "tst_c00" VARCHAR(20) NOT NULL,
   "tst_c01" INTEGER,
   "tst_c02" REAL,
@@ -73,10 +73,10 @@ CREATE TABLE "TST_TABLE" (
   "tst_c04" DATE,
   "tst_c05" INTEGER,
   "tst_c06" INTEGER,
-  CONSTRAINT "PK_TST_TABLE" PRIMARY KEY ("tst_c00")
+  CONSTRAINT "PK_tst_table" PRIMARY KEY ("tst_c00")
 );
 
-insert into "TST_TABLE"( tst_c00
+insert into "tst_table"( tst_c00
 ,                      tst_c01
 ,                      tst_c02
 ,                      tst_c03
@@ -100,16 +100,16 @@ values( 'Hello'
 ;
 
 -- ---------------------------------------------------------------------------------------------------------------------
-drop table if exists "TST_LABEL";
+drop table if exists "tst_label";
 
-CREATE TABLE "TST_LABEL" (
+CREATE TABLE "tst_label" (
   "tst_id" BIGSERIAL,
   "tst_test" VARCHAR(40) NOT NULL,
   "tst_label" VARCHAR(40),
-  CONSTRAINT "PK_TST_LABEL" PRIMARY KEY ("tst_id")
+  CONSTRAINT "PK_tst_label" PRIMARY KEY ("tst_id")
 );
 
-insert into "TST_LABEL"( tst_test
+insert into "tst_label"( tst_test
 ,                      tst_label )
 values( 'spam'
 ,       'TST_ID_SPAM')
