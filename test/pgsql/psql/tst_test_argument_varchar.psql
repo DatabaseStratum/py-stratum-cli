@@ -1,0 +1,11 @@
+/**
+ * Test for argument type varchar
+ */
+create function tst_test_argument_varchar( p_varchar varchar )
+returns varchar
+as $$
+-- type: function
+begin
+  return p_varchar;
+end;
+$$ language plpgsql;

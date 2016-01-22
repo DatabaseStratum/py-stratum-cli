@@ -1,0 +1,11 @@
+/**
+ * Test for argument type numeric
+ */
+create function tst_test_argument_numeric( p_num numeric )
+returns numeric
+as $$
+-- type: function
+begin
+  return p_num;
+end;
+$$ language plpgsql;

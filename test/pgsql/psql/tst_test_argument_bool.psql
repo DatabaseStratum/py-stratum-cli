@@ -1,0 +1,11 @@
+/**
+ * Test for argument type boolean
+ */
+create function tst_test_argument_bool( p_bool boolean )
+returns boolean
+as $$
+-- type: function
+begin
+  return p_bool;
+end;
+$$ language plpgsql;

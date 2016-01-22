@@ -1,0 +1,11 @@
+/**
+ * Test for argument type bigint
+ */
+create function tst_test_argument_big_int( p_bigint bigint )
+returns bigint
+as $$
+-- type: function
+begin
+  return p_bigint;
+end;
+$$ language plpgsql;
