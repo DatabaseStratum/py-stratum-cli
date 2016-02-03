@@ -45,5 +45,7 @@ setup(
         'console_scripts': [
             'pystratum = pystratum:main',
         ],
-    }, requires=['pymssql', 'mysql']
+    },
+
+    requires=['pymssql', 'mysql']
 )
