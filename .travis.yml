@@ -22,6 +22,7 @@ install:
   - wget https://dev.mysql.com/get/Downloads/Connector-Python/mysql-connector-python-2.1.3.tar.gz
   - tar zxvf mysql-connector-python-2.1.3.tar.gz
   - cd mysql-connector-python-2.1.3
+  - ls -alR
   - python3 setup.py install
 
 before_script:
