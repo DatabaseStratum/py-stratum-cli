@@ -35,7 +35,7 @@ returns void
 as $$
 -- type: none
 begin
-  insert into TST_FOO1 (tst_bigint,
+  insert into tst_foo1 (tst_bigint,
                         tst_int,
                         tst_smallint,
                         tst_bit,

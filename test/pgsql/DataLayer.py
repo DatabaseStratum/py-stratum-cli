@@ -116,11 +116,6 @@ class DataLayer(StaticDataLayer):
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def tst_test_max_allowed_packet(p_tmp_blob):
-        return StaticDataLayer.execute_sp_singleton1("select tst_test_max_allowed_packet(%s::bytea)", p_tmp_blob)
-
-    # ------------------------------------------------------------------------------------------------------------------
-    @staticmethod
     def tst_test_none(p_count):
         return StaticDataLayer.execute_sp_none("select tst_test_none(%s::bigint)", p_count)
 
