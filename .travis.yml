@@ -1,29 +1,44 @@
 language: python
-php:
+python:
   - '3.4'
   - '3.5'
   - '3.5-dev'
-  - nightly
+  - 'nightly'
+
+env:
+  - DB=mysql
+  - DB=pgsql
   
 sudo: true
 
 addons:
   mariadb: 10.1
-
-before_install:
-  - mysql --version
-  - mysql -u root -e "create database if not exists test;"
-  - mysql -u root -e "create user 'test'@'localhost' identified by 'test';"
-  - mysql -u root -e "grant all on test.*  to 'test'@'localhost';"
-  - mysql -u root -e "set global binlog_format = 'row';"
-  - mysql -u root -e "set global log_bin_trust_function_creators = 1;"
   
 install:
-  - pip install pymssql
-    
-script: 
-  cat test/mysql/ddl/create_tables.sql | mysql -utest -ptest test
-  bin/stratum.py -c etc/mysql/test_stratum.cfg
-  python3 -m unittest test/mysql/*.py
-  
+  - cd $HOME
+  - if [ "$DB" = 'mysql' ]; then wget https://dev.mysql.com/get/Downloads/Connector-Python/mysql-connector-python-2.1.3.tar.gz; fi
+  - if [ "$DB" = 'mysql' ]; then tar zxvf mysql-connector-python-2.1.3.tar.gz; fi
+  - if [ "$DB" = 'mysql' ]; then cd mysql-connector-python-2.1.3; fi
+  - if [ "$DB" = 'mysql' ]; then python3 setup.py install; fi
+  - if [ "$DB" = 'pgsql' ]; then pip3 install psycopg2; fi
 
+before_script:
+  - if [ "$DB" = 'mysql' ]; then mysql --version; fi
+  - if [ "$DB" = 'mysql' ]; then mysql -u root -e "create database if not exists test;"; fi
+  - if [ "$DB" = 'mysql' ]; then mysql -u root -e "create user 'test'@'localhost' identified by 'test';"; fi
+  - if [ "$DB" = 'mysql' ]; then mysql -u root -e "grant all on test.*  to 'test'@'localhost';"; fi
+  - if [ "$DB" = 'mysql' ]; then mysql -u root -e "set global binlog_format = 'row';"; fi
+  - if [ "$DB" = 'mysql' ]; then mysql -u root -e "set global log_bin_trust_function_creators = 1;"; fi
+  - if [ "$DB" = 'pgsql' ]; then psql --version; fi
+  - if [ "$DB" = 'pgsql' ]; then psql -c "create user test with password 'test';" -U postgres; fi
+  - if [ "$DB" = 'pgsql' ]; then psql -c "create database test owner=test;" -U postgres; fi
+  - if [ "$DB" = 'pgsql' ]; then psql -c "create schema test;" -U postgres test; fi
+
+script: 
+  - cd $TRAVIS_BUILD_DIR
+  - if [ "$DB" = 'mysql' ]; then cat test/mysql/ddl/create_tables.sql | mysql -utest -ptest test; fi
+  - if [ "$DB" = 'mysql' ]; then python3 bin/stratum.py -c etc/mysql/test_stratum.cfg; fi
+  - if [ "$DB" = 'mysql' ]; then python3 -m unittest test/mysql/*.py; fi
+  - if [ "$DB" = 'pgsql' ]; then cat test/pgsql/ddl/create_tables.sql | psql -Utest test; fi
+  - if [ "$DB" = 'pgsql' ]; then python3 bin/stratum.py -c etc/pgsql/test_stratum.cfg; fi
+  - if [ "$DB" = 'pgsql' ]; then python3 -m unittest test/pgsql/*.py; fi
