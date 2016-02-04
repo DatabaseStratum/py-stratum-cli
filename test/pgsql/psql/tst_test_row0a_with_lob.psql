@@ -18,7 +18,7 @@ begin
   open cur
   for
   select *
-  from   "TST_FOO2"
+  from   tst_foo2
   where  tst_c00 <= p_count
   ;
 
