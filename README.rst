@@ -2,6 +2,9 @@ PyStratum
 =========
 A stored procedure and function loader, wrapper generator for MySQL, SQL Server and PostgreSQL in Python.
 
+.. image:: https://travis-ci.org/SetBased/py-stratum.svg?branch=master
+    :target: https://travis-ci.org/SetBased/py-stratum
+
 Overview
 ========
 PyStratum is a tool and library with the following mayor functionalities:
