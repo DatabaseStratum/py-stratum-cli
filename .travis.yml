@@ -3,7 +3,8 @@ python:
   - '3.4'
   - '3.5'
   - '3.5-dev'
-  - nightly
+  - 'nightly'
+  - 'pypy3'
   
 sudo: true
 
