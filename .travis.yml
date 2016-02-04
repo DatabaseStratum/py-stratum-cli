@@ -32,7 +32,7 @@ before_script:
   - if [ "$DB" = 'pgsql' ]; then psql --version; fi
   - if [ "$DB" = 'pgsql' ]; then psql -c "create user test with password 'test';" -U postgres; fi
   - if [ "$DB" = 'pgsql' ]; then psql -c "create database test owner=test;" -U postgres; fi
-  - if [ "$DB" = 'pgsql' ]; then psql -c "create schema test;" -U postgres test; fi
+  - if [ "$DB" = 'pgsql' ]; then psql -c "create schema test authorization test;" -U postgres test; fi
 
 script: 
   - cd $TRAVIS_BUILD_DIR
