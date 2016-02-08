@@ -18,6 +18,12 @@ Status
 ======
 Currently this project is under development and for more information we refer to its sister project.
 
+Contact
+=======
+
+  * IRC:     Freenode, ##stratum
+  * E-mail:  info@setbased.nl
+
 Sister Project 
 ==============
 We are also working on PhpStratum_. PhpStratum_ provides the same functionalities as PyStratum but in a PHP 
