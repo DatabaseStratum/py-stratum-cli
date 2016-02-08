@@ -21,8 +21,8 @@ Currently this project is under development and for more information we refer to
 Contact
 =======
 
-  * IRC:     Freenode, ##stratum
-  * E-mail:  info@setbased.nl
+* IRC:     Freenode, ##stratum
+* E-mail:  info@setbased.nl
 
 Sister Project 
 ==============
