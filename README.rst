@@ -30,3 +30,8 @@ We are also working on PhpStratum_. PhpStratum_ provides the same functionalitie
 environment and supports MySQL only.
 
 .. _PhpStratum: https://github.com/SetBased/php-stratum
+
+
+.. image:: https://badges.gitter.im/SetBased/py-stratum.svg
+   :alt: Join the chat at https://gitter.im/SetBased/py-stratum
+   :target: https://gitter.im/SetBased/py-stratum?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
