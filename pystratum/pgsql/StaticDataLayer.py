@@ -182,8 +182,7 @@ class StaticDataLayer:
         cursor.close()
 
         if not (n == 0 or n == 1):
-            raise Exception("Number of rows selected by query below is %d. Expected 0 or 1.\n%s" %
-                            (n, sql))
+            raise Exception("Number of rows selected by query below is {0:d}. Expected 0 or 1.\n{1!s}".format(n, sql))
 
         return ret
 
@@ -215,8 +214,7 @@ class StaticDataLayer:
         cursor.close()
 
         if n != 1:
-            raise Exception("Number of rows selected by query below is %d. Expected 1.\n%s" %
-                            (n, sql))
+            raise Exception("Number of rows selected by query below is {0:d}. Expected 1.\n{1!s}".format(n, sql))
 
         return ret
 
@@ -273,8 +271,7 @@ class StaticDataLayer:
         cursor.close()
 
         if not (n == 0 or n == 1):
-            raise Exception("Number of rows selected by query below is %d. Expected 0 or 1.\n%s" %
-                            (n, sql))
+            raise Exception("Number of rows selected by query below is {0:d}. Expected 0 or 1.\n{1!s}".format(n, sql))
 
         return ret
 
@@ -301,8 +298,7 @@ class StaticDataLayer:
         cursor.close()
 
         if n != 1:
-            raise Exception("Number of rows selected by query below is %d. Expected 1.\n%s" %
-                            (n, sql))
+            raise Exception("Number of rows selected by query below is {0:d}. Expected 1.\n{1!s}".format(n, sql))
 
         return ret
 
@@ -332,8 +328,7 @@ class StaticDataLayer:
         cursor.close()
 
         if len(rows) != 1:
-            raise Exception("Number of rows selected by query below is %d. Expected 1.\n%s" %
-                            (n, sql))
+            raise Exception("Number of rows selected by query below is {0:d}. Expected 1.\n{1!s}".format(n, sql))
 
         return ret
 
@@ -373,7 +368,7 @@ class StaticDataLayer:
 
         # Log the log messages.
         for message in messages:
-            print('%s %s' % message)
+            print('{0!s} {1!s}'.format(*message))
 
         return len(messages)
 

@@ -7,7 +7,7 @@ class RowsWithKeyWrapper(BaseRowsWithKeyWrapper, MsSqlWrapper):
 
     # ------------------------------------------------------------------------------------------------------------------
     def _write_execute_rows(self, routine):
-        self._write_line('rows = StaticDataLayer.execute_rows(%s)' % self._generate_command(routine))
+        self._write_line('rows = StaticDataLayer.execute_rows({0!s})'.format(self._generate_command(routine)))
 
 
 # ----------------------------------------------------------------------------------------------------------------------

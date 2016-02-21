@@ -47,7 +47,7 @@ order by  scm.name
         rows = StaticDataLayer.execute_rows(sql)
 
         for row in rows:
-            key = '@%s.%s.%s%%type@' % (row['schema_name'], row['table_name'], row['column_name'])
+            key = '@{0!s}.{1!s}.{2!s}%type@'.format(row['schema_name'], row['table_name'], row['column_name'])
             key = key.lower()
 
             value = self._derive_data_type(row)
@@ -99,13 +99,13 @@ and   prc.is_ms_shipped=0"""
         for routine_name, values in self._rdbms_old_metadata.items():
             if routine_name not in self._source_file_names:
                 if values['routine_type'].strip() == 'P':
-                    print("Dropping procedure %s.%s" % (values['schema_name'], values['routine_name']))
-                    sql = "drop procedure [%s].[%s]" % (values['schema_name'], values['routine_name'])
+                    print("Dropping procedure {0!s}.{1!s}".format(values['schema_name'], values['routine_name']))
+                    sql = "drop procedure [{0!s}].[{1!s}]".format(values['schema_name'], values['routine_name'])
                 elif values['routine_type'].strip() in ('FN', 'TF'):
-                    print("Dropping function %s.%s" % (values['schema_name'], values['routine_name']))
-                    sql = "drop function [%s].[%s]" % (values['schema_name'], values['routine_name'])
+                    print("Dropping function {0!s}.{1!s}".format(values['schema_name'], values['routine_name']))
+                    sql = "drop function [{0!s}].[{1!s}]".format(values['schema_name'], values['routine_name'])
                 else:
-                    raise Exception("Unknown routine type '%s'." % values['type'])
+                    raise Exception("Unknown routine type '{0!s}'.".format(values['type']))
 
                 StaticDataLayer.execute_none(sql)
 
@@ -141,10 +141,10 @@ and   prc.is_ms_shipped=0"""
             return data_type
 
         if data_type == 'decimal':
-            return 'decimal(%d,%d)' % (column['precision'], column['scale'])
+            return 'decimal({0:d},{1:d})'.format(column['precision'], column['scale'])
 
         if data_type == 'numeric':
-            return 'decimal(%d,%d)' % (column['precision'], column['scale'])
+            return 'decimal({0:d},{1:d})'.format(column['precision'], column['scale'])
 
         if data_type == 'float':
             return data_type
@@ -171,25 +171,25 @@ and   prc.is_ms_shipped=0"""
             return data_type
 
         if data_type == 'char':
-            return 'char(%d)' % column['max_length']
+            return 'char({0:d})'.format(column['max_length'])
 
         if data_type == 'varchar':
             if column['max_length'] == -1:
                 return 'varchar(max)'
 
-            return 'varchar(%d)' % column['max_length']
+            return 'varchar({0:d})'.format(column['max_length'])
 
         if data_type == 'text':
             return data_type
 
         if data_type == 'nchar':
-            return 'nchar(%d)' % (column['max_length'] / 2)
+            return 'nchar({0:d})'.format((column['max_length'] / 2))
 
         if data_type == 'nvarchar':
             if column['max_length'] == -1:
                 return 'nvarchar(max)'
 
-            return 'nvarchar(%d)' % (column['max_length'] / 2)
+            return 'nvarchar({0:d})'.format((column['max_length'] / 2))
 
         if data_type == 'ntext':
             return data_type
@@ -198,7 +198,7 @@ and   prc.is_ms_shipped=0"""
             return data_type
 
         if data_type == 'varbinary':
-            return 'varbinary(%d)' % column['max_length']
+            return 'varbinary({0:d})'.format(column['max_length'])
 
         if data_type == 'image':
             return data_type
@@ -212,7 +212,7 @@ and   prc.is_ms_shipped=0"""
         if data_type == 'geometry':
             return data_type
 
-        raise Exception("Unexpected data type '%s'." % data_type)
+        raise Exception("Unexpected data type '{0!s}'.".format(data_type))
 
     # ------------------------------------------------------------------------------------------------------------------
     def _read_configuration_file(self, config_filename: str):
