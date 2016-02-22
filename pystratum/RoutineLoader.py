@@ -142,7 +142,7 @@ class RoutineLoader:
         :param str config_filename: The filename of the configuration file.
         :param list[str] file_names: The list of files to be loaded.
         """
-        self.read_configuration_file(config_filename)
+        self._read_configuration_file(config_filename)
         self.connect()
         self.find_source_files_from_list(file_names)
         self._get_column_type()
@@ -161,7 +161,7 @@ class RoutineLoader:
 
         :param str config_filename: string The filename of the configuration file.
         """
-        self.read_configuration_file(config_filename)
+        self._read_configuration_file(config_filename)
         self.connect()
         self._find_source_files()
         self._get_column_type()
@@ -176,7 +176,7 @@ class RoutineLoader:
         self.disconnect()
 
     # ------------------------------------------------------------------------------------------------------------------
-    def read_configuration_file(self, config_filename):
+    def _read_configuration_file(self, config_filename):
         """
         Reads parameters from the configuration file.
 

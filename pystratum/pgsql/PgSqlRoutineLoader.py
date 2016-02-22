@@ -118,13 +118,13 @@ order by routine_name
                 StaticDataLayer.execute_none(sql)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def read_configuration_file(self, config_filename):
+    def _read_configuration_file(self, config_filename):
         """
         Reads parameters from the configuration file.
 
         :param string config_filename:
         """
-        RoutineLoader.read_configuration_file(self, config_filename)
-        PgSqlConnection.read_configuration_file(self, config_filename)
+        RoutineLoader._read_configuration_file(self, config_filename)
+        PgSqlConnection._read_configuration_file(self, config_filename)
 
 # ----------------------------------------------------------------------------------------------------------------------

@@ -17,14 +17,14 @@ class MsSqlRoutineWrapperGenerator(MsSqlConnection, RoutineWrapperGenerator):
         RoutineWrapperGenerator.__init__(self)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def read_configuration_file(self, config_filename):
+    def _read_configuration_file(self, config_filename):
         """
         Reads parameters from the configuration file.
 
         :param str config_filename: The name of the configuration file.
         """
-        MsSqlConnection.read_configuration_file(self, config_filename)
-        RoutineWrapperGenerator.read_configuration_file(self, config_filename)
+        MsSqlConnection._read_configuration_file(self, config_filename)
+        RoutineWrapperGenerator._read_configuration_file(self, config_filename)
 
     # ------------------------------------------------------------------------------------------------------------------
     def _write_routine_function(self, routine):

@@ -71,7 +71,7 @@ class RoutineWrapperGenerator:
 
         :rtype: int
         """
-        self.read_configuration_file(config_filename)
+        self._read_configuration_file(config_filename)
 
         routines = self._read_routine_metadata()
 
@@ -91,7 +91,7 @@ class RoutineWrapperGenerator:
         return 0
 
     # ------------------------------------------------------------------------------------------------------------------
-    def read_configuration_file(self, config_filename):
+    def _read_configuration_file(self, config_filename):
         """
         Reads parameters from the configuration file.
 

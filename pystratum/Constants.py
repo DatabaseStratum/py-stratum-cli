@@ -95,7 +95,7 @@ class Constants:
 
         :rtype: int
         """
-        self.read_configuration_file(config_filename)
+        self._read_configuration_file(config_filename)
         self.connect()
         self._get_old_columns()
         self._get_columns()
@@ -110,7 +110,7 @@ class Constants:
         return 0
 
     # ------------------------------------------------------------------------------------------------------------------
-    def read_configuration_file(self, config_filename):
+    def _read_configuration_file(self, config_filename):
         """
         Reads parameters from the configuration file.
 

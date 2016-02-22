@@ -282,13 +282,13 @@ where   nullif(`{3!s}`,'') is not null""".format(table['id'],
         raise Exception("Unexpected type '{0!s}'.".format(column['data_type']))
 
     # ------------------------------------------------------------------------------------------------------------------
-    def read_configuration_file(self, config_filename):
+    def _read_configuration_file(self, config_filename):
         """
         Reads parameters from the configuration file.
 
         :param str config_filename: The name of the configuration file.
         """
-        Constants.read_configuration_file(self, config_filename)
-        MySqlConnection.read_configuration_file(self, config_filename)
+        Constants._read_configuration_file(self, config_filename)
+        MySqlConnection._read_configuration_file(self, config_filename)
 
 # ----------------------------------------------------------------------------------------------------------------------

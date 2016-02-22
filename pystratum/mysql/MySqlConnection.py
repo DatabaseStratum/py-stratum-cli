@@ -90,7 +90,7 @@ class MySqlConnection(Connection.Connection):
         StaticDataLayer.disconnect()
 
     # ------------------------------------------------------------------------------------------------------------------
-    def read_configuration_file(self, config_filename):
+    def _read_configuration_file(self, config_filename):
         """
         Reads connections parameters from the configuration file.
 

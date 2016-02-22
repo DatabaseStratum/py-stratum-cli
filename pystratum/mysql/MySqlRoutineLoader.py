@@ -122,12 +122,12 @@ order by routine_name"""
                 StaticDataLayer.execute_none(sql)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def read_configuration_file(self, config_filename: str):
+    def _read_configuration_file(self, config_filename: str):
         """
         Reads parameters from the configuration file.
         :param config_filename string
         """
-        RoutineLoader.read_configuration_file(self, config_filename)
-        MySqlConnection.read_configuration_file(self, config_filename)
+        RoutineLoader._read_configuration_file(self, config_filename)
+        MySqlConnection._read_configuration_file(self, config_filename)
 
 # ----------------------------------------------------------------------------------------------------------------------
