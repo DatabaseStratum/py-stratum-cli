@@ -14,6 +14,9 @@ class PgSqlConstants(PgSqlConnection, Constants):
     """
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self):
+        """
+        Object constructor.
+        """
         Constants.__init__(self)
         PgSqlConnection.__init__(self)
 
@@ -241,8 +244,10 @@ where   nullif(\"{3!s}\",'') is not null""".format(table['id'],
     @staticmethod
     def derive_field_length(column):
         """
-        Returns the width of a field based on column.
+        Returns the width of a field based on the data type of column.
+
         :param dict column: The column of which the field is based.
+
         :rtype int:
         """
         types_length = {'bigint': 21,
@@ -275,6 +280,7 @@ where   nullif(\"{3!s}\",'') is not null""".format(table['id'],
     def _read_configuration_file(self, config_filename):
         """
         Reads parameters from the configuration file.
+
         :param str config_filename:
         """
         Constants._read_configuration_file(self, config_filename)

@@ -249,7 +249,7 @@ where  nullif(tab.[{5!s}],'') is not null""".format(table['id'],
     @staticmethod
     def derive_field_length(column):
         """
-        Returns the width of a field based based on a column type.
+        Returns the width of a field based based on the data type of column.
 
         :param dict column: Info about the column.
 

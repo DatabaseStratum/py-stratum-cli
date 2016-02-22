@@ -10,6 +10,9 @@ class PgSqlRoutineWrapperGenerator(PgSqlConnection, RoutineWrapperGenerator):
     """
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self):
+        """
+        Object constructor.
+        """
         PgSqlConnection.__init__(self)
         RoutineWrapperGenerator.__init__(self)
 
@@ -17,6 +20,7 @@ class PgSqlRoutineWrapperGenerator(PgSqlConnection, RoutineWrapperGenerator):
     def _read_configuration_file(self, config_filename):
         """
         Reads parameters from the configuration file.
+
         :param str config_filename: The name of the configuration file.
         """
         PgSqlConnection._read_configuration_file(self, config_filename)
@@ -26,6 +30,7 @@ class PgSqlRoutineWrapperGenerator(PgSqlConnection, RoutineWrapperGenerator):
     def _write_routine_function(self, routine):
         """
         Generates a complete wrapper method for a stored routine.
+
         :param dict routine: The metadata of the stored routine.
         """
         wrapper = create_routine_wrapper(routine, self._lob_as_string_flag)

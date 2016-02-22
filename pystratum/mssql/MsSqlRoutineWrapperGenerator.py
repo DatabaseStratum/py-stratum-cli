@@ -10,11 +10,14 @@ class MsSqlRoutineWrapperGenerator(MsSqlConnection, RoutineWrapperGenerator):
     """
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self):
+        """
+        Object constructor.
+        """
         MsSqlConnection.__init__(self)
         RoutineWrapperGenerator.__init__(self)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _read_configuration_file(self, config_filename: str):
+    def _read_configuration_file(self, config_filename):
         """
         Reads parameters from the configuration file.
         """

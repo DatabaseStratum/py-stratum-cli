@@ -13,8 +13,9 @@ class PgSqlWrapper(Wrapper):
         """
         Returns True if one of the parameters is a BLOB or CLOB. Otherwise, returns False.
 
-        :param parameters: The parameters of a stored routine.
-        :return bool:
+        :param list[dict[str,str]] parameters: The parameters of a stored routine.
+
+        :rtype: bool
         """
         has_lob = False
 
@@ -55,10 +56,11 @@ class PgSqlWrapper(Wrapper):
     # ------------------------------------------------------------------------------------------------------------------
     def _generate_command(self, routine):
         """
-        Generates SQL statement for calling a stored routine.
+        Returns a SQL-statement for calling a stored routine.
 
-        :param routine: Metadata of the stored routine.
-        :return: The generated SQL statement.
+        :param dict routine: Metadata of the stored routine.
+
+        :rtype: str
         """
         parameters = ''
         placeholders = ''
@@ -93,8 +95,9 @@ class PgSqlWrapper(Wrapper):
         """
         Returns the appropriate format specifier for a parameter type.
 
-        :param str data_type: The parameter type.
-        :return str: The format specifier.
+        :param dict[str,str] parameter: The parameter metadata.
+
+        :rtype: str
         """
 
         lookup = {'bigint':                      '%s::bigint',

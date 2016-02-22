@@ -11,18 +11,21 @@ class StaticDataLayer:
     connection = None
     """
     The connection between Python and the PostgreSQL instance.
+
     :type: psycopg2.extensions.connection
     """
 
     sp_log_init = 'stratum_log_init'
     """
     The name of the stored routine that must be run before a store routine with designation type "log".
+
     :type: str
     """
 
     sp_log_fetch = 'stratum_log_fetch'
     """
     The name of the stored routine that must be run after a store routine with designation type "log".
+
     :type: str
     """
 
@@ -33,6 +36,7 @@ class StaticDataLayer:
         Returns a list with column names retrieved from the description of a cursor.
 
         :param psycopg2.extensions.cursor cursor: The cursor.
+
         :return: list
         """
         column_names = []
@@ -47,9 +51,8 @@ class StaticDataLayer:
         """
         Starts a transaction.
 
-        :param str isolation_level:
+        :param str isolation_level: The isolation level.
         :param bool readonly:
-        :return: None
         """
         StaticDataLayer.connection.set_session(isolation_level, readonly)
 
@@ -58,7 +61,6 @@ class StaticDataLayer:
     def commit():
         """
         Commits the current transaction.
-        :return: None
         """
         StaticDataLayer.connection.commit()
 
@@ -67,7 +69,6 @@ class StaticDataLayer:
     def rollback():
         """
         Rolls back the current transaction.
-        :return: None
         """
         StaticDataLayer.connection.rollback()
 
@@ -83,7 +84,6 @@ class StaticDataLayer:
         :param str user:
         :param str password:
         :param int port:
-        :return: None
         """
         StaticDataLayer.connection = psycopg2.connect(database=database,
                                                       user=user,
@@ -98,7 +98,6 @@ class StaticDataLayer:
     def disconnect():
         """
         Disconnects from the PostgreSQL instance.
-        :return: None
         """
         StaticDataLayer.connection.close()
 
@@ -122,11 +121,12 @@ class StaticDataLayer:
     @staticmethod
     def execute_rows(sql, *params):
         """
-        Executes a query that selects 0 or more rows.
+        Executes a query that selects 0 or more rows. Returns the selected rows (an empty list if no rows are selected).
 
         :param str sql: The SQL statement.
         :param iterable params: The arguments for the statement.
-        :return list[dict]: The selected rows (an empty list if no rows are selected).
+
+        :rtype: list[dict]
         """
         cursor = StaticDataLayer.connection.cursor(cursor_factory=RealDictCursor)
         if params:
@@ -158,11 +158,12 @@ class StaticDataLayer:
     @staticmethod
     def execute_sp_row0(sql, *params):
         """
-        Executes a stored procedure that selects 0 or 1 row.
+        Executes a stored procedure that selects 0 or 1 row. Returns the selected row or None.
 
         :param str sql: The SQL statement.
         :param iterable params: The arguments for the statement.
-        :return None|dict: The selected row or None.
+
+        :rtype: None|dict[str,object]
         """
         cursor = StaticDataLayer.connection.cursor()
 
@@ -190,11 +191,12 @@ class StaticDataLayer:
     @staticmethod
     def execute_sp_row1(sql, *params):
         """
-        Executes a stored procedure that selects 1 row.
+        Executes a stored procedure that selects 1 row. Returns the selected row.
 
         :param str sql: The SQL call the the stored procedure.
         :param iterable params: The arguments for the stored procedure.
-        :return dict: The selected row.
+
+        :rtype: dict[str,object]
         """
         cursor = StaticDataLayer.connection.cursor()
         if params:
@@ -222,11 +224,13 @@ class StaticDataLayer:
     @staticmethod
     def execute_sp_rows(sql, *params):
         """
-        Executes a stored procedure that selects 0 or more rows.
+        Executes a stored procedure that selects 0 or more rows. Returns the selected rows (an empty list if no rows
+        are selected).
 
         :param str sql: The SQL call the the stored procedure.
         :param iterable params: The arguments for the stored procedure.
-        :return list[disc]: The selected rows (an empty list if no rows are selected).
+
+        :rtype: list[dict[str,object]]
         """
         cursor = StaticDataLayer.connection.cursor()
         if params:
@@ -249,11 +253,12 @@ class StaticDataLayer:
     @staticmethod
     def execute_sp_singleton0(sql, *params):
         """
-        Executes a stored procedure that selects 0 or 1 row with 1 column.
+        Executes a stored procedure that selects 0 or 1 row with 1 column. Returns the value of selected column or None.
 
         :param str sql: The SQL call the the stored procedure.
         :param iterable params: The arguments for the stored procedure.
-        :return T|None: The value of selected column or None.
+
+        :rtype: object
         """
         cursor = StaticDataLayer.connection.cursor()
         if params:
@@ -277,13 +282,14 @@ class StaticDataLayer:
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def execute_singleton1(sql: str, *params):
+    def execute_singleton1(sql, *params):
         """
-        Executes query that selects 1 row with 1 column.
+        Executes query that selects 1 row with 1 column. Returns the value of the selected column.
 
         :param str sql: The SQL call the the stored procedure.
         :param iterable params: The arguments for the stored procedure.
-        :return T: The value of the selected column.
+
+        :rtype: object
         """
         cursor = StaticDataLayer.connection.cursor()
         if params:
@@ -306,11 +312,12 @@ class StaticDataLayer:
     @staticmethod
     def execute_sp_singleton1(sql: str, *params):
         """
-        Executes a stored procedure that selects 1 row with 1 column.
+        Executes a stored procedure that selects 1 row with 1 column. Returns the value of the selected column.
 
         :param str sql: The SQL call the the stored procedure.
         :param iterable params: The arguments for the stored procedure.
-        :return T: The value of the selected column.
+
+        :rtype: object
         """
         cursor = StaticDataLayer.connection.cursor()
         if params:
@@ -334,7 +341,7 @@ class StaticDataLayer:
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def execute_sp_table(sql: str, *params):
+    def execute_sp_table(sql, *params):
         # todo methods for showing table
         raise NotImplementedError
 
@@ -342,11 +349,12 @@ class StaticDataLayer:
     @staticmethod
     def execute_sp_log(sql, *params):
         """
-        Executes a stored procedure with log stements.
+        Executes a stored procedure with log statements. Returns the number of lines in the log.
 
         :param str sql: The SQL call the the stored procedure.
         :param iterable params: The arguments for the stored procedure.
-        :return int: The number of lines in the log.
+
+        :rtype: int
         """
         cursor = StaticDataLayer.connection.cursor()
 
@@ -376,7 +384,8 @@ class StaticDataLayer:
     @staticmethod
     def copy_from(file, table, sep='\t', null='\\N', size=8192, columns=None):
         """
-        Read data from the file-like object file appending them to the table named table.
+        Read data from the file-like object file appending them to the table named table. Returns the number of rows
+        copied.
 
         :param T file: File-like object to read data from. It must have both read() and readline() methods.
         :param str table: Name of the table to copy data into.
@@ -386,7 +395,8 @@ class StaticDataLayer:
         :param iterable columns: Iterable with name of the columns to import. The length and types should match the
                                  content of the file to read. If not specified, it is assumed that the entire table
                                  matches the file structure.
-        "return int: The number of rows copied.
+
+        :rtype: int
         """
         cursor = StaticDataLayer.connection.cursor()
         cursor.copy_from(file, table, sep, null, size, columns)
@@ -399,14 +409,15 @@ class StaticDataLayer:
     @staticmethod
     def copy_to(file, table, sep='\t', null='\\N', columns=None):
         """
-        Write the content of the table named table to the file-like object file
+        Write the content of the table named table to the file-like object file. Returns the number of rows copied.
 
         :param T file: File-like object to write data into. It must have a write() method.
         :param str table: Name of the table to copy data from.
         :param str sep: Columns separator expected in the file. Defaults to a tab.
         :param str null: Textual representation of NULL in the file. The default is the two characters string \\N.
         :param iterable columns: Iterable with name of the columns to export. If not specified, export all the columns.
-        "return int: The number of rows copied.
+
+        :rtype: int
         """
         cursor = StaticDataLayer.connection.cursor()
         cursor.copy_to(file, table, sep, null, columns)
@@ -419,12 +430,13 @@ class StaticDataLayer:
     @staticmethod
     def copy_expert(sql, file, size=8192):
         """
-        Submit a user-composed COPY statement.
+        Submit a user-composed COPY statement. Returns the number of rows copied.
 
         :param str sql: The COPY statement to execute.
         :param T file: A file-like object to read or write (according to sql).
         :param int size: Size of the read buffer to be used in COPY FROM.
-        "return int: The number of rows copied.
+
+        :rtype: int
         """
         cursor = StaticDataLayer.connection.cursor()
         cursor.copy_expert(sql, file, size)

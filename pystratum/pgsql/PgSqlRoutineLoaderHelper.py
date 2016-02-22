@@ -14,7 +14,8 @@ class PgSqlRoutineLoaderHelper(RoutineLoaderHelper):
     def _must_reload(self):
         """
         Returns True if the source file must be load or reloaded. Otherwise returns False.
-        :return bool:
+
+        :rtype: bool
         """
         if not self._pystratum_old_metadata:
             return True
@@ -36,7 +37,9 @@ class PgSqlRoutineLoaderHelper(RoutineLoaderHelper):
     def _get_name(self):
         """
         Extracts the name of the stored routine and the stored routine type (i.e. procedure or function) source.
-        :return bool: Returns True on success, False otherwise.
+        Returns True on success, False otherwise.
+
+        :rtype: bool
         """
         ret = True
         p = re.compile("create\\s+(function)\\s+([a-zA-Z0-9_]+)")

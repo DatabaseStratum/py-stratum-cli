@@ -8,12 +8,13 @@ class MsSqlWrapper(Wrapper):
     Parent class for classes that generate Python code, i.e. wrappers, for calling a stored routine.
     """
     # ------------------------------------------------------------------------------------------------------------------
-    def is_lob_parameter(self, parameters) -> bool:
+    def is_lob_parameter(self, parameters):
         """
         Returns True of one of the parameters is a BLOB or CLOB. Otherwise, returns False.
 
         :param parameters: The parameters of a stored routine.
-        :return:
+
+        :rtype: bool:
         """
         has_blob = False
 
@@ -78,10 +79,11 @@ class MsSqlWrapper(Wrapper):
     # ------------------------------------------------------------------------------------------------------------------
     def _generate_command(self, routine):
         """
-        Generates SQL statement for calling a stored routine.
+        Returns a SQL-statement for calling a stored routine.
 
         :param routine: Metadata of the stored routine.
-        :return: The generated SQL statement.
+
+        :rtype: str
         """
         if routine['parameters']:
             if routine['designation'] == 'function':
@@ -120,7 +122,8 @@ class MsSqlWrapper(Wrapper):
         Returns the appropriate format specifier for a parameter type.
 
         :param data_type: The parameter type.
-        :return: The format specifier.
+
+        :rtype: str
         """
         lookup = {'bigint': '%s',
                   'binary': '%s',

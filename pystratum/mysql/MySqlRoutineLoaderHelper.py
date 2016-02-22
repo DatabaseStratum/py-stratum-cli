@@ -11,14 +11,26 @@ class MySqlRoutineLoaderHelper(RoutineLoaderHelper):
     """
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self,
-                 routine_filename: str,
-                 routine_file_encoding: str,
-                 pystratum_old_metadata: dict,
-                 replace_pairs: dict,
-                 rdbms_old_metadata: dict,
-                 sql_mode: str,
-                 character_set: str,
-                 collate: str):
+                 routine_filename,
+                 routine_file_encoding,
+                 pystratum_old_metadata,
+                 replace_pairs,
+                 rdbms_old_metadata,
+                 sql_mode,
+                 character_set,
+                 collate):
+        """
+        Object constructor.
+
+        :param str routine_filename: The filename of the source of the stored routine.
+        :param str routine_file_encoding: The encoding of the source file.
+        :param dict pystratum_old_metadata: The metadata of the stored routine from PyStratum.
+        :param dict[str,str] replace_pairs: A map from placeholders to their actual values.
+        :param dict rdbms_old_metadata: The old metadata of the stored routine from MS SQL Server.
+        :param str sql_mode: The SQL mode under which the stored routine must be loaded and run.
+        :param str character_set: The default character set under which the stored routine must be loaded and run.
+        :param str collate: The default collate under which the stored routine must be loaded and run.
+        """
 
         RoutineLoaderHelper.__init__(self,
                                      routine_filename,
@@ -29,7 +41,7 @@ class MySqlRoutineLoaderHelper(RoutineLoaderHelper):
 
         self._sql_mode = sql_mode
         """
-        The SQL mode under which the stored routine will be loaded and run.
+        The SQL-mode under which the stored routine will be loaded and run.
 
         :type: str
         """
@@ -49,10 +61,11 @@ class MySqlRoutineLoaderHelper(RoutineLoaderHelper):
         """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _must_reload(self) -> bool:
+    def _must_reload(self):
         """
         Returns True if the source file must be load or reloaded. Otherwise returns False.
-        :return bool
+
+        :rtype: bool
         """
         if not self._pystratum_old_metadata:
             return True
@@ -80,10 +93,12 @@ class MySqlRoutineLoaderHelper(RoutineLoaderHelper):
         return False
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _get_name(self) -> bool:
+    def _get_name(self):
         """
         Extracts the name of the stored routine and the stored routine type (i.e. procedure or function) source.
-        :return Returns True on success, False otherwise.
+        Returns True on success, False otherwise.
+
+        :rtype: bool
         """
         ret = True
         p = re.compile("create\\s+(procedure|function)\\s+([a-zA-Z0-9_]+)")
@@ -182,10 +197,11 @@ and   TABLE_NAME   = '%s'""" % self._table_name
         self._fields = tmp_fields
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _get_designation_type(self) -> bool:
+    def _get_designation_type(self):
         """
-        Extracts the designation type of the stored routine.
-        :return True on success. Otherwise returns False.
+        Extracts the designation type of the stored routine. Returns True on success. Otherwise returns False.
+
+        :rtype: bool
         """
         ret = True
 

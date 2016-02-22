@@ -11,6 +11,9 @@ class PgSqlRoutineLoader(PgSqlConnection, RoutineLoader):
     """
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self):
+        """
+        Object constructor.
+        """
         RoutineLoader.__init__(self)
         PgSqlConnection.__init__(self)
 
@@ -118,6 +121,7 @@ order by routine_name
     def _read_configuration_file(self, config_filename):
         """
         Reads parameters from the configuration file.
+
         :param string config_filename:
         """
         RoutineLoader._read_configuration_file(self, config_filename)

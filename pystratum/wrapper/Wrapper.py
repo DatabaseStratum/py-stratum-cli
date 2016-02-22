@@ -91,9 +91,11 @@ class Wrapper:
     # ------------------------------------------------------------------------------------------------------------------
     def write_routine_method(self, routine):
         """
-        Generates a complete wrapper method.
+        Returns a complete wrapper method.
 
-        :return: Python code with a routine wrapper.
+        :param dict[str,Object] routine: The routine metadata.
+
+        :rtype: str
         """
         if self._lob_as_string_flag:
             return self._write_routine_method_without_lob(routine)
@@ -132,8 +134,9 @@ class Wrapper:
         """
         Returns code for the parameters of the wrapper method for the stored routine.
 
-        :param routine:
-        :return: The Python snippet.
+        :param dict[str,Object] routine: The routine metadata.
+
+        :rtype: str
         """
         # todo  if routine['designation'] == 'bulk':
         # ret = 'bulk_handler'  else:

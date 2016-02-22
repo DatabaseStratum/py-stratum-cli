@@ -14,7 +14,11 @@ from pystratum.pgsql.wrapper.Singleton1Wrapper import Singleton1Wrapper
 def create_routine_wrapper(routine, lob_as_string_flag):
     """
     A factory for creating the appropriate object for generating a wrapper method for a stored routine.
-    :return:
+
+    :param dict[str,str] routine: The metadata of the sored routine.
+    :param bool lob_as_string_flag: If True BLOBs and CLOBs must be treated as strings.
+
+    :rtype: pystratum.pgsql.wrapper.PgSqlWrapper.PgSqlWrapper
     """
     if routine['designation'] == 'none':
         wrapper = NoneWrapper(routine, lob_as_string_flag)

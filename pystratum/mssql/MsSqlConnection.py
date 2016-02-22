@@ -10,6 +10,9 @@ class MsSqlConnection(Connection.Connection):
     """
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self):
+        """
+        Object constructor.
+        """
         self._host = ''
         """
         The hostname of the SQL Server instance.
