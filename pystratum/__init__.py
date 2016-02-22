@@ -28,7 +28,7 @@ def create_constants(rdbms: str):
         module = locate('pystratum.pgsql.PgSqlConstants')
         return module.PgSqlConstants()
 
-    raise Exception("Unknown RDBMS '%s'." % rdbms)
+    raise Exception("Unknown RDBMS '{0!s}'.".format(rdbms))
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -56,7 +56,7 @@ def create_routine_loader(rdbms):
         module = locate('pystratum.pgsql.PgSqlRoutineLoader')
         return module.PgSqlRoutineLoader()
 
-    raise Exception("Unknown RDBMS '%s'." % rdbms)
+    raise Exception("Unknown RDBMS '{0!s}'.".format(rdbms))
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -84,7 +84,7 @@ def create_routine_wrapper_generator(rdbms):
         module = locate('pystratum.pgsql.PgSqlRoutineWrapperGenerator')
         return module.PgSqlRoutineWrapperGenerator()
 
-    raise Exception("Unknown RDBMS '%s'." % rdbms)
+    raise Exception("Unknown RDBMS '{0!s}'.".format(rdbms))
 
 
 # ----------------------------------------------------------------------------------------------------------------------

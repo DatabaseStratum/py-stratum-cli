@@ -182,7 +182,7 @@ class Constants:
         """
         content = ''
         for constant, value in sorted(self._constants.items()):
-            content += "%s = %s\n" % (str(constant), str(value))
+            content += "{0!s} = {1!s}\n".format(str(constant), str(value))
 
             # Save the configuration file.
         Util.write_two_phases(self._config_filename, content)

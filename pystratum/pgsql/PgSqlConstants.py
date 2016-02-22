@@ -172,13 +172,13 @@ union all
             for ord_position, column_name in sorted(key_map.items()):
                 if table[column_name]['length'] is not None:
                     if 'constant_name' in table[column_name]:
-                        line_format = "%%s.%%-%ds %%%dd %%s\n" % (int(width1), int(width2))
+                        line_format = "%s.%-{0:d}s %{1:d}d %s\n".format(int(width1), int(width2))
                         content += line_format % (table[column_name]['table_name'],
                                                   table[column_name]['column_name'],
                                                   table[column_name]['length'],
                                                   table[column_name]['constant_name'])
                     else:
-                        line_format = "%%s.%%-%ds %%%dd\n" % (int(width1), int(width2))
+                        line_format = "%s.%-{0:d}s %{1:d}d\n".format(int(width1), int(width2))
                         content += line_format % (table[column_name]['table_name'],
                                                   table[column_name]['column_name'],
                                                   table[column_name]['length'])
@@ -211,10 +211,10 @@ and   t2.column_name like '%%_label'
 
         for table in tables:
             query_string = """
-select \"%s\"  as id
-,      \"%s\"  as label
-from   \"%s\"
-where   nullif(\"%s\",'') is not null""" % (table['id'],
+select \"{0!s}\"  as id
+,      \"{1!s}\"  as label
+from   \"{2!s}\"
+where   nullif(\"{3!s}\",'') is not null""".format(table['id'],
                                             table['label'],
                                             table['table_name'],
                                             table['label'])
@@ -268,7 +268,7 @@ where   nullif(\"%s\",'') is not null""" % (table['id'],
         if column['data_type'] in types_length:
             return types_length[column['data_type']]
 
-        raise Exception("Unexpected type '%s'." % column['data_type'])
+        raise Exception("Unexpected type '{0!s}'.".format(column['data_type']))
 
     # ------------------------------------------------------------------------------------------------------------------
     def _read_configuration_file(self, config_filename):

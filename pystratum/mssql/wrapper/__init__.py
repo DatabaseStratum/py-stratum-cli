@@ -43,7 +43,7 @@ def create_routine_wrapper(routine, lob_as_string_flag):
     #elif routine['designation'] == 'bulk_insert':
     #    wrapper = BulkInsertWrapper(routine, lob_as_string_flag)
     else:
-        raise Exception("Unknown routine type '%s'." % routine['designation'])
+        raise Exception("Unknown routine type '{0!s}'.".format(routine['designation']))
 
     return wrapper
 

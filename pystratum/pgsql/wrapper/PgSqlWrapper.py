@@ -40,7 +40,7 @@ class PgSqlWrapper(Wrapper):
                 if parameter_info['data_type'] in lookup:
                     has_lob = lookup[parameter_info['data_type']]
                 else:
-                    raise Exception("Unexpected date type '%s'." % parameter_info['data_type'])
+                    raise Exception("Unexpected date type '{0!s}'.".format(parameter_info['data_type']))
 
         return has_lob
 
@@ -79,9 +79,9 @@ class PgSqlWrapper(Wrapper):
                 l += 1
 
         if l == 0:
-            line = '"%s %s()"' % (execute, routine['routine_name'])
+            line = '"{0!s} {1!s}()"'.format(execute, routine['routine_name'])
         elif l >= 1:
-            line = '"%s %s(%s)", %s' % (execute, routine['routine_name'], placeholders, parameters)
+            line = '"{0!s} {1!s}({2!s})", {3!s}'.format(execute, routine['routine_name'], placeholders, parameters)
         else:
             raise Exception('Internal error.')
 
@@ -116,6 +116,6 @@ class PgSqlWrapper(Wrapper):
         if parameter['data_type'] in lookup:
             return lookup[parameter['data_type']]
 
-        raise Exception('Unexpected data type %s.' % parameter['data_type'])
+        raise Exception('Unexpected data type {0!s}.'.format(parameter['data_type']))
 
 # ---------------------------------------------------------------------------------------------------------------------

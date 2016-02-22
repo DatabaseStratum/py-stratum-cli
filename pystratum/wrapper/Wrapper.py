@@ -121,7 +121,7 @@ class Wrapper:
         self._write_line()
         self._write_separator()
         self._write_line('@staticmethod')
-        self._write_line('def %s(%s):' % (str(routine['routine_name']), str(self._get_wrapper_args(routine))))
+        self._write_line('def {0!s}({1!s}):'.format(str(routine['routine_name']), str(self._get_wrapper_args(routine))))
         self._write_result_handler(routine)
 
         return self._code
