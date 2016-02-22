@@ -74,7 +74,7 @@ class DataLayer(StaticDataLayer):
             if row['tst_c01'] in ret:
                 if row['tst_c02'] in ret[row['tst_c01']]:
                     if row['tst_c03'] in ret[row['tst_c01']][row['tst_c02']]:
-                        raise Exception('Duplicate key for %s.' % str((row['tst_c01'], row['tst_c02'], row['tst_c03'])))
+                        raise Exception('Duplicate key for {0!s}.'.format(str((row['tst_c01'], row['tst_c02'], row['tst_c03']))))
                     else:
                         ret[row['tst_c01']][row['tst_c02']][row['tst_c03']] = row
                 else:

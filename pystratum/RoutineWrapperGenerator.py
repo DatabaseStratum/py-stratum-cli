@@ -110,11 +110,11 @@ class RoutineWrapperGenerator:
         """
         Generate a class header for stored routine wrapper.
         """
-        self._write_line("from %s import %s" % (self._parent_class_namespace, self._parent_class_name))
+        self._write_line("from {0!s} import {1!s}".format(self._parent_class_namespace, self._parent_class_name))
         self._write_line()
         self._write_line()
         self._write_line('# ' + ('-' * 118))
-        self._write_line("class %s(%s):" % (self._wrapper_class_name, self._parent_class_name))
+        self._write_line("class {0!s}({1!s}):".format(self._wrapper_class_name, self._parent_class_name))
 
     # ------------------------------------------------------------------------------------------------------------------
     def _write_line(self, text=None):

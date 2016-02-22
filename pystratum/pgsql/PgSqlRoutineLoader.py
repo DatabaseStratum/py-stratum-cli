@@ -106,8 +106,8 @@ order by routine_name
         """
         for routine_name, values in self._rdbms_old_metadata.items():
             if routine_name not in self._source_file_names:
-                print("Dropping %s %s" % (values['routine_type'], routine_name))
-                sql = "drop %s if exists %s(%s)" % (values['routine_type'],
+                print("Dropping {0!s} {1!s}".format(values['routine_type'], routine_name))
+                sql = "drop {0!s} if exists {1!s}({2!s})".format(values['routine_type'],
                                                     routine_name,
                                                     values['routine_args'])
                 StaticDataLayer.execute_none(sql)

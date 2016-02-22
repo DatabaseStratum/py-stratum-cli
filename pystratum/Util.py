@@ -34,6 +34,6 @@ class Util:
             with open(tmp_filename, 'w+') as file:
                 file.write(the_data)
             os.replace(tmp_filename, the_filename)
-            print("Wrote: '%s'." % the_filename)
+            print("Wrote: '{0!s}'.".format(the_filename))
 
 # ----------------------------------------------------------------------------------------------------------------------

@@ -52,7 +52,7 @@ class MsSqlWrapper(Wrapper):
                 if parameter_info['data_type'] in lookup:
                     has_blob = lookup[parameter_info['data_type']]
                 else:
-                    print("Unknown SQL type '%s'." % parameter_info['data_type'])
+                    print("Unknown SQL type '{0!s}'.".format(parameter_info['data_type']))
 
         return has_blob
 
@@ -62,7 +62,7 @@ class MsSqlWrapper(Wrapper):
         self._write_line()
         self._write_separator()
         self._write_line('@staticmethod')
-        self._write_line('def %s(%s):' % (str(routine['routine_base_name']), str(self._get_wrapper_args(routine))))
+        self._write_line('def {0!s}({1!s}):'.format(str(routine['routine_base_name']), str(self._get_wrapper_args(routine))))
         self._write_result_handler(routine)
 
         return self._code
@@ -155,7 +155,7 @@ class MsSqlWrapper(Wrapper):
         if data_type in lookup:
             return '%s'
 
-        raise Exception('Unexpected data type %s.' % data_type)
+        raise Exception('Unexpected data type {0!s}.'.format(data_type))
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -196,7 +196,7 @@ class MsSqlWrapper(Wrapper):
         if data_type in templates:
             return templates[data_type]
 
-        raise Exception('Unexpected data type %s.' % data_type)
+        raise Exception('Unexpected data type {0!s}.'.format(data_type))
 
 
 # ----------------------------------------------------------------------------------------------------------------------

@@ -20,20 +20,20 @@ class RowsWithIndexWrapper(Wrapper):
 
         i = 0
         while i < num_of_dict:
-            value = "row['%s']" % routine['columns'][i]
+            value = "row['{0!s}']".format(routine['columns'][i])
 
             stack = ''
             j = 0
             while j < i:
-                stack += "[row['%s']]" % routine['columns'][j]
+                stack += "[row['{0!s}']]".format(routine['columns'][j])
                 j += 1
-            line = 'if %s in ret%s:' % (value, stack)
+            line = 'if {0!s} in ret{1!s}:'.format(value, stack)
             self._write_line(line)
             i += 1
 
         line = 'ret'
         for column_name in routine['columns']:
-            line += "[row['%s']]" % column_name
+            line += "[row['{0!s}']]".format(column_name)
         line += '.append(row)'
         self._write_line(line)
         self._indent_level_down()
@@ -45,19 +45,19 @@ class RowsWithIndexWrapper(Wrapper):
             part1 = ''
             j = 0
             while j < i - 1:
-                part1 += "[row['%s']]" % routine['columns'][j]
+                part1 += "[row['{0!s}']]".format(routine['columns'][j])
                 j += 1
-            part1 += "[row['%s']]" % routine['columns'][j]
+            part1 += "[row['{0!s}']]".format(routine['columns'][j])
 
             part2 = ''
             j = i - 1
             while j < num_of_dict:
                 if j + 1 != i:
-                    part2 += "{row['%s']: " % routine['columns'][j]
+                    part2 += "{{row['{0!s}']: ".format(routine['columns'][j])
                 j += 1
             part2 += "[row]" + ('}' * (num_of_dict - i))
 
-            line = "ret%s = %s" % (part1, part2)
+            line = "ret{0!s} = {1!s}".format(part1, part2)
             self._write_line(line)
             self._indent_level_down()
             if i > 1:
