@@ -12,6 +12,7 @@ class MySqlConstants(MySqlConnection, Constants):
     """
     Class for creating constants based on column widths, and auto increment columns and labels for MySQL databases.
     """
+
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self):
         Constants.__init__(self)
@@ -45,14 +46,14 @@ class MySqlConstants(MySqlConnection, Constants):
                                 table_name = schema_name + '.' + table_name
 
                             if constant_name:
-                                column_info = {'table_name': table_name,
-                                               'column_name': column_name,
-                                               'length': length,
+                                column_info = {'table_name':    table_name,
+                                               'column_name':   column_name,
+                                               'length':        length,
                                                'constant_name': constant_name}
                             else:
-                                column_info = {'table_name': table_name,
+                                column_info = {'table_name':  table_name,
                                                'column_name': column_name,
-                                               'length': length}
+                                               'length':      length}
 
                             if table_name in self._old_columns:
                                 if column_name in self._old_columns[table_name]:
@@ -149,7 +150,8 @@ union all
                             self._columns[table_name][column_name]['constant_name'] = column['constant_name']
                         except KeyError:
                             # Either the column or table is not present anymore.
-                            pass
+                            print('Dropping constant {1} because column is not present anymore'.
+                                  format(column['constant_name']))
 
     # ------------------------------------------------------------------------------------------------------------------
     def _write_columns(self):
@@ -193,11 +195,11 @@ union all
         Gets all primary key labels from the MySQL database.
         """
         query_string = """
-select t1.TABLE_NAME  `table_name`
-,      t1.COLUMN_NAME `id`
-,      t2.COLUMN_NAME `label`
+select t1.TABLE_NAME  table_name
+,      t1.COLUMN_NAME id
+,      t2.COLUMN_NAME label
 from       information_schema.COLUMNS t1
-inner join information_schema.COLUMNS t2 ON t1.TABLE_NAME = t2.TABLE_NAME
+inner join information_schema.COLUMNS t2 on t1.TABLE_NAME = t2.TABLE_NAME
 where t1.TABLE_SCHEMA = database()
 and   t1.EXTRA        = 'auto_increment'
 and   t2.TABLE_SCHEMA = database()
@@ -211,9 +213,9 @@ select `{0!s}`  as `id`
 ,      `{1!s}`  as `label`
 from   `{2!s}`
 where   nullif(`{3!s}`,'') is not null""".format(table['id'],
-                                          table['label'],
-                                          table['table_name'],
-                                          table['label'])
+                                                 table['label'],
+                                                 table['table_name'],
+                                                 table['label'])
 
             rows = StaticDataLayer.execute_rows(query_string)
             for row in rows:
@@ -240,34 +242,34 @@ where   nullif(`{3!s}`,'') is not null""".format(table['id'],
         :param the_column dict The column of which the field is based.
         :returns The width of the column.
         """
-        types_length = {'tinyint': the_column['numeric_precision'],
-                        'smallint': the_column['numeric_precision'],
-                        'mediumint': the_column['numeric_precision'],
-                        'int': the_column['numeric_precision'],
-                        'bigint': the_column['numeric_precision'],
-                        'decimal': the_column['numeric_precision'],
-                        'float': the_column['numeric_precision'],
-                        'double': the_column['numeric_precision'],
-                        'char': the_column['character_maximum_length'],
-                        'varchar': the_column['character_maximum_length'],
-                        'binary': the_column['character_maximum_length'],
-                        'varbinary': the_column['character_maximum_length'],
-                        'tinytext': the_column['character_maximum_length'],
-                        'text': the_column['character_maximum_length'],
+        types_length = {'tinyint': the_column   ['numeric_precision'],
+                        'smallint': the_column  ['numeric_precision'],
+                        'mediumint': the_column ['numeric_precision'],
+                        'int': the_column       ['numeric_precision'],
+                        'bigint': the_column    ['numeric_precision'],
+                        'decimal': the_column   ['numeric_precision'],
+                        'float': the_column     ['numeric_precision'],
+                        'double': the_column    ['numeric_precision'],
+                        'char': the_column      ['character_maximum_length'],
+                        'varchar': the_column   ['character_maximum_length'],
+                        'binary': the_column    ['character_maximum_length'],
+                        'varbinary': the_column ['character_maximum_length'],
+                        'tinytext': the_column  ['character_maximum_length'],
+                        'text': the_column      ['character_maximum_length'],
                         'mediumtext': the_column['character_maximum_length'],
-                        'longtext': the_column['character_maximum_length'],
-                        'tinyblob': the_column['character_maximum_length'],
-                        'blob': the_column['character_maximum_length'],
+                        'longtext': the_column  ['character_maximum_length'],
+                        'tinyblob': the_column  ['character_maximum_length'],
+                        'blob': the_column      ['character_maximum_length'],
                         'mediumblob': the_column['character_maximum_length'],
-                        'longblob': the_column['character_maximum_length'],
-                        'bit': the_column['character_maximum_length'],
-                        'timestamp': 16,
-                        'year': 4,
-                        'time': 8,
-                        'date': 10,
-                        'datetime': 16,
-                        'enum': None,
-                        'set': None}
+                        'longblob': the_column  ['character_maximum_length'],
+                        'bit': the_column       ['character_maximum_length'],
+                        'timestamp':            16,
+                        'year':                 4,
+                        'time':                 8,
+                        'date':                 10,
+                        'datetime':             16,
+                        'enum':                 None,
+                        'set':                  None}
 
         if the_column['data_type'] in types_length:
             return types_length[the_column['data_type']]

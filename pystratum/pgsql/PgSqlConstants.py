@@ -150,7 +150,8 @@ union all
                             self._columns[table_name][column_name]['constant_name'] = column['constant_name']
                         except KeyError:
                             # Either the column or table is not present anymore.
-                            pass
+                            print('Dropping constant {1} because column is not present anymore'.
+                                  format(column['constant_name']))
 
     # ------------------------------------------------------------------------------------------------------------------
     def _write_columns(self):
