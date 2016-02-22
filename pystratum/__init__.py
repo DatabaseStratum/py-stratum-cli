@@ -4,14 +4,14 @@ from pydoc import locate
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-def create_constants(rdbms: str):
+def create_constants(rdbms):
     """
     Factory for creating a Constants objects (i.e. objects for creating constants based on column widths, and auto
     increment columns and labels).
 
-    :param rdbms: The target RDBMS (i.e. mysql, mssql or pgsql).
+    :param str rdbms: The target RDBMS (i.e. mysql, mssql or pgsql).
 
-    :rtype : pystratum.Constants.Constants
+    :rtype: pystratum.Constants.Constants
     """
     # Note: We load modules and classes dynamically such that on the end user's system only the required modules
     #       and other dependencies for the targeted RDBMS must be installed (and required modules and other

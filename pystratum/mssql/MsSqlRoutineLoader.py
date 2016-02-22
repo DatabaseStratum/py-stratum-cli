@@ -223,13 +223,13 @@ and   prc.is_ms_shipped=0"""
         raise Exception("Unexpected data type '{0!s}'.".format(data_type))
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _read_configuration_file(self, config_filename):
+    def read_configuration_file(self, config_filename):
         """
         Reads parameters from the configuration file.
 
         :param str config_filename: The name of the configuration file.
         """
-        RoutineLoader._read_configuration_file(self, config_filename)
-        MsSqlConnection._read_configuration_file(self, config_filename)
+        RoutineLoader.read_configuration_file(self, config_filename)
+        MsSqlConnection.read_configuration_file(self, config_filename)
 
 # ----------------------------------------------------------------------------------------------------------------------

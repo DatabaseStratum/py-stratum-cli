@@ -117,11 +117,11 @@ class MsSqlWrapper(Wrapper):
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def _get_parameter_format_specifier(data_type: str):
+    def _get_parameter_format_specifier(data_type):
         """
         Returns the appropriate format specifier for a parameter type.
 
-        :param data_type: The parameter type.
+        :param str data_type: The parameter type.
 
         :rtype: str
         """

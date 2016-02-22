@@ -36,11 +36,11 @@ class Wrapper:
         """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _write(self, text: str):
+    def _write(self, text):
         """
         Appends a part of code to the generated code.
 
-        :param text: The part of code that must be appended.
+        :param str text: The part of code that must be appended.
         """
         self._code += str(text)
 
@@ -79,14 +79,15 @@ class Wrapper:
         self._write_line('# ' + ('-' * tmp))
 
     # ------------------------------------------------------------------------------------------------------------------
-    def is_lob_parameter(self, parameters) -> bool:
+    def is_lob_parameter(self, parameters):
         """
         Returns True of one of the parameters is a BLOB or CLOB. Otherwise, returns False.
 
         :param parameters: The parameters of a stored routine.
-        :return:
+
+        :rtype: bool
         """
-        pass
+        raise NotImplementedError
 
     # ------------------------------------------------------------------------------------------------------------------
     def write_routine_method(self, routine):

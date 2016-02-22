@@ -60,7 +60,7 @@ class MsSqlConnection(Connection.Connection):
         StaticDataLayer.disconnect()
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _read_configuration_file(self, filename):
+    def read_configuration_file(self, filename):
         """
         Reads connections parameters from the configuration file.
 

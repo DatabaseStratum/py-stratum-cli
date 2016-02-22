@@ -359,14 +359,14 @@ where  nullif(tab.[{5!s}],'') is not null""".format(table['id'],
         raise Exception("Unexpected data type '{0!s}'".format(data_type))
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _read_configuration_file(self, config_filename):
+    def read_configuration_file(self, config_filename):
         """
         Reads parameters from the configuration file.
 
         :param str config_filename: The name of the configuration file.
         """
-        Constants._read_configuration_file(self, config_filename)
-        MsSqlConnection._read_configuration_file(self, config_filename)
+        Constants.read_configuration_file(self, config_filename)
+        MsSqlConnection.read_configuration_file(self, config_filename)
 
 
 # ----------------------------------------------------------------------------------------------------------------------

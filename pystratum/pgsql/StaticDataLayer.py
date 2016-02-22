@@ -310,7 +310,7 @@ class StaticDataLayer:
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def execute_sp_singleton1(sql: str, *params):
+    def execute_sp_singleton1(sql, *params):
         """
         Executes a stored procedure that selects 1 row with 1 column. Returns the value of the selected column.
 

@@ -92,7 +92,7 @@ class StaticDataLayer:
         Executes a query that does not select any rows. Returns the number of affected rows.
 
         :param str sql: The SQL statement.
-        :param params: The values for the statement.
+        :param iterable params: The values for the statement.
 
         :rtype: int
         """
@@ -109,7 +109,7 @@ class StaticDataLayer:
         Executes a query that selects 0 or more rows. Returns the selected rows (an empty list if no rows are selected).
 
         :param str sql: The SQL statement.
-        :param params: The arguments for the statement.
+        :param iterable params: The arguments for the statement.
 
         :rtype: list[dict[str,Object]]
         """
@@ -127,7 +127,7 @@ class StaticDataLayer:
         Executes a stored routine that does not select any rows. Returns the number of affected rows.
 
         :param str sql: The SQL calling the stored procedure.
-        :param params: The arguments for the stored procedure.
+        :param iterable params: The arguments for the stored procedure.
 
         :rtype: int
         """
@@ -146,7 +146,7 @@ class StaticDataLayer:
         Executes a stored procedure that selects 0 or 1 row. Returns the selected row or None.
 
         :param str sql: The SQL call the the stored procedure.
-        :param params: The arguments for the stored procedure.
+        :param iterable params: The arguments for the stored procedure.
 
         :rtype: None|dict[str,object]
         """
@@ -174,7 +174,7 @@ class StaticDataLayer:
         Executes a stored procedure that selects 1 row. Returns the selected row.
 
         :param str sql: The SQL calling the the stored procedure.
-        :param params: The arguments for the stored procedure.
+        :param iterable params: The arguments for the stored procedure.
 
         :rtype: dict[str,object]
         """
@@ -203,7 +203,7 @@ class StaticDataLayer:
         are selected).
 
         :param str sql: The SQL statement.
-        :param params: The arguments for the statement.
+        :param iterable params: The arguments for the statement.
 
         :rtype: list[dict[str,object]]
         """
@@ -222,7 +222,7 @@ class StaticDataLayer:
         Executes a stored procedure that selects 0 or 1 row with 1 column. Returns the value of selected column or None.
 
         :param str sql: The SQL calling the stored procedure.
-        :param params: The arguments for the stored procedure.
+        :param iterable params: The arguments for the stored procedure.
 
         :rtype: object
         """
@@ -250,7 +250,7 @@ class StaticDataLayer:
         Executes SQL statement that selects 1 row with 1 column. Returns the value of the selected column.
 
         :param str sql: The SQL calling the stored procedure.
-        :param params: The arguments for the stored procedure.
+        :param iterable params: The arguments for the stored procedure.
 
         :rtype: int:
         """
@@ -277,7 +277,7 @@ class StaticDataLayer:
         with 1 column.
 
         :param str sql: The SQL calling the the stored procedure.
-        :param params: The arguments for the stored procedure.
+        :param iterable params: The arguments for the stored procedure.
 
         :rtype: object The value of the selected column.
         """
@@ -305,7 +305,7 @@ class StaticDataLayer:
         Executes a stored routine with designation type "table". Returns the number of rows.
 
         :param str sql: The SQL calling the the stored procedure.
-        :param params: The arguments for calling the stored routine.
+        :param iterable params: The arguments for calling the stored routine.
 
         :rtype: int
         """
@@ -319,7 +319,7 @@ class StaticDataLayer:
         Executes a stored routine with designation type "log". Returns the number of log messages.
 
         :param str sql: The SQL statement for calling the stored routine.
-        :param params: The arguments for calling the stored routine.
+        :param iterable params: The arguments for calling the stored routine.
 
         :rtype: int
         """

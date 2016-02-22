@@ -90,13 +90,13 @@ class MySqlConnection(Connection.Connection):
         StaticDataLayer.disconnect()
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _read_configuration_file(self, filename):
+    def read_configuration_file(self, config_filename):
         """
         Reads connections parameters from the configuration file.
 
-        :param str filename: The name of the configuration file.
+        :param str config_filename: The name of the configuration file.
         """
-        config, config_supplement = self._read_configuration(filename)
+        config, config_supplement = self._read_configuration(config_filename)
 
         self._host = self._get_option(config, config_supplement, 'database', 'host_name', fallback='localhost')
         self._user = self._get_option(config, config_supplement, 'database', 'user')

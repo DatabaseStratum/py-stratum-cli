@@ -99,7 +99,6 @@ class PgSqlWrapper(Wrapper):
 
         :rtype: str
         """
-
         lookup = {'bigint':                      '%s::bigint',
                   'integer':                     '%s::int',
                   'bit':                         '%s::bit(4)',

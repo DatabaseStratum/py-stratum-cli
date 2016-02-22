@@ -200,7 +200,7 @@ class StaticDataLayer:
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def execute_table(sql: str, *params):
+    def execute_table(sql, *params):
         # @todo methods for showing table
         raise NotImplementedError
 
