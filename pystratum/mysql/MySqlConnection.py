@@ -13,56 +13,56 @@ class MySqlConnection(Connection.Connection):
         """
         The hostname of the MySQL instance.
 
-        :type: string
+        :type: str
         """
 
         self._port = None
         """
         The port of the MySQL instance.
 
-        :type: string
+        :type: str
         """
 
         self._user = None
         """
         User name.
 
-        :type: string
+        :type: str
         """
 
         self._password = None
         """
         Password required for logging in on to the MySQL instance.
 
-        :type: string
+        :type: str
         """
 
         self._database = None
         """
         The database name.
 
-        :type: string
+        :type: str
         """
 
         self._character_set_client = None
         """
         The default character set under which the stored routine will be loaded and run.
 
-        :type: string
+        :type: str
         """
 
         self._collation_connection = None
         """
         The default collate under which the stored routine will be loaded and run.
 
-        :type: string
+        :type: str
         """
 
         self._sql_mode = None
         """
         The SQL mode under which the stored routine will be loaded and run.
 
-        :type: string
+        :type: str
         """
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -94,7 +94,7 @@ class MySqlConnection(Connection.Connection):
         """
         Reads connections parameters from the configuration file.
 
-        :param str filename: The path to the configuration file.
+        :param str filename: The name of the configuration file.
         """
         config, config_supplement = self._read_configuration(filename)
 

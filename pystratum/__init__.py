@@ -9,7 +9,8 @@ def create_constants(rdbms: str):
     Factory for creating a Constants objects (i.e. objects for creating constants based on column widths, and auto
     increment columns and labels).
 
-    :param rdbms: The target RDBMS (i.e. mysql or mssql).
+    :param rdbms: The target RDBMS (i.e. mysql, mssql or pgsql).
+
     :rtype : pystratum.Constants.Constants
     """
     # Note: We load modules and classes dynamically such that on the end user's system only the required modules
@@ -37,7 +38,8 @@ def create_routine_loader(rdbms):
     Factory for creating a Routine Loader objects (i.e. objects for loading stored routines into a RDBMS instance from
     (pseudo) SQL files.
 
-    :param str rdbms: The target RDBMS (i.e. mysql or mssql).
+    :param str rdbms: The target RDBMS (i.e. mysql, mssql or pgsql).
+
     :rtype: pystratum.RoutineLoader.RoutineLoader
     """
     # Note: We load modules and classes dynamically such that on the end user's system only the required modules
@@ -65,8 +67,9 @@ def create_routine_wrapper_generator(rdbms):
     Factory for creating a Constants objects (i.e. objects for generating a class with wrapper methods for calling
     stored routines in a database).
 
-    :param str rdbms: The target RDBMS (i.e. mysql or mssql).
-    :return: pystratum.RoutineWrapperGenerator.RoutineWrapperGenerator
+    :param str rdbms: The target RDBMS (i.e. mysql, mssql or pgsql).
+
+    :rtype: pystratum.RoutineWrapperGenerator.RoutineWrapperGenerator
     """
     # Note: We load modules and classes dynamically such that on the end user's system only the required modules
     #       and other dependencies for the targeted RDBMS must be installed (and required modules and other

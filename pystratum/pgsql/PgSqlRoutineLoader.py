@@ -57,10 +57,12 @@ order by table_schema
     def create_routine_loader_helper(self, routine_name, pystratum_old_metadata, rdbms_old_metadata):
         """
         Creates a Routine Loader Helper object.
-        :param str routine_name:
-        :param dict pystratum_old_metadata:
-        :param dict rdbms_old_metadata:
-        :return: PgSqlRoutineLoaderHelper
+
+        :param str routine_name: The name of the routine.
+        :param dict pystratum_old_metadata: The old metadata of the stored routine from PyStratum.
+        :param dict rdbms_old_metadata:  The old metadata of the stored routine from PostgreSQL.
+
+        :rtype: pystratum.pgsql.PgSqlRoutineLoaderHelper.PgSqlRoutineLoaderHelper
         """
         return PgSqlRoutineLoaderHelper(self._source_file_names[routine_name],
                                         self._source_file_encoding,

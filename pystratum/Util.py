@@ -8,7 +8,7 @@ class Util:
     """
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def write_two_phases(the_filename, the_data):
+    def write_two_phases(filename, data):
         """
         Writes a file in two phase to the filesystem.
 
@@ -19,21 +19,21 @@ class Util:
         is written.
         * Renaming a file is atomic. So, running processes will never read a partially written data.
 
-        :param str the_filename: The name of the file were the data must be stored.
-        :param str the_data: The data that must be written.
+        :param str filename: The name of the file were the data must be stored.
+        :param str data: The data that must be written.
         """
         write_flag = True
-        if os.path.exists(the_filename):
-            with open(the_filename, 'r') as file:
+        if os.path.exists(filename):
+            with open(filename, 'r') as file:
                 old_data = file.read()
-                if the_data == old_data:
+                if data == old_data:
                     write_flag = False
 
         if write_flag:
-            tmp_filename = the_filename + '.tmp'
+            tmp_filename = filename + '.tmp'
             with open(tmp_filename, 'w+') as file:
-                file.write(the_data)
-            os.replace(tmp_filename, the_filename)
-            print("Wrote: '{0!s}'.".format(the_filename))
+                file.write(data)
+            os.replace(tmp_filename, filename)
+            print("Wrote: '{0!s}'.".format(filename))
 
 # ----------------------------------------------------------------------------------------------------------------------

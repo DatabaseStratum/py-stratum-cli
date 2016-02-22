@@ -13,12 +13,14 @@ class Connection:
         """
         Reads an option for a configuration file.
 
-        :param ConfigParser config: The main config file.
-        :param ConfigParser supplement: The supplement config file.
+        :param configparser.ConfigParser config: The main config file.
+        :param configparser.ConfigParser supplement: The supplement config file.
         :param str section: The name of the section op the option.
         :param str option: The name of the option.
-        :param str fallback: The fallback value of the option if it is not set in either configuration files.
+        :param str|None fallback: The fallback value of the option if it is not set in either configuration files.
+
         :rtype: str
+
         :raise KeyError:
         """
         if supplement:
@@ -37,8 +39,9 @@ class Connection:
         """
         Checks the supplement file.
 
-        :param str config_filename: The path of main config file
-        :rtype: (ConfigParser,ConfigParser)
+        :param str config_filename: The name of the configuration file.
+
+        :rtype: (configparser.ConfigParser,configparser.ConfigParser)
         """
         config = ConfigParser()
         config.read(config_filename)

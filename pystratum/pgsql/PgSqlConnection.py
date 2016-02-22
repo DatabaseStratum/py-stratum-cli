@@ -10,46 +10,46 @@ class PgSqlConnection(Connection.Connection):
     """
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self):
-        self._host = None
+        self._host = 'localhost'
         """
         The hostname of the PostgreSQL instance.
 
-        :type: string
+        :type: str
         """
 
-        self._port = None
+        self._port = 5432
         """
         The port of the PostgreSQL instance.
 
-        :type: string
+        :type: int
         """
 
-        self._user = None
+        self._user = ''
         """
         User name.
 
-        :type: string
+        :type: str
         """
 
-        self._password = None
+        self._password = ''
         """
         Password required for logging in on to the PostgreSQL instance.
 
-        :type: string
+        :type: str
         """
 
-        self._database = None
+        self._database = ''
         """
         The database name.
 
-        :type: string
+        :type: str
         """
 
-        self._schema = None
+        self._schema = ''
         """
         The schema name.
 
-        :type: string
+        :type: str
         """
 
     # ------------------------------------------------------------------------------------------------------------------

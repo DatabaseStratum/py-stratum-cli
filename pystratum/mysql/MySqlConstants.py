@@ -15,6 +15,9 @@ class MySqlConstants(MySqlConnection, Constants):
 
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self):
+        """
+        Object constructor.
+        """
         Constants.__init__(self)
         MySqlConnection.__init__(self)
 
@@ -236,51 +239,54 @@ where   nullif(`{3!s}`,'') is not null""".format(table['id'],
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def derive_field_length(the_column: dict) -> int:
+    def derive_field_length(column):
         """
         Returns the width of a field based on column.
-        :param the_column dict The column of which the field is based.
-        :returns The width of the column.
+
+        :param dict column: The column of which the field is based.
+
+        :rtype: int
         """
-        types_length = {'tinyint': the_column   ['numeric_precision'],
-                        'smallint': the_column  ['numeric_precision'],
-                        'mediumint': the_column ['numeric_precision'],
-                        'int': the_column       ['numeric_precision'],
-                        'bigint': the_column    ['numeric_precision'],
-                        'decimal': the_column   ['numeric_precision'],
-                        'float': the_column     ['numeric_precision'],
-                        'double': the_column    ['numeric_precision'],
-                        'char': the_column      ['character_maximum_length'],
-                        'varchar': the_column   ['character_maximum_length'],
-                        'binary': the_column    ['character_maximum_length'],
-                        'varbinary': the_column ['character_maximum_length'],
-                        'tinytext': the_column  ['character_maximum_length'],
-                        'text': the_column      ['character_maximum_length'],
-                        'mediumtext': the_column['character_maximum_length'],
-                        'longtext': the_column  ['character_maximum_length'],
-                        'tinyblob': the_column  ['character_maximum_length'],
-                        'blob': the_column      ['character_maximum_length'],
-                        'mediumblob': the_column['character_maximum_length'],
-                        'longblob': the_column  ['character_maximum_length'],
-                        'bit': the_column       ['character_maximum_length'],
-                        'timestamp':            16,
-                        'year':                 4,
-                        'time':                 8,
-                        'date':                 10,
-                        'datetime':             16,
-                        'enum':                 None,
-                        'set':                  None}
+        types_length = {'tinyint': column   ['numeric_precision'],
+                        'smallint': column  ['numeric_precision'],
+                        'mediumint': column ['numeric_precision'],
+                        'int': column       ['numeric_precision'],
+                        'bigint': column    ['numeric_precision'],
+                        'decimal': column   ['numeric_precision'],
+                        'float': column     ['numeric_precision'],
+                        'double': column    ['numeric_precision'],
+                        'char': column      ['character_maximum_length'],
+                        'varchar': column   ['character_maximum_length'],
+                        'binary': column    ['character_maximum_length'],
+                        'varbinary': column ['character_maximum_length'],
+                        'tinytext': column  ['character_maximum_length'],
+                        'text': column      ['character_maximum_length'],
+                        'mediumtext': column['character_maximum_length'],
+                        'longtext': column  ['character_maximum_length'],
+                        'tinyblob': column  ['character_maximum_length'],
+                        'blob': column      ['character_maximum_length'],
+                        'mediumblob': column['character_maximum_length'],
+                        'longblob': column  ['character_maximum_length'],
+                        'bit': column       ['character_maximum_length'],
+                        'timestamp':        16,
+                        'year':             4,
+                        'time':             8,
+                        'date':             10,
+                        'datetime':         16,
+                        'enum':             None,
+                        'set':              None}
 
-        if the_column['data_type'] in types_length:
-            return types_length[the_column['data_type']]
+        if column['data_type'] in types_length:
+            return types_length[column['data_type']]
 
-        raise Exception("Unexpected type '{0!s}'.".format(the_column['data_type']))
+        raise Exception("Unexpected type '{0!s}'.".format(column['data_type']))
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _read_configuration_file(self, config_filename: str):
+    def _read_configuration_file(self, config_filename):
         """
         Reads parameters from the configuration file.
-        :param config_filename
+
+        :param str config_filename: The name of the configuration file.
         """
         Constants._read_configuration_file(self, config_filename)
         MySqlConnection._read_configuration_file(self, config_filename)

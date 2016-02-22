@@ -16,66 +16,77 @@ class RoutineLoader:
         self.error_file_names = set()
         """
         A set with source names that are not loaded into RDBMS instance.
+
         :type: set
         """
 
         self._pystratum_metadata = {}
         """
         The meta data of all stored routines.
+
         :type: dict
         """
 
         self._pystratum_metadata_filename = None
         """
         The filename of the file with the metadata of all stored routines.
-        :type: string
+
+        :type: str
         """
 
         self._rdbms_old_metadata = {}
         """
         Old metadata about all stored routines.
+
         :type: dict
         """
 
         self._replace_pairs = {}
         """
         A map from placeholders to their actual values.
+
         :type: dict
         """
 
         self._source_file_encoding = None
         """
         The character set of the source files.
-        :type: string
+
+        :type: str
         """
 
         self._source_directory = None
         """
         Path where source files can be found.
-        :type: string
+
+        :type: str
         """
 
         self._source_file_extension = None
         """
         The extension of the source files.
-        :type: string
+
+        :type: str
         """
 
         self._source_file_names = {}
         """
         All found source files.
+
         :type: dict
         """
 
         self._target_config_filename = None
         """
         The name of the configuration file of the target project.
-        :type: string
+
+        :type: str
         """
 
         self._constants_filename = None
         """
-        :type: string
+
+        :type: str
         """
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -84,8 +95,9 @@ class RoutineLoader:
         Loads stored routines into the current schema.
 
         :param str config_filename: The name of the configuration file of the current project
-        :param list file_names: The sources that must be loaded. If empty all sources (if required) will loaded.
-        :rtype : int The status of exit.
+        :param list[str] file_names: The sources that must be loaded. If empty all sources (if required) will loaded.
+
+        :rtype: int The status of exit.
         """
         if file_names:
             self._load_list(config_filename, file_names)
@@ -128,7 +140,7 @@ class RoutineLoader:
         Loads all stored routines in a list into the RDBMS instance.
 
         :param str config_filename: The filename of the configuration file.
-        :param list file_names: The list of files to be loaded.
+        :param list[str] file_names: The list of files to be loaded.
         """
         self._read_configuration_file(config_filename)
         self.connect()
@@ -146,6 +158,7 @@ class RoutineLoader:
     def _load_all(self, config_filename):
         """
         Loads all stored routines into the RDBMS instance.
+
         :param str config_filename: string The filename of the configuration file.
         """
         self._read_configuration_file(config_filename)
@@ -166,7 +179,8 @@ class RoutineLoader:
     def _read_configuration_file(self, config_filename):
         """
         Reads parameters from the configuration file.
-        :param str config_filename: string
+
+        :param str config_filename: The name of the configuration file.
         """
         config = configparser.ConfigParser()
         config.read(config_filename)
@@ -221,9 +235,10 @@ class RoutineLoader:
         """
         Creates a Routine Loader Helper object.
 
-        :param str routine_name:
-        :param dict pystratum_old_metadata:
-        :param dict rdbms_old_metadata:
+        :param str routine_name: The name of the routine.
+        :param dict pystratum_old_metadata: The old metadata of the stored routine from PyStratum.
+        :param dict rdbms_old_metadata:  The old metadata of the stored routine from database instance.
+
         :rtype: pystratum.RoutineLoaderHelper.RoutineLoaderHelper
         """
         pass
@@ -303,7 +318,7 @@ class RoutineLoader:
         """
         Finds all source files that actually exists from a list of file names.
 
-        :param list file_names: The list of file names.
+        :param list[str] file_names: The list of file names.
         """
         for file_name in file_names:
             if os.path.exists(file_name):

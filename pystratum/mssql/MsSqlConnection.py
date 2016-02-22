@@ -10,32 +10,32 @@ class MsSqlConnection(Connection.Connection):
     """
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self):
-        self._host = None
+        self._host = ''
         """
         The hostname of the SQL Server instance.
 
-        :type: string
+        :type: str
         """
 
-        self._user = None
+        self._user = ''
         """
         User name.
 
-        :type: string
+        :type: str
         """
 
-        self._password = None
+        self._password = ''
         """
         Password required for singing on to the SQL Server instance.
 
-        :type: string
+        :type: str
         """
 
-        self._database = None
+        self._database = ''
         """
         The database name.
 
-        :type: string
+        :type: str
         """
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -49,14 +49,15 @@ class MsSqlConnection(Connection.Connection):
                                 self._database)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def disconnect(self):
+    @staticmethod
+    def disconnect():
         """
         Disconnects from the database.
         """
         StaticDataLayer.disconnect()
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _read_configuration_file(self, filename: str):
+    def _read_configuration_file(self, filename):
         """
         Reads connections parameters from the configuration file.
 

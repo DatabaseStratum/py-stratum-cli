@@ -36,12 +36,12 @@ def create_routine_wrapper(routine, lob_as_string_flag):
         wrapper = FunctionsWrapper(routine, lob_as_string_flag)
     elif routine['designation'] == 'log':
         wrapper = LogWrapper(routine, lob_as_string_flag)
-    #elif routine['designation'] == 'table':
-    #    wrapper = TableWrapper(routine, lob_as_string_flag)
-    #elif routine['designation'] == 'bulk':
-    #    wrapper = BulkWrapper(routine, lob_as_string_flag)
-    #elif routine['designation'] == 'bulk_insert':
-    #    wrapper = BulkInsertWrapper(routine, lob_as_string_flag)
+    # elif routine['designation'] == 'table':
+    #     wrapper = TableWrapper(routine, lob_as_string_flag)
+    # elif routine['designation'] == 'bulk':
+    #     wrapper = BulkWrapper(routine, lob_as_string_flag)
+    # elif routine['designation'] == 'bulk_insert':
+    #     wrapper = BulkInsertWrapper(routine, lob_as_string_flag)
     else:
         raise Exception("Unknown routine type '{0!s}'.".format(routine['designation']))
 

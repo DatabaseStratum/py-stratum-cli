@@ -12,7 +12,8 @@ class StaticDataLayer:
     __conn = None
     """
     The SQL connection.
-    :type: "Object"
+
+    :type: Object
     """
 
     _suppress_bogus_messages = True
@@ -21,6 +22,7 @@ class StaticDataLayer:
     * "Warning: Null value is eliminated by an aggregate or other SET operation."
     * The module ... depends on the missing object .... The module will still be created; however, it cannot run
       successfully until the object exists.
+
     :type: bool
     """
 
@@ -199,7 +201,7 @@ class StaticDataLayer:
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
     def execute_table(sql: str, *params):
-        # todo methods for showing table
-        pass
+        # @todo methods for showing table
+        raise NotImplementedError
 
 # ----------------------------------------------------------------------------------------------------------------------

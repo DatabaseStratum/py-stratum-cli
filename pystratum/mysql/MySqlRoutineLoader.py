@@ -9,8 +9,12 @@ class MySqlRoutineLoader(MySqlConnection, RoutineLoader):
     """
     Class for loading stored routines into a MySQL instance from (pseudo) SQL files.
     """
+
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self):
+        """
+        Object constructor.
+        """
         RoutineLoader.__init__(self)
         MySqlConnection.__init__(self)
 
@@ -24,7 +28,7 @@ select TABLE_NAME                                    table_name
 ,      COLUMN_NAME                                   column_name
 ,      COLUMN_TYPE                                   column_type
 ,      CHARACTER_SET_NAME                            character_set_name
-,      NULL                                          table_schema
+,      null                                          table_schema
 from   information_schema.COLUMNS
 where  TABLE_SCHEMA = database()
 union all
@@ -54,13 +58,15 @@ order by table_schema
             self._replace_pairs[key] = value
 
     # ------------------------------------------------------------------------------------------------------------------
-    def create_routine_loader_helper(self,
-                                     routine_name: str,
-                                     pystratum_old_metadata: dict,
-                                     rdbms_old_metadata: dict) -> MySqlRoutineLoaderHelper:
+    def create_routine_loader_helper(self, routine_name, pystratum_old_metadata, rdbms_old_metadata):
         """
         Creates a Routine Loader Helper object.
-        :return: MySqlRoutineLoaderHelper
+
+        :param str routine_name: The name of the routine.
+        :param dict pystratum_old_metadata: The old metadata of the stored routine from PyStratum.
+        :param dict rdbms_old_metadata:  The old metadata of the stored routine from MySQL.
+
+        :rtype: pystratum.mysql.MySqlRoutineLoaderHelper.MySqlRoutineLoaderHelper
         """
         return MySqlRoutineLoaderHelper(self._source_file_names[routine_name],
                                         self._source_file_encoding,
@@ -123,6 +129,5 @@ order by routine_name"""
         """
         RoutineLoader._read_configuration_file(self, config_filename)
         MySqlConnection._read_configuration_file(self, config_filename)
-
 
 # ----------------------------------------------------------------------------------------------------------------------

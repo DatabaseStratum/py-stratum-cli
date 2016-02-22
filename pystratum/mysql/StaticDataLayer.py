@@ -28,7 +28,7 @@ class StaticDataLayer:
     connection = None
     """
     The connection between Python and the MySQL instance.
-    :type : MySQLConnection
+    :type: MySQLConnection
     """
 
     # ------------------------------------------------------------------------------------------------------------------

@@ -9,14 +9,23 @@ class MsSqlRoutineLoaderHelper(RoutineLoaderHelper):
     """
     Class for loading a single stored routine into a SQL Server instance from a (pseudo) SQL file.
     """
+
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self,
-                 routine_filename: str,
-                 routine_file_encoding: str,
-                 pystratum_old_metadata: dict,
-                 replace_pairs: dict,
-                 rdbms_old_metadata: dict):
+                 routine_filename,
+                 routine_file_encoding,
+                 pystratum_old_metadata,
+                 replace_pairs,
+                 rdbms_old_metadata):
+        """
+        Object constructor.
 
+        :param str routine_filename: The filename of the source of the stored routine.
+        :param str routine_file_encoding: The encoding of the source file.
+        :param dict pystratum_old_metadata: The metadata of the stored routine from PyStratum.
+        :param dict[str,str] replace_pairs: A map from placeholders to their actual values.
+        :param dict rdbms_old_metadata: The old metadata of the stored routine from MS SQL Server.
+        """
         RoutineLoaderHelper.__init__(self,
                                      routine_filename,
                                      routine_file_encoding,
@@ -28,21 +37,22 @@ class MsSqlRoutineLoaderHelper(RoutineLoaderHelper):
         """
         The name of the schema of the stored routine.
 
-        :type : string
+        :type: str
         """
 
         self._routine_base_name = None
         """
         The name of the stored routine without schema name.
 
-        :type : string
+        :type: str
         """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _must_reload(self) -> bool:
+    def _must_reload(self):
         """
         Returns True if the source file must be load or reloaded. Otherwise returns False.
-        :return bool
+
+        :rtype: bool
         """
         if not self._pystratum_old_metadata:
             return True
@@ -61,10 +71,11 @@ class MsSqlRoutineLoaderHelper(RoutineLoaderHelper):
         return False
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _get_name(self) -> bool:
+    def _get_name(self):
         """
         Extracts the name of the stored routine and the stored routine type (i.e. procedure or function) source.
-        :return Returns True on success, False otherwise.
+
+        :rtype: bool
         """
         ret = True
         p = re.compile(r"create\\s+(procedure|function)\\s+(?:(\w+)\.([a-zA-Z0-9_]+))", re.IGNORECASE)
@@ -113,7 +124,8 @@ class MsSqlRoutineLoaderHelper(RoutineLoaderHelper):
         self._unset_magic_constants()
 
         if self._rdbms_old_metadata:
-            if self._pystratum_old_metadata and self._pystratum_old_metadata['designation'] == self._pystratum_metadata['designation']:
+            if self._pystratum_old_metadata and self._pystratum_old_metadata['designation'] == \
+                    self._pystratum_metadata['designation']:
                 p = re.compile("(create\\s+(procedure|function))", re.IGNORECASE)
                 matches = p.findall(routine_source)
                 if matches:
@@ -157,15 +169,18 @@ order by par.parameter_id""" % (self._routines_schema_name, self._routine_base_n
                     parameter_name = routine_parameter['parameter_name'][1:]
                     value = routine_parameter['type_name']
 
-                    self._parameters.append({'name': parameter_name,
+                    self._parameters.append({'name':                       parameter_name,
                                              'data_type': routine_parameter['type_name'],
-                                             'data_type_descriptor': value})
+                                             'data_type_descriptor':       value})
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _get_designation_type(self) -> bool:
+    def _get_designation_type(self):
         """
         Extracts the designation type of the stored routine.
-        :return True on success. Otherwise returns False.
+
+        Returns True on success. Otherwise returns False.
+
+        :rtype: bool
         """
         ret = True
 
@@ -230,6 +245,5 @@ order by par.parameter_id""" % (self._routines_schema_name, self._routine_base_n
 
         # Update SQL Server specific metadata.
         self._pystratum_metadata['routine_base_name'] = self._routine_base_name
-
 
 # ----------------------------------------------------------------------------------------------------------------------

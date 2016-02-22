@@ -11,19 +11,19 @@ class StaticDataLayer:
     connection = None
     """
     The connection between Python and the PostgreSQL instance.
-    :type : psycopg2.extensions.connection
+    :type: psycopg2.extensions.connection
     """
 
     sp_log_init = 'stratum_log_init'
     """
     The name of the stored routine that must be run before a store routine with designation type "log".
-    :type : str
+    :type: str
     """
 
     sp_log_fetch = 'stratum_log_fetch'
     """
     The name of the stored routine that must be run after a store routine with designation type "log".
-    :type : str
+    :type: str
     """
 
     # ------------------------------------------------------------------------------------------------------------------

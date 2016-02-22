@@ -4,7 +4,6 @@ from pystratum.wrapper.Wrapper import Wrapper
 
 # ----------------------------------------------------------------------------------------------------------------------
 class RowsWithKeyWrapper(Wrapper):
-
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
     def _write_execute_rows(self, routine):
@@ -31,8 +30,8 @@ class RowsWithKeyWrapper(Wrapper):
             self._write_line(line)
             i += 1
 
-        line = "raise Exception('Duplicate key for %s.' % str(({0!s})))".format(\
-               ", ".join(["row['{0!s}']".format(column_name) for column_name in routine['columns']]))
+        line = "raise Exception('Duplicate key for %s.' % str(({0!s})))". \
+            format(", ".join(["row['{0!s}']".format(column_name) for column_name in routine['columns']]))
 
         self._write_line(line)
         self._indent_level_down()
@@ -65,6 +64,5 @@ class RowsWithKeyWrapper(Wrapper):
 
         self._write_line()
         self._write_line('return ret')
-
 
 # ----------------------------------------------------------------------------------------------------------------------

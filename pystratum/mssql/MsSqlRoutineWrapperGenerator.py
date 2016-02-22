@@ -25,7 +25,8 @@ class MsSqlRoutineWrapperGenerator(MsSqlConnection, RoutineWrapperGenerator):
     def _write_routine_function(self, routine):
         """
         Generates a complete wrapper method for a stored routine.
-        :param  The metadata of the stored routine.
+
+        :param dict routine: The metadata of the stored routine.
         """
         wrapper = create_routine_wrapper(routine, self._lob_as_string_flag)
         self._code += wrapper.write_routine_method(routine)

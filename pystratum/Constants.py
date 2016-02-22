@@ -19,6 +19,7 @@ class Constants:
         self._constants = {}
         """
         All constants.
+
         :type: dict
         """
 
@@ -26,12 +27,14 @@ class Constants:
         """
         The previous column names, widths, and constant names (i.e. the content of $myConstantsFilename upon
         starting this program).
+
         :type: dict
         """
 
         self._constants_filename = None
         """
         Filename with column names, their widths, and constant names.
+
         :type: str
         """
 
@@ -44,24 +47,28 @@ class Constants:
         self._template_config_filename = None
         """
         Template filename under which the file is generated with the constants.
+
         :type: str
         """
 
         self._config_filename = None
         """
         The destination filename with constants.
+
         :type: str
         """
 
         self._columns = {}
         """
         All columns in the MySQL schema.
+
         :type: dict
         """
 
         self._labels = {}
         """
         All primary key labels, their widths and constant names.
+
         :type: dict
         """
 
@@ -82,10 +89,11 @@ class Constants:
         pass
 
     # ------------------------------------------------------------------------------------------------------------------
-    def main(self, config_filename: str) -> int:
+    def main(self, config_filename):
         """
-        :param: config_filename string The config filename.
-        :return: int
+        :param str config_filename: The config filename.
+
+        :rtype: int
         """
         self._read_configuration_file(config_filename)
         self.connect()
@@ -102,10 +110,11 @@ class Constants:
         return 0
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _read_configuration_file(self, config_filename: str):
+    def _read_configuration_file(self, config_filename):
         """
         Reads parameters from the configuration file.
-        :param config_filename string
+
+        :param str config_filename: The name of the configuration file.
         """
         config = configparser.ConfigParser()
         config.read(config_filename)
@@ -178,7 +187,6 @@ class Constants:
     def _write_target_config_file(self):
         """
         Creates a python configuration file with constants.
-        :return:
         """
         content = ''
         for constant, value in sorted(self._constants.items()):

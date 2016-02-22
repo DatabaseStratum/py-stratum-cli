@@ -9,8 +9,12 @@ class MsSqlRoutineLoader(MsSqlConnection, RoutineLoader):
     """
     Class for loading stored routines into a MySQL instance from pseudo SQL files.
     """
+
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self):
+        """
+        Object constructor.
+        """
         RoutineLoader.__init__(self)
         MsSqlConnection.__init__(self)
 
@@ -55,14 +59,15 @@ order by  scm.name
             self._replace_pairs[key] = value
 
     # ------------------------------------------------------------------------------------------------------------------
-    def create_routine_loader_helper(self,
-                                     routine_name: str,
-                                     pystratum_old_metadata: dict,
-                                     rdbms_old_metadata: dict):
+    def create_routine_loader_helper(self, routine_name, pystratum_old_metadata, rdbms_old_metadata):
         """
         Creates a Routine Loader Helper object.
 
-        :rtype: MsSqlRoutineLoaderHelper
+        :param str routine_name: The name of the routine.
+        :param dict pystratum_old_metadata: The old metadata of the stored routine from PyStratum.
+        :param dict rdbms_old_metadata:  The old metadata of the stored routine from MS SQL Server.
+
+        :rtype: pystratum.mssql.MsSqlRoutineLoaderHelper.MsSqlRoutineLoaderHelper
         """
         return MsSqlRoutineLoaderHelper(self._source_file_names[routine_name],
                                         self._source_file_encoding,
@@ -78,7 +83,7 @@ order by  scm.name
         query = """
 select scm.name    schema_name
 ,      prc.name    routine_name
-,      prc.[type]  routine_type
+,      prc.type  routine_type
 from       sys.all_objects  prc
 inner join sys.schemas     scm  on   scm.schema_id = prc.schema_id
 where prc.type in ('P','FN','TF')
@@ -222,10 +227,9 @@ and   prc.is_ms_shipped=0"""
         """
         Reads parameters from the configuration file.
 
-        :param config_filename: str
+        :param str config_filename: The name of the configuration file.
         """
         RoutineLoader._read_configuration_file(self, config_filename)
         MsSqlConnection._read_configuration_file(self, config_filename)
 
 # ----------------------------------------------------------------------------------------------------------------------
-

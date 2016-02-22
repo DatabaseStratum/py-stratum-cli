@@ -16,42 +16,49 @@ class RoutineWrapperGenerator:
         self._code = ''
         """
         The generated Python code buffer.
+
         :type: str
         """
 
         self._lob_as_string_flag = False
         """
         If true BLOBs and CLOBs must be treated as strings.
+
         :type: bool
         """
 
         self._metadata_filename = None
         """
         The filename of the file with the metadata of all stored procedures.
+
         :type: str
         """
 
         self._parent_class_name = None
         """
         The class name of the parent class of the routine wrapper.
+
         :type: str
         """
 
         self._parent_class_namespace = None
         """
         The namespace of the parent class of the routine wrapper.
+
         :type: str
         """
 
         self._wrapper_class_name = None
         """
         The class name of the routine wrapper.
+
         :type: str
         """
 
         self._wrapper_filename = None
         """
-        The filename where the generated wrapper class must be stored
+        The filename where the generated wrapper class must be stored.
+
         :type: str
         """
 
@@ -59,8 +66,9 @@ class RoutineWrapperGenerator:
     def run(self, config_filename):
         """
         The "main" of the wrapper generator. Returns 0 on success, 1 if one or more errors occurred.
+
         :param str config_filename: The name of the configuration file.
-        :return: The exit code.
+
         :rtype: int
         """
         self._read_configuration_file(config_filename)
@@ -86,6 +94,7 @@ class RoutineWrapperGenerator:
     def _read_configuration_file(self, config_filename):
         """
         Reads parameters from the configuration file.
+
         :param str config_filename: The name of the configuration file.
         """
         config = configparser.ConfigParser()
@@ -102,6 +111,7 @@ class RoutineWrapperGenerator:
     def _read_routine_metadata(self):
         """
         Returns the metadata of stored routines.
+
         :rtype: dict
         """
         metadata = {}
@@ -123,13 +133,14 @@ class RoutineWrapperGenerator:
         self._write_line("class {0!s}({1!s}):".format(self._wrapper_class_name, self._parent_class_name))
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _write_line(self, text=None):
+    def _write_line(self, text=''):
         """
         Writes a line with Python code to the generate code buffer.
-        :param text: The line with Python code.
+
+        :param str text: The line with Python code.
         """
         if text:
-            self._code += str(text + "\n")
+            self._code += str(text) + "\n"
         else:
             self._code += "\n"
 
@@ -147,6 +158,7 @@ class RoutineWrapperGenerator:
     def _write_routine_function(self, routine):
         """
         Generates a complete wrapper method for a stored routine.
+
         :param dict routine: The metadata of the stored routine.
         """
         pass

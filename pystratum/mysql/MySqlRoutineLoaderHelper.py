@@ -31,21 +31,21 @@ class MySqlRoutineLoaderHelper(RoutineLoaderHelper):
         """
         The SQL mode under which the stored routine will be loaded and run.
 
-        :type : string
+        :type: str
         """
 
         self._character_set = character_set
         """
         The default character set under which the stored routine will be loaded and run.
 
-        :type : string
+        :type: str
         """
 
         self._collate = collate
         """
         The default collate under which the stored routine will be loaded and run.
 
-        :type : string
+        :type: str
         """
 
     # ------------------------------------------------------------------------------------------------------------------
