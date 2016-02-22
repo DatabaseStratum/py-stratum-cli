@@ -67,7 +67,7 @@ class MsSqlRoutineLoaderHelper(RoutineLoaderHelper):
         :return Returns True on success, False otherwise.
         """
         ret = True
-        p = re.compile("create\\s+(procedure|function)\\s+(?:(\w+)\.([a-zA-Z0-9_]+))", re.IGNORECASE)
+        p = re.compile(r"create\\s+(procedure|function)\\s+(?:(\w+)\.([a-zA-Z0-9_]+))", re.IGNORECASE)
         matches = p.findall(self._routine_source_code)
 
         if matches:
@@ -172,14 +172,14 @@ order by par.parameter_id""" % (self._routines_schema_name, self._routine_base_n
         key = self._routine_source_code_lines.index('as')
 
         if key != -1:
-            p = re.compile('\s*--\s+type:\s*(\w+)\s*(.+)?\s*', re.IGNORECASE)
+            p = re.compile(r'\s*--\s+type:\s*(\w+)\s*(.+)?\s*', re.IGNORECASE)
             matches = p.findall(self._routine_source_code_lines[key - 1])
 
             if matches:
                 self._designation_type = matches[0][0]
                 tmp = str(matches[0][1])
                 if self._designation_type == 'bulk_insert':
-                    n = re.compile('([a-zA-Z0-9_]+)\s+([a-zA-Z0-9_,]+)')
+                    n = re.compile(r'([a-zA-Z0-9_]+)\s+([a-zA-Z0-9_,]+)')
                     info = n.findall(tmp)
 
                     if not info:

@@ -74,6 +74,11 @@
         <exec command="twine upload dist/PyStratum-${VERSION}.tar.gz" passthru="true" checkreturn="true"/>
     </target>
 
+    <!-- Checks the code with pylint -->
+    <target name="pylint">
+        <exec command="pylint --rcfile pylintrc pystratum" passthru="true"/>
+    </target>
+
     <!-- Runs all unit tests for MySQL-->
     <target name="my-unit">
         <delete file="etc/mysql/test_routines.json" quiet="true"/>

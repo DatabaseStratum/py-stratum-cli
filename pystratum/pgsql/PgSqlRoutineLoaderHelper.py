@@ -1,4 +1,3 @@
-from pprint import pprint
 import re
 import sys
 from pystratum.RoutineLoaderHelper import RoutineLoaderHelper
@@ -134,22 +133,23 @@ and   TABLE_NAME   = '%s'""" % self._table_name
     # ------------------------------------------------------------------------------------------------------------------
     def _get_designation_type(self):
         """
-        Extracts the designation type of the stored routine.
-        :return bool: True on success. Otherwise returns False.
+        Extracts the designation type of the stored routine. Returns True on success. Otherwise returns False.
+
+        :rtype bool:
         """
         ret = True
 
         key = self._routine_source_code_lines.index('begin')
 
         if key != -1:
-            p = re.compile('\s*--\s+type:\s*(\w+)\s*(.+)?\s*')
+            p = re.compile(r'\s*--\s+type:\s*(\w+)\s*(.+)?\s*')
             matches = p.findall(self._routine_source_code_lines[key - 1])
 
             if matches:
                 self._designation_type = matches[0][0]
                 tmp = str(matches[0][1])
                 if self._designation_type == 'bulk_insert':
-                    n = re.compile('([a-zA-Z0-9_]+)\s+([a-zA-Z0-9_,]+)')
+                    n = re.compile(r'([a-zA-Z0-9_]+)\s+([a-zA-Z0-9_,]+)')
                     info = n.findall(tmp)
 
                     if not info:

@@ -29,8 +29,8 @@ class MySqlConstants(MySqlConnection, Constants):
                 for line in file:
                     line_number += 1
                     if line != "\n":
-                        p = re.compile('\s*(?:([a-zA-Z0-9_]+)\.)?([a-zA-Z0-9_]+)\.'
-                                       '([a-zA-Z0-9_]+)\s+(\d+)\s*(\*|[a-zA-Z0-9_]+)?\s*')
+                        p = re.compile(r'\s*(?:([a-zA-Z0-9_]+)\.)?([a-zA-Z0-9_]+)\.'
+                                       r'([a-zA-Z0-9_]+)\s+(\d+)\s*(\*|[a-zA-Z0-9_]+)?\s*')
                         matches = p.findall(line)
 
                         if matches:

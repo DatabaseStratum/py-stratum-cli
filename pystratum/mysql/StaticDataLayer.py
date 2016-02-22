@@ -278,7 +278,7 @@ class StaticDataLayer:
     @staticmethod
     def execute_sp_table(sql: str, *params):
         """
-        Executes a stored routine with designation type "table". 
+        Executes a stored routine with designation type "table".
         :param str sql: The SQL statement for calling the stored routine.
         :param params: The arguments for calling the stored routine.
         :return: int The number of rows.
@@ -290,10 +290,10 @@ class StaticDataLayer:
     @staticmethod
     def execute_sp_log(sql, *params):
         """
-        Executes a stored routine with designation type "log". 
+        Executes a stored routine with designation type "log".
         :param str sql: The SQL statement for calling the stored routine.
         :param params: The arguments for calling the stored routine.
-        :return: int The number of log messages. 
+        :return: int The number of log messages.
         """
         cursor = MySQLCursorBuffered(StaticDataLayer.connection)
         itr = cursor.execute(sql, params, multi=True)

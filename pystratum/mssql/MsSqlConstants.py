@@ -30,8 +30,8 @@ class MsSqlConstants(MsSqlConnection, Constants):
                 for line in f:
                     line_number += 1
                     if line != "\n":
-                        p = re.compile('\s*(?:([a-zA-Z0-9_]+)\.)?([a-zA-Z0-9_]+)\.'
-                                       '([a-zA-Z0-9_]+)\s+(\d+)\s*(\*|[a-zA-Z0-9_]+)?\s*')
+                        p = re.compile(r'\s*(?:([a-zA-Z0-9_]+)\.)?([a-zA-Z0-9_]+)\.'
+                                       r'([a-zA-Z0-9_]+)\s+(\d+)\s*(\*|[a-zA-Z0-9_]+)?\s*')
                         matches = p.findall(line)
 
                         if matches:
@@ -244,11 +244,13 @@ where  nullif(tab.[%s],'') is not null""" \
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def derive_field_length(column: dict) -> int:
+    def derive_field_length(column):
         """
-        Returns the width of a field based on column.
-        :param column dict The column of which the field is based.
-        :returns int The width of the column.
+        Returns the width of a field based based on a column type.
+
+        :param dict column: Info about the column.
+
+        :rtype int:
         """
         data_type = column['data_type']
 
@@ -351,7 +353,7 @@ where  nullif(tab.[%s],'') is not null""" \
                 # This is a varchar(max) data type.
                 return 2147483647
 
-        raise Exception("Unexpected data type '%s'." % data_type)
+        raise RuntimeError("Unexpected data type '%s'." % data_type)
 
     # ------------------------------------------------------------------------------------------------------------------
     def _read_configuration_file(self, config_filename: str):

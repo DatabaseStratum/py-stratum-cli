@@ -14,6 +14,12 @@ PyStratum is a tool and library with the following mayor functionalities:
 * Generating automatically a Python wrapper class for calling your stored routines. This wrapper class takes care about error handing and prevents SQL injections.
 * Defining Python constants based on auto increment columns and column widths.
 
+Contact
+-------
+
+  * IRC:     Freenode, #stratum
+  * E-mail:  .. _info@setbased.nl: _info@setbased.nl
+
 Status
 ======
 Currently this project is under development and for more information we refer to its sister project.

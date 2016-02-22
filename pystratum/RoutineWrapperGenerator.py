@@ -33,13 +33,19 @@ class RoutineWrapperGenerator:
 
         self._parent_class_name = None
         """
-        The class name (including namespace) of the parent class of the routine wrapper.
+        The class name of the parent class of the routine wrapper.
+        :type: str
+        """
+
+        self._parent_class_namespace = None
+        """
+        The namespace of the parent class of the routine wrapper.
         :type: str
         """
 
         self._wrapper_class_name = None
         """
-        The class name (including namespace) of the routine wrapper.
+        The class name of the routine wrapper.
         :type: str
         """
 

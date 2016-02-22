@@ -326,7 +326,7 @@ class RoutineLoader:
             with open(self._constants_filename, 'r') as file:
                 for line in file:
                     if line.strip() != "\n":
-                        pattern = re.compile('(?:(\w+)\s*=\s*(\w+))')
+                        pattern = re.compile(r'(?:(\w+)\s*=\s*(\w+))')
                         matches = pattern.findall(line)
 
                         if matches:

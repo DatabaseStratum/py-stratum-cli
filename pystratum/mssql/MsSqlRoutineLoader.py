@@ -58,10 +58,11 @@ order by  scm.name
     def create_routine_loader_helper(self,
                                      routine_name: str,
                                      pystratum_old_metadata: dict,
-                                     rdbms_old_metadata: dict) -> MsSqlRoutineLoaderHelper:
+                                     rdbms_old_metadata: dict):
         """
         Creates a Routine Loader Helper object.
-        :return: A MsSqlRoutineLoaderHelper object.
+
+        :rtype: MsSqlRoutineLoaderHelper
         """
         return MsSqlRoutineLoaderHelper(self._source_file_names[routine_name],
                                         self._source_file_encoding,
@@ -111,11 +112,13 @@ and   prc.is_ms_shipped=0"""
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def _derive_data_type(column: dict) -> int:
+    def _derive_data_type(column):
         """
         Returns the proper SQL declaration of a data type of a column.
-        :param column dict The column of which the field is based.
-        :returns SQL declaration of data type
+
+        :param dict column: The column of which the field is based.
+
+        :rtype: str
         """
         data_type = column['data_type']
 
@@ -215,10 +218,11 @@ and   prc.is_ms_shipped=0"""
         raise Exception("Unexpected data type '%s'." % data_type)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _read_configuration_file(self, config_filename: str):
+    def _read_configuration_file(self, config_filename):
         """
         Reads parameters from the configuration file.
-        :param config_filename string
+
+        :param config_filename: str
         """
         RoutineLoader._read_configuration_file(self, config_filename)
         MsSqlConnection._read_configuration_file(self, config_filename)
