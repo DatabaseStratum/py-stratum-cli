@@ -96,7 +96,7 @@ order by routine_name"""
         """
         Gets the SQL mode in the order as preferred by MySQL.
         """
-        sql = "set sql_mode = %s" % self._sql_mode
+        sql = "set sql_mode = {0!s}".format(self._sql_mode)
         StaticDataLayer.execute_none(sql)
 
         query = "select @@sql_mode;"
@@ -111,8 +111,8 @@ order by routine_name"""
         """
         for routine_name, values in self._rdbms_old_metadata.items():
             if routine_name not in self._source_file_names:
-                print("Dropping %s %s" % (values['routine_type'], routine_name))
-                sql = "drop %s if exists %s" % (values['routine_type'], routine_name)
+                print("Dropping {0!s} {1!s}".format(values['routine_type'], routine_name))
+                sql = "drop {0!s} if exists {1!s}".format(values['routine_type'], routine_name)
                 StaticDataLayer.execute_none(sql)
 
     # ------------------------------------------------------------------------------------------------------------------

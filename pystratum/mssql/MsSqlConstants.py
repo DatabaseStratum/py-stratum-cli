@@ -169,14 +169,14 @@ order by  scm.name
                 for col_id, column_name in sorted(key_map.items()):
                     if table[column_name]['length'] is not None:
                         if 'constant_name' in table[column_name]:
-                            line_format = "%%s.%%s.%%-%ds %%%dd %%s\n" % (int(width1), int(width2))
+                            line_format = "%s.%s.%-{0:d}s %{1:d}d %s\n".format(int(width1), int(width2))
                             content += line_format % (schema_name,
                                                       table[column_name]['table_name'],
                                                       table[column_name]['column_name'],
                                                       table[column_name]['length'],
                                                       table[column_name]['constant_name'])
                         else:
-                            line_format = "%%s.%%s.%%-%ds %%%dd\n" % (int(width1), int(width2))
+                            line_format = "%s.%s.%-{0:d}s %{1:d}d\n".format(int(width1), int(width2))
                             content += line_format % (schema_name,
                                                       table[column_name]['table_name'],
                                                       table[column_name]['column_name'],
@@ -209,11 +209,10 @@ and   cl2.is_identity = 1"""
 
         for table in tables:
             query_string = """
-select tab.[%s] id
-,      tab.[%s] label
-from   [%s].[%s].[%s] tab
-where  nullif(tab.[%s],'') is not null""" \
-                           % (table['id'],
+select tab.[{0!s}] id
+,      tab.[{1!s}] label
+from   [{2!s}].[{3!s}].[{4!s}] tab
+where  nullif(tab.[{5!s}],'') is not null""".format(table['id'],
                               table['label'],
                               self._database,
                               table['schema_name'],
@@ -351,7 +350,7 @@ where  nullif(tab.[%s],'') is not null""" \
                 # This is a varchar(max) data type.
                 return 2147483647
 
-        raise Exception("Unexpected data type '%s'." % data_type)
+        raise Exception("Unexpected data type '{0!s}'.".format(data_type))
 
     # ------------------------------------------------------------------------------------------------------------------
     def _read_configuration_file(self, config_filename: str):
