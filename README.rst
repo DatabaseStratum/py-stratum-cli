@@ -5,14 +5,16 @@ A stored procedure and function loader, wrapper generator for MySQL, SQL Server 
 .. image:: https://badges.gitter.im/SetBased/py-stratum.svg
    :alt: Join the chat at https://gitter.im/SetBased/py-stratum
    :target: https://gitter.im/SetBased/py-stratum?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
+.. image:: https://badge.fury.io/py/pystratum.svg
+   :target: https://badge.fury.io/py/pystratum   
 .. image:: https://travis-ci.org/SetBased/py-stratum.svg?branch=master
-    :target: https://travis-ci.org/SetBased/py-stratum
+   :target: https://travis-ci.org/SetBased/py-stratum
 .. image:: https://www.versioneye.com/user/projects/56e2eb13df573d00431139d8/badge.svg?style=flat
-    :target: https://www.versioneye.com/user/projects/56e2eb13df573d00431139d8
+   :target: https://www.versioneye.com/user/projects/56e2eb13df573d00431139d8
 .. image:: https://scrutinizer-ci.com/g/SetBased/py-stratum/badges/quality-score.png?b=master
-    :target: https://scrutinizer-ci.com/g/SetBased/py-stratum/?branch=master
+   :target: https://scrutinizer-ci.com/g/SetBased/py-stratum/?branch=master
 .. image:: https://api.codacy.com/project/badge/grade/140064de208843c7923d0d11669de586
-    :target: https://www.codacy.com/app/p-r-water/py-stratum
+   :target: https://www.codacy.com/app/p-r-water/py-stratum
 
 Overview
 ========
