@@ -15,6 +15,14 @@ class StaticDataLayer:
     :type: psycopg2.extensions.connection
     """
 
+    line_buffered = True
+    """
+    If True log messages from stored procedures with designation type 'log' are line buffered (Note: In python
+    sys.stdout is buffered by default).
+
+    :type: bool
+    """
+
     sp_log_init = 'stratum_log_init'
     """
     The name of the stored routine that must be run before a store routine with designation type "log".
@@ -376,7 +384,7 @@ class StaticDataLayer:
 
         # Log the log messages.
         for message in messages:
-            print('{0!s} {1!s}'.format(*message))
+            print('{0!s} {1!s}'.format(*message), flush=StaticDataLayer.line_buffered)
 
         return len(messages)
 

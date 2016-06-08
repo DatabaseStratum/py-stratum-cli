@@ -34,6 +34,14 @@ class StaticDataLayer:
     :type: mysql.connector.connection.MySQLConnection
     """
 
+    line_buffered = True
+    """
+    If True log messages from stored procedures with designation type 'log' are line buffered (Note: In python
+    sys.stdout is buffered by default).
+
+    :type: bool
+    """
+
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
     def start_transaction(consistent_snapshot=False, isolation_level='READ-COMMITTED', readonly=None):
@@ -336,7 +344,7 @@ class StaticDataLayer:
                         print(stamp, end='')
                         for field in row:
                             print(' %s' % field, end='')
-                        print('')
+                        print('', flush=StaticDataLayer.line_buffered)
                         n += 1
         except InterfaceError:
             pass

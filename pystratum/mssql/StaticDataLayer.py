@@ -26,6 +26,14 @@ class StaticDataLayer:
     :type: bool
     """
 
+    line_buffered = True
+    """
+    If True log messages from stored procedures with designation type 'log' are line buffered (Note: In python
+    sys.stdout is buffered by default).
+
+    :type: bool
+    """
+
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
     def my_msg_handler(msgstate, severity, srvname, procname, line, msgtext):
@@ -189,7 +197,7 @@ class StaticDataLayer:
                 print(stamp, end='')
                 for field in row:
                     print(' %s' % field, end='')
-                print('')
+                print('', flush=StaticDataLayer.line_buffered)
                 n += 1
 
             next_set = cursor.nextset()
