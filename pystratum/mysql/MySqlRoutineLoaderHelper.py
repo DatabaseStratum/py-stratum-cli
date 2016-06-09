@@ -267,9 +267,9 @@ and   t1.ROUTINE_NAME   = '%s'""" % self._routine_name
                     if routine_parameter['character_set_name']:
                         value += ' collation %s' % routine_parameter['collation']
 
-                self._parameters.append({'name': routine_parameter     ['parameter_name'],
-                                         'data_type': routine_parameter['parameter_type'],
-                                         'data_type_descriptor':       value})
+                self._parameters.append({'name':                 routine_parameter['parameter_name'],
+                                         'data_type':            routine_parameter['parameter_type'],
+                                         'data_type_descriptor': value})
 
     # ------------------------------------------------------------------------------------------------------------------
     def _drop_routine(self):

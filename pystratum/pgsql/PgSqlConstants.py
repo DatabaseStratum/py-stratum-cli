@@ -199,9 +199,9 @@ union all
         Gets all primary key labels from the MySQL database.
         """
         query_string = """
-select t1.table_name  table_name
-,      t1.column_name id
-,      t2.column_name label
+select t1.table_name  "table_name"
+,      t1.column_name "id"
+,      t2.column_name "label"
 from       information_schema.columns t1
 inner join information_schema.columns t2 on t1.table_name = t2.table_name
 where t1.table_catalog = current_database()
@@ -254,14 +254,14 @@ where   nullif(\"{3!s}\",'') is not null""".format(table['id'],
         types_length = {'bigint':                      21,
                         'integer':                     11,
                         'smallint':                    6,
-                        'bit': column                  ['character_maximum_length'],
+                        'bit':                         column['character_maximum_length'],
                         'money':                       None,  # @todo max-length
                         'boolean':                     None,  # @todo max-length
-                        'double': column               ['numeric_precision'],
-                        'numeric': column              ['numeric_precision'],
+                        'double':                      column['numeric_precision'],
+                        'numeric':                     column['numeric_precision'],
                         'real':                        None,  # @todo max-length
-                        'character': column            ['character_maximum_length'],
-                        'character varying': column    ['character_maximum_length'],
+                        'character':                   column['character_maximum_length'],
+                        'character varying':           column['character_maximum_length'],
                         'point':                       None,  # @todo max-length
                         'polygon':                     None,  # @todo max-length
                         'text':                        None,  # @todo max-length

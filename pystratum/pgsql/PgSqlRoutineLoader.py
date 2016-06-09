@@ -24,20 +24,20 @@ class PgSqlRoutineLoader(PgSqlConnection, RoutineLoader):
         Selects schema, table, column names and the column type from MySQL and saves them as replace pairs.
         """
         sql = """
-select table_name                                    table_name
-,      column_name                                   column_name
-,      udt_name                                      column_type
-,      null                                          table_schema
+select table_name                                    "table_name"
+,      column_name                                   "column_name"
+,      udt_name                                      "column_type"
+,      null                                          "table_schema"
 from   information_schema.columns
 where  table_catalog = current_database()
 and    table_schema  = current_schema()
 
 union all
 
-select table_name                                    table_name
-,      column_name                                   column_name
-,      udt_name                                      column_type
-,      table_schema                                  table_schema
+select table_name                                    "table_name"
+,      column_name                                   "column_name"
+,      udt_name                                      "column_type"
+,      table_schema                                  "table_schema"
 from   information_schema.columns
 where  table_catalog = current_database()
 order by table_schema
@@ -80,13 +80,13 @@ order by table_schema
         Retrieves information about all stored routines in the current schema.
         """
         query = """
-select t1.routine_name                                                                        routine_name
-,      t1.routine_type                                                                        routine_type
+select t1.routine_name                                                                        "routine_name"
+,      t1.routine_type                                                                        "routine_type"
 ,      array_to_string(array_agg(case when (parameter_name is not null) then
                                    concat(t2.parameter_mode, ' ',
                                           t2.parameter_name, ' ',
                                           t2.udt_name)
-                                 end order by t2.ordinal_position asc), ',')                  routine_args
+                                 end order by t2.ordinal_position asc), ',')                  "routine_args"
 from            information_schema.routines   t1
 left outer join information_schema.parameters t2  on  t2.specific_catalog = t1.specific_catalog and
                                                       t2.specific_schema  = t1.specific_schema and
