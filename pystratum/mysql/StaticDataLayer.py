@@ -7,8 +7,10 @@ from mysql.connector.cursor import MySQLCursorBufferedDict, MySQLCursorBuffered,
 # ----------------------------------------------------------------------------------------------------------------------
 class StaticDataLayer:
     """
-    Class for connecting to a MySQL instance and running SQL statements and stored routines.
+    Class for connecting to a MySQL instance and executing SQL statements. Also, a parent class for classes with
+    static wrapper methods for executing stored procedures and functions.
     """
+    # ------------------------------------------------------------------------------------------------------------------
     config = {
         'database':  None,
         'user':      '',

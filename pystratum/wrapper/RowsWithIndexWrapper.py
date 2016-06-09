@@ -4,6 +4,10 @@ from pystratum.wrapper.Wrapper import Wrapper
 
 # ----------------------------------------------------------------------------------------------------------------------
 class RowsWithIndexWrapper(Wrapper):
+    """
+    Parent class wrapper wrapper method generator for stored procedures whose result set  must be returned using tree
+    structure using a combination of non-unique columns.
+    """
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod

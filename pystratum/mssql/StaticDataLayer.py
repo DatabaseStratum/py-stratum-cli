@@ -8,6 +8,10 @@ import pymssql
 
 # ----------------------------------------------------------------------------------------------------------------------
 class StaticDataLayer:
+    """
+    Class for connecting to a SQL Server instance and executing SQL statements. Also, a parent class for classes with
+    static wrapper methods for executing stored procedures and functions.
+    """
     # ------------------------------------------------------------------------------------------------------------------
     __conn = None
     """

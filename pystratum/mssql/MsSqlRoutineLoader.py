@@ -9,7 +9,6 @@ class MsSqlRoutineLoader(MsSqlConnection, RoutineLoader):
     """
     Class for loading stored routines into a MySQL instance from pseudo SQL files.
     """
-
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self):
         """

@@ -4,7 +4,7 @@ import abc
 # ----------------------------------------------------------------------------------------------------------------------
 class Wrapper:
     """
-    Parent class for classes that generate Python code, i.e. wrappers, for calling a stored routines.
+    Parent class for classes that generate Python code, i.e. wrappers, for calling a stored procedures and functions.
     """
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self, routine, lob_as_string_flag: bool):

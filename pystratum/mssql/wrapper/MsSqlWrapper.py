@@ -5,7 +5,7 @@ from pystratum.wrapper.Wrapper import Wrapper
 # ----------------------------------------------------------------------------------------------------------------------
 class MsSqlWrapper(Wrapper):
     """
-    Parent class for classes that generate Python code, i.e. wrappers, for calling a stored routine.
+    Parent class for wrapper method generators for stored procedures and functions.
     """
     # ------------------------------------------------------------------------------------------------------------------
     def is_lob_parameter(self, parameters):

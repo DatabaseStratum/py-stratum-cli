@@ -5,7 +5,8 @@ from psycopg2.extras import RealDictCursor
 # ----------------------------------------------------------------------------------------------------------------------
 class StaticDataLayer:
     """
-    Class for connecting to a PostgreSQL instance and running SQL statements and stored routines.
+    Class for connecting to a PostgreSQL instance and executing SQL statements. Also, a parent class for classes with
+    static wrapper methods for executing stored procedures and functions.
     """
     # ------------------------------------------------------------------------------------------------------------------
     connection = None

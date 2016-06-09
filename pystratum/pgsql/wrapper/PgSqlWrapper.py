@@ -6,7 +6,7 @@ from pystratum.wrapper.Wrapper import Wrapper
 # ----------------------------------------------------------------------------------------------------------------------
 class PgSqlWrapper(Wrapper):
     """
-    Parent class for classes that generate Python code, i.e. wrappers, for calling a stored routine.
+    Parent class for wrapper method generators for stored functions.
     """
     # ------------------------------------------------------------------------------------------------------------------
     def is_lob_parameter(self, parameters):
