@@ -11,6 +11,7 @@ class RoutineWrapperGenerator:
     """
     Class for generating a class with wrapper methods for calling stored routines in a MySQL database.
     """
+
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self):
         self._code = ''

@@ -1,10 +1,10 @@
 import os
 import re
 
+from pystratum.Constants import Constants
 from pystratum.Util import Util
 from pystratum.mysql.MySqlConnection import MySqlConnection
 from pystratum.mysql.StaticDataLayer import StaticDataLayer
-from pystratum.Constants import Constants
 
 
 # ----------------------------------------------------------------------------------------------------------------------

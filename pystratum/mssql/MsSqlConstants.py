@@ -1,10 +1,10 @@
 import os
 import re
 
+from pystratum.Constants import Constants
 from pystratum.Util import Util
 from pystratum.mssql.MsSqlConnection import MsSqlConnection
 from pystratum.mssql.StaticDataLayer import StaticDataLayer
-from pystratum.Constants import Constants
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -13,6 +13,7 @@ class MsSqlConstants(MsSqlConnection, Constants):
     Class for creating constants based on column widths, and auto increment columns and labels for MS SQL Server
     databases.
     """
+
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self):
         """
@@ -46,16 +47,16 @@ class MsSqlConstants(MsSqlConnection, Constants):
                             constant_name = str(matches[4])
 
                             if constant_name:
-                                column_info = {'schema_name': schema_name,
-                                               'table_name': table_name,
-                                               'column_name': column_name,
-                                               'length': length,
+                                column_info = {'schema_name':   schema_name,
+                                               'table_name':    table_name,
+                                               'column_name':   column_name,
+                                               'length':        length,
                                                'constant_name': constant_name}
                             else:
                                 column_info = {'schema_name': schema_name,
-                                               'table_name': table_name,
+                                               'table_name':  table_name,
                                                'column_name': column_name,
-                                               'length': length}
+                                               'length':      length}
 
                             if schema_name in self._old_columns:
                                 if table_name in self._old_columns[schema_name]:
@@ -130,7 +131,8 @@ order by  scm.name
                                 self._old_columns[schema_name][table_name][column_name]['constant_name'] = constant_name
                             else:
                                 constant_name = str(
-                                    self._old_columns[schema_name][table_name][column_name]['constant_name']).upper()
+                                        self._old_columns[schema_name][table_name][column_name][
+                                            'constant_name']).upper()
                                 self._old_columns[schema_name][table_name][column_name]['constant_name'] = constant_name
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -217,11 +219,11 @@ select tab.[{0!s}] id
 ,      tab.[{1!s}] label
 from   [{2!s}].[{3!s}].[{4!s}] tab
 where  nullif(tab.[{5!s}],'') is not null""".format(table['id'],
-                              table['label'],
-                              self._database,
-                              table['schema_name'],
-                              table['table_name'],
-                              table['label'])
+                                                    table['label'],
+                                                    self._database,
+                                                    table['schema_name'],
+                                                    table['table_name'],
+                                                    table['label'])
 
             rows = StaticDataLayer.execute_rows(query_string)
             for row in rows:
@@ -368,6 +370,4 @@ where  nullif(tab.[{5!s}],'') is not null""".format(table['id'],
         Constants._read_configuration_file(self, config_filename)
         MsSqlConnection._read_configuration_file(self, config_filename)
 
-
 # ----------------------------------------------------------------------------------------------------------------------
-

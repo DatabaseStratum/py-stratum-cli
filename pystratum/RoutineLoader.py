@@ -1,9 +1,9 @@
 import abc
+import configparser
+import json
 import os
 import re
 import sys
-import json
-import configparser
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -11,6 +11,7 @@ class RoutineLoader:
     """
     Class for loading stored routines into a RDBMS instance from (pseudo) SQL files.
     """
+
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self):
         self.error_file_names = set()

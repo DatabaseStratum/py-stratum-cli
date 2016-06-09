@@ -1,5 +1,5 @@
-from pystratum.mssql.StaticDataLayer import StaticDataLayer
 from pystratum import Connection
+from pystratum.mssql.StaticDataLayer import StaticDataLayer
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -8,6 +8,7 @@ class MsSqlConnection(Connection.Connection):
     Class for connecting to SQL Server instances and reading SQl Server specific connection parameters from
     configuration files.
     """
+
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self):
         """
@@ -72,6 +73,5 @@ class MsSqlConnection(Connection.Connection):
         self._user = self._get_option(config, config_supplement, 'database', 'user')
         self._password = self._get_option(config, config_supplement, 'database', 'password')
         self._database = self._get_option(config, config_supplement, 'database', 'database')
-
 
 # ----------------------------------------------------------------------------------------------------------------------

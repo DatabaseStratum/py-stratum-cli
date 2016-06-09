@@ -1,5 +1,6 @@
 import re
 import sys
+
 from pystratum.RoutineLoaderHelper import RoutineLoaderHelper
 from pystratum.pgsql.StaticDataLayer import StaticDataLayer
 
@@ -204,9 +205,9 @@ order by t2.ordinal_position
                     if routine_parameter['character_set_name']:
                         value += ' collation %s' % routine_parameter['collation']
 
-                self._parameters.append({'name': routine_parameter['parameter_name'],
+                self._parameters.append({'name': routine_parameter     ['parameter_name'],
                                          'data_type': routine_parameter['parameter_type'],
-                                         'data_type_descriptor': value})
+                                         'data_type_descriptor':       value})
 
     # ------------------------------------------------------------------------------------------------------------------
     def _drop_routine(self):
@@ -218,6 +219,5 @@ order by t2.ordinal_position
                                                 self._routine_name,
                                                 self._rdbms_old_metadata['routine_args'])
             StaticDataLayer.execute_none(sql)
-
 
 # ----------------------------------------------------------------------------------------------------------------------

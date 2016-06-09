@@ -1,5 +1,5 @@
-from pystratum.mysql.StaticDataLayer import StaticDataLayer
 from pystratum import Connection
+from pystratum.mysql.StaticDataLayer import StaticDataLayer
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -7,6 +7,7 @@ class MySqlConnection(Connection.Connection):
     """
     Class for connecting to MySQL instances and reading MySQL specific connection parameters from configuration files.
     """
+
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self):
         self._host = None

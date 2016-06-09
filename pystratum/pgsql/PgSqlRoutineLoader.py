@@ -9,6 +9,7 @@ class PgSqlRoutineLoader(PgSqlConnection, RoutineLoader):
     """
     Class for loading stored routines into a PostgreSQL instance from (pseudo) SQL files.
     """
+
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self):
         """
@@ -23,20 +24,20 @@ class PgSqlRoutineLoader(PgSqlConnection, RoutineLoader):
         Selects schema, table, column names and the column type from MySQL and saves them as replace pairs.
         """
         sql = """
-select table_name                                    "table_name"
-,      column_name                                   "column_name"
-,      udt_name                                      "column_type"
-,      null                                          "table_schema"
+select table_name                                    table_name
+,      column_name                                   column_name
+,      udt_name                                      column_type
+,      null                                          table_schema
 from   information_schema.columns
 where  table_catalog = current_database()
 and    table_schema  = current_schema()
 
 union all
 
-select table_name                                    "table_name"
-,      column_name                                   "column_name"
-,      udt_name                                      "column_type"
-,      table_schema                                  "table_schema"
+select table_name                                    table_name
+,      column_name                                   column_name
+,      udt_name                                      column_type
+,      table_schema                                  table_schema
 from   information_schema.columns
 where  table_catalog = current_database()
 order by table_schema
@@ -113,8 +114,8 @@ order by routine_name
             if routine_name not in self._source_file_names:
                 print("Dropping {0!s} {1!s}".format(values['routine_type'], routine_name))
                 sql = "drop {0!s} if exists {1!s}({2!s})".format(values['routine_type'],
-                                                    routine_name,
-                                                    values['routine_args'])
+                                                                 routine_name,
+                                                                 values['routine_args'])
                 StaticDataLayer.execute_none(sql)
 
     # ------------------------------------------------------------------------------------------------------------------

@@ -1,4 +1,5 @@
 import abc
+
 from pystratum.wrapper.Wrapper import Wrapper
 
 
@@ -70,6 +71,5 @@ class RowsWithIndexWrapper(Wrapper):
 
         self._write_line()
         self._write_line('return ret')
-
 
 # ----------------------------------------------------------------------------------------------------------------------

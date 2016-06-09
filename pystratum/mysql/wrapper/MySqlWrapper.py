@@ -1,4 +1,5 @@
 import abc
+
 from pystratum.wrapper.Wrapper import Wrapper
 
 
@@ -7,6 +8,7 @@ class MySqlWrapper(Wrapper):
     """
     Parent class for wrapper method generators for stored procedures and functions.
     """
+
     # ------------------------------------------------------------------------------------------------------------------
     def is_lob_parameter(self, parameters):
         """
@@ -18,35 +20,35 @@ class MySqlWrapper(Wrapper):
         """
         has_lob = False
 
-        lookup = {'bigint': False,
-                  'binary': False,
-                  'bit': False,
-                  'char': False,
-                  'date': False,
-                  'datetime': False,
-                  'decimal': False,
-                  'double': False,
-                  'enum': False,
-                  'float': False,
-                  'int': False,
-                  'mediumint': False,
-                  'set': False,
-                  'smallint': False,
-                  'time': False,
-                  'timestamp': False,
-                  'tinyint': False,
-                  'varbinary': False,
-                  'varchar': False,
-                  'year': False,
+        lookup = {'bigint':     False,
+                  'binary':     False,
+                  'bit':        False,
+                  'char':       False,
+                  'date':       False,
+                  'datetime':   False,
+                  'decimal':    False,
+                  'double':     False,
+                  'enum':       False,
+                  'float':      False,
+                  'int':        False,
+                  'mediumint':  False,
+                  'set':        False,
+                  'smallint':   False,
+                  'time':       False,
+                  'timestamp':  False,
+                  'tinyint':    False,
+                  'varbinary':  False,
+                  'varchar':    False,
+                  'year':       False,
 
-                  'blob': True,
-                  'longblob': True,
-                  'longtext': True,
+                  'blob':       True,
+                  'longblob':   True,
+                  'longtext':   True,
                   'mediumblob': True,
                   'mediumtext': True,
-                  'text': True,
-                  'tinyblob': True,
-                  'tinytext': True}
+                  'text':       True,
+                  'tinyblob':   True,
+                  'tinytext':   True}
 
         if parameters:
             for parameter_info in parameters:
@@ -112,39 +114,38 @@ class MySqlWrapper(Wrapper):
 
         :rtype: str
         """
-        lookup = {'bigint': '%s',
-                  'binary': '%s',
-                  'bit': '%s',
-                  'blob': '%s',
-                  'char': '%s',
-                  'date': '%s',
-                  'datetime': '%s',
-                  'decimal': '%s',
-                  'double': '%s',
-                  'enum': '%s',
-                  'float': '%s',
-                  'int': '%s',
-                  'longblob': '%s',
-                  'longtext': '%s',
+        lookup = {'bigint':     '%s',
+                  'binary':     '%s',
+                  'bit':        '%s',
+                  'blob':       '%s',
+                  'char':       '%s',
+                  'date':       '%s',
+                  'datetime':   '%s',
+                  'decimal':    '%s',
+                  'double':     '%s',
+                  'enum':       '%s',
+                  'float':      '%s',
+                  'int':        '%s',
+                  'longblob':   '%s',
+                  'longtext':   '%s',
                   'mediumblob': '%s',
-                  'mediumint': '%s',
+                  'mediumint':  '%s',
                   'mediumtext': '%s',
-                  'set': '%s',
-                  'smallint': '%s',
-                  'text': '%s',
-                  'time': '%s',
-                  'timestamp': '%s',
-                  'tinyblob': '%s',
-                  'tinyint': '%s',
-                  'tinytext': '%s',
-                  'varbinary': '%s',
-                  'varchar': '%s',
-                  'year': '%s'}
+                  'set':        '%s',
+                  'smallint':   '%s',
+                  'text':       '%s',
+                  'time':       '%s',
+                  'timestamp':  '%s',
+                  'tinyblob':   '%s',
+                  'tinyint':    '%s',
+                  'tinytext':   '%s',
+                  'varbinary':  '%s',
+                  'varchar':    '%s',
+                  'year':       '%s'}
 
         if data_type in lookup:
             return lookup[data_type]
 
         raise Exception('Unexpected data type {0!s}.'.format(data_type))
-
 
 # ----------------------------------------------------------------------------------------------------------------------

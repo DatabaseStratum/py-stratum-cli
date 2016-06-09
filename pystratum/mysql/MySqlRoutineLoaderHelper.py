@@ -1,5 +1,6 @@
 import re
 import sys
+
 from pystratum.RoutineLoaderHelper import RoutineLoaderHelper
 from pystratum.mysql.StaticDataLayer import StaticDataLayer
 
@@ -9,6 +10,7 @@ class MySqlRoutineLoaderHelper(RoutineLoaderHelper):
     """
     Class for loading a single stored routine into a MySQL instance from a (pseudo) SQL file.
     """
+
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self,
                  routine_filename,
@@ -265,9 +267,9 @@ and   t1.ROUTINE_NAME   = '%s'""" % self._routine_name
                     if routine_parameter['character_set_name']:
                         value += ' collation %s' % routine_parameter['collation']
 
-                self._parameters.append({'name': routine_parameter['parameter_name'],
+                self._parameters.append({'name': routine_parameter     ['parameter_name'],
                                          'data_type': routine_parameter['parameter_type'],
-                                         'data_type_descriptor': value})
+                                         'data_type_descriptor':       value})
 
     # ------------------------------------------------------------------------------------------------------------------
     def _drop_routine(self):
@@ -277,6 +279,5 @@ and   t1.ROUTINE_NAME   = '%s'""" % self._routine_name
         if self._rdbms_old_metadata:
             sql = "drop %s if exists %s" % (self._rdbms_old_metadata['routine_type'], self._routine_name)
             StaticDataLayer.execute_none(sql)
-
 
 # ----------------------------------------------------------------------------------------------------------------------

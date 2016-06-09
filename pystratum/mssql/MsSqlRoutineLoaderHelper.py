@@ -1,5 +1,6 @@
 import re
 import sys
+
 from pystratum.RoutineLoaderHelper import RoutineLoaderHelper
 from pystratum.mssql.StaticDataLayer import StaticDataLayer
 

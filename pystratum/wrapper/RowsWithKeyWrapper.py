@@ -1,4 +1,5 @@
 import abc
+
 from pystratum.wrapper.Wrapper import Wrapper
 
 
@@ -8,6 +9,7 @@ class RowsWithKeyWrapper(Wrapper):
     Parent class wrapper wrapper method generator for stored procedures whose result set must be returned using tree
     structure using a combination of unique columns.
     """
+
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
     def _write_execute_rows(self, routine):

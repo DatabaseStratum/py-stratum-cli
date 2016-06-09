@@ -1,9 +1,8 @@
 import csv
+import pymssql
 import re
 import sys
 from time import strftime, gmtime
-
-import pymssql
 
 
 # ----------------------------------------------------------------------------------------------------------------------

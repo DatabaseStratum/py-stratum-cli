@@ -1,10 +1,10 @@
 import os
 import re
 
+from pystratum.Constants import Constants
 from pystratum.Util import Util
 from pystratum.pgsql.PgSqlConnection import PgSqlConnection
 from pystratum.pgsql.StaticDataLayer import StaticDataLayer
-from pystratum.Constants import Constants
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -12,6 +12,7 @@ class PgSqlConstants(PgSqlConnection, Constants):
     """
     Class for creating constants based on column widths, and auto increment columns and labels for PostgreSQL databases.
     """
+
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self):
         """
@@ -48,14 +49,14 @@ class PgSqlConstants(PgSqlConnection, Constants):
                                 table_name = schema_name + '.' + table_name
 
                             if constant_name:
-                                column_info = {'table_name': table_name,
-                                               'column_name': column_name,
-                                               'length': length,
+                                column_info = {'table_name':    table_name,
+                                               'column_name':   column_name,
+                                               'length':        length,
                                                'constant_name': constant_name}
                             else:
-                                column_info = {'table_name': table_name,
+                                column_info = {'table_name':  table_name,
                                                'column_name': column_name,
-                                               'length': length}
+                                               'length':      length}
 
                             if table_name in self._old_columns:
                                 if column_name in self._old_columns[table_name]:
@@ -198,9 +199,9 @@ union all
         Gets all primary key labels from the MySQL database.
         """
         query_string = """
-select t1.table_name  "table_name"
-,      t1.column_name "id"
-,      t2.column_name "label"
+select t1.table_name  table_name
+,      t1.column_name id
+,      t2.column_name label
 from       information_schema.columns t1
 inner join information_schema.columns t2 on t1.table_name = t2.table_name
 where t1.table_catalog = current_database()
@@ -219,9 +220,9 @@ select \"{0!s}\"  as id
 ,      \"{1!s}\"  as label
 from   \"{2!s}\"
 where   nullif(\"{3!s}\",'') is not null""".format(table['id'],
-                                            table['label'],
-                                            table['table_name'],
-                                            table['label'])
+                                                   table['label'],
+                                                   table['table_name'],
+                                                   table['label'])
 
             rows = StaticDataLayer.execute_rows(query_string)
             for row in rows:
@@ -250,26 +251,26 @@ where   nullif(\"{3!s}\",'') is not null""".format(table['id'],
 
         :rtype int:
         """
-        types_length = {'bigint': 21,
-                        'integer': 11,
-                        'smallint': 6,
-                        'bit': column['character_maximum_length'],
-                        'money': None,  # @todo max-length
-                        'boolean': None,  # @todo max-length
-                        'double': column['numeric_precision'],
-                        'numeric': column['numeric_precision'],
-                        'real': None,  # @todo max-length
-                        'character': column['character_maximum_length'],
-                        'character varying': column['character_maximum_length'],
-                        'point': None,  # @todo max-length
-                        'polygon': None,  # @todo max-length
-                        'text': None,  # @todo max-length
-                        'bytea': None,  # @todo max-length
-                        'xml': None,  # @todo max-length
-                        'USER-DEFINED': None,
+        types_length = {'bigint':                      21,
+                        'integer':                     11,
+                        'smallint':                    6,
+                        'bit': column                  ['character_maximum_length'],
+                        'money':                       None,  # @todo max-length
+                        'boolean':                     None,  # @todo max-length
+                        'double': column               ['numeric_precision'],
+                        'numeric': column              ['numeric_precision'],
+                        'real':                        None,  # @todo max-length
+                        'character': column            ['character_maximum_length'],
+                        'character varying': column    ['character_maximum_length'],
+                        'point':                       None,  # @todo max-length
+                        'polygon':                     None,  # @todo max-length
+                        'text':                        None,  # @todo max-length
+                        'bytea':                       None,  # @todo max-length
+                        'xml':                         None,  # @todo max-length
+                        'USER-DEFINED':                None,
                         'timestamp without time zone': 16,
-                        'time without time zone': 8,
-                        'date': 10}
+                        'time without time zone':      8,
+                        'date':                        10}
 
         if column['data_type'] in types_length:
             return types_length[column['data_type']]

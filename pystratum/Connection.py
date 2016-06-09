@@ -1,5 +1,5 @@
-from configparser import ConfigParser
 import os
+from configparser import ConfigParser
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -7,6 +7,7 @@ class Connection:
     """
     Parent class for RDBMS connections.
     """
+
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
     def _get_option(config, supplement, section, option, fallback=None):

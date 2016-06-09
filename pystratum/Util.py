@@ -6,6 +6,7 @@ class Util:
     """
     A helper class with miscellaneous functions that don;t belong somewhere else.
     """
+
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
     def write_two_phases(filename, data):

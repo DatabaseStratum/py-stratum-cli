@@ -8,6 +8,7 @@ class PgSqlWrapper(Wrapper):
     """
     Parent class for wrapper method generators for stored functions.
     """
+
     # ------------------------------------------------------------------------------------------------------------------
     def is_lob_parameter(self, parameters):
         """
@@ -19,22 +20,22 @@ class PgSqlWrapper(Wrapper):
         """
         has_lob = False
 
-        lookup = {'bigint': False,
-                  'integer': False,
-                  'bit': False,
-                  'smallint': False,
-                  'money': False,
-                  'numeric': False,
-                  'real': False,
-                  'character': False,
-                  'character varying': False,
+        lookup = {'bigint':                      False,
+                  'integer':                     False,
+                  'bit':                         False,
+                  'smallint':                    False,
+                  'money':                       False,
+                  'numeric':                     False,
+                  'real':                        False,
+                  'character':                   False,
+                  'character varying':           False,
                   'timestamp without time zone': False,
-                  'time without time zone': False,
-                  'date': False,
-                  'boolean': False,
+                  'time without time zone':      False,
+                  'date':                        False,
+                  'boolean':                     False,
 
-                  'bytea': True,
-                  'text': True}
+                  'bytea':                       True,
+                  'text':                        True}
 
         if parameters:
             for parameter_info in parameters:

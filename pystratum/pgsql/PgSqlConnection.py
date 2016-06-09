@@ -1,5 +1,5 @@
-from pystratum.pgsql.StaticDataLayer import StaticDataLayer
 from pystratum import Connection
+from pystratum.pgsql.StaticDataLayer import StaticDataLayer
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -8,6 +8,7 @@ class PgSqlConnection(Connection.Connection):
     Class for connecting to PostgreSQL instances and reading PostgreSQL specific connection parameters from 
     configuration files.
     """
+
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self):
         self._host = 'localhost'
