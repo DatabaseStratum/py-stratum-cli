@@ -63,7 +63,7 @@ class MySqlWrapper(Wrapper):
         """
         Generates code for calling the stored routine in the wrapper method.
         """
-        pass
+        raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
     def _generate_command(self, routine):

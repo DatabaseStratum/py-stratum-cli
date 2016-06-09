@@ -12,7 +12,7 @@ class RowsWithIndexWrapper(Wrapper):
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
     def _write_execute_rows(self, routine):
-        pass
+        raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
     def _write_result_handler(self, routine):

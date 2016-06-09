@@ -215,7 +215,7 @@ class RoutineLoaderHelper:
 
         :rtype: bool
         """
-        pass
+        raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
     def _get_placeholders(self):
@@ -270,7 +270,7 @@ class RoutineLoaderHelper:
 
         :rtype: bool
         """
-        pass
+        raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
@@ -278,7 +278,7 @@ class RoutineLoaderHelper:
         """
         Loads the stored routine into the RDBMS instance.
         """
-        pass
+        raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
@@ -286,7 +286,7 @@ class RoutineLoaderHelper:
         """
         Gets the column names and column types of the current table for bulk insert.
         """
-        pass
+        raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
@@ -294,7 +294,7 @@ class RoutineLoaderHelper:
         """
         Retrieves information about the stored routine parameters from the meta data of the RDBMS.
         """
-        pass
+        raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
     def _update_metadata(self):
@@ -317,7 +317,7 @@ class RoutineLoaderHelper:
         """
         Drops the stored routine if it exists.
         """
-        pass
+        raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
     def _set_magic_constants(self):

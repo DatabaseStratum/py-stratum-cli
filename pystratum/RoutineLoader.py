@@ -124,7 +124,7 @@ class RoutineLoader:
         """
         Connects to the RDBMS instance.
         """
-        pass
+        raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
@@ -132,7 +132,7 @@ class RoutineLoader:
         """
         Disconnects from the RDBMS instance.
         """
-        pass
+        raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
     def _load_list(self, config_filename, file_names):
@@ -227,7 +227,7 @@ class RoutineLoader:
         """
         Selects schema, table, column names and the column type from the RDBMS instance and saves them as replace pairs.
         """
-        pass
+        raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
@@ -241,7 +241,7 @@ class RoutineLoader:
 
         :rtype: pystratum.RoutineLoaderHelper.RoutineLoaderHelper
         """
-        pass
+        raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
     def _load_stored_routines(self):
@@ -275,7 +275,7 @@ class RoutineLoader:
         """
         Retrieves information about all stored routines in the current schema.
         """
-        pass
+        raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
     def _get_correct_sql_mode(self):
@@ -291,7 +291,7 @@ class RoutineLoader:
         Drops obsolete stored routines (i.e. stored routines that exits in the current schema but for
         which we don't have a source file).
         """
-        pass
+        raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
     def _remove_obsolete_metadata(self):

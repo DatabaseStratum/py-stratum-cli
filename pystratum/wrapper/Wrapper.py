@@ -112,7 +112,7 @@ class Wrapper:
         """
         Generates code for calling the stored routine in the wrapper method.
         """
-        pass
+        raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
     def _write_routine_method_with_lob(self, routine):

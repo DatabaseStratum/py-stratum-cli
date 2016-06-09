@@ -161,6 +161,6 @@ class RoutineWrapperGenerator:
 
         :param dict routine: The metadata of the stored routine.
         """
-        pass
+        raise NotImplementedError()
 
 # ----------------------------------------------------------------------------------------------------------------------

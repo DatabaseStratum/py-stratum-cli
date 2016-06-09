@@ -1,5 +1,5 @@
-import configparser
 import abc
+import configparser
 
 from pystratum.Util import Util
 
@@ -10,6 +10,7 @@ class Constants:
     Abstract parent class for RDBMS specific classes for creating constants based on column widths, and auto increment
     columns and labels.
     """
+
     # ------------------------------------------------------------------------------------------------------------------
     def __init__(self):
         """
@@ -78,7 +79,7 @@ class Constants:
         """
         Connects to the database.
         """
-        pass
+        raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
@@ -86,7 +87,7 @@ class Constants:
         """
         Disconnects from the database.
         """
-        pass
+        raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
     def main(self, config_filename):
@@ -131,7 +132,7 @@ class Constants:
         Reads from file constants_filename the previous table and column names, the width of the column,
         and the constant name (if assigned) and stores this data in old_columns.
         """
-        pass
+        raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
@@ -139,7 +140,7 @@ class Constants:
         """
         Retrieves metadata all columns in the MySQL schema.
         """
-        pass
+        raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
@@ -149,7 +150,7 @@ class Constants:
         If the constant name is *, is is replaced with the column name prefixed by prefix in uppercase.
         Otherwise the constant name is set to uppercase.
         """
-        pass
+        raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
@@ -157,7 +158,7 @@ class Constants:
         """
         Preserves relevant data in old_columns into columns.
         """
-        pass
+        raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
@@ -166,7 +167,7 @@ class Constants:
         Writes table and column names, the width of the column, and the constant name (if assigned) to
         constants_filename.
         """
-        pass
+        raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
@@ -174,7 +175,7 @@ class Constants:
         """
         Gets all primary key labels from the MySQL database.
         """
-        pass
+        raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
     def _fill_constants(self):
