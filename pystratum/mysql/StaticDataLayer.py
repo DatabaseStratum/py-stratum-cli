@@ -46,34 +46,12 @@ class StaticDataLayer:
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def start_transaction(consistent_snapshot=False, isolation_level='READ-COMMITTED', readonly=None):
-        """
-        Starts a transaction.
-        See http://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlconnection-start-transaction.html
-
-        :param bool consistent_snapshot:
-        :param str isolation_level:
-        :param bool readonly:
-        """
-        StaticDataLayer.connection.start_transaction(consistent_snapshot, isolation_level, readonly)
-
-    # ------------------------------------------------------------------------------------------------------------------
-    @staticmethod
     def commit():
         """
         Commits the current transaction.
         See http://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlconnection-commit.html
         """
         StaticDataLayer.connection.commit()
-
-    # ------------------------------------------------------------------------------------------------------------------
-    @staticmethod
-    def rollback():
-        """
-        Rolls back the current transaction.
-        See http://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlconnection-rollback.html
-        """
-        StaticDataLayer.connection.rollback()
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -94,6 +72,19 @@ class StaticDataLayer:
         See http://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlconnection-disconnect.html.
         """
         StaticDataLayer.connection.disconnect()
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @staticmethod
+    def execute_multi(sql):
+        """
+        Executes a multi query that does not select any rows.
+
+        :param str sql: The SQL statements.
+        """
+        cursor = MySQLCursor(StaticDataLayer.connection)
+        for _ in cursor.execute(sql, multi=True):
+            pass
+        cursor.close()
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -129,6 +120,65 @@ class StaticDataLayer:
         cursor.close()
 
         return ret
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @staticmethod
+    def execute_singleton1(sql, *params):
+        """
+        Executes SQL statement that selects 1 row with 1 column. Returns the value of the selected column.
+
+        :param str sql: The SQL calling the stored procedure.
+        :param iterable params: The arguments for the stored procedure.
+
+        :rtype: int:
+        """
+        cursor = MySQLCursorBuffered(StaticDataLayer.connection)
+        cursor.execute(sql, params)
+        n = cursor.rowcount
+        if n == 1:
+            ret = cursor.fetchone()[0]
+        else:
+            ret = None  # Keep our IDE happy.
+        cursor.close()
+
+        if n != 1:
+            raise DataError("Number of rows selected by query below is %d. Expected 1.\n%s" %
+                            (n, sql))
+
+        return ret
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @staticmethod
+    def execute_sp_log(sql, *params):
+        """
+        Executes a stored routine with designation type "log". Returns the number of log messages.
+
+        :param str sql: The SQL statement for calling the stored routine.
+        :param iterable params: The arguments for calling the stored routine.
+
+        :rtype: int
+        """
+        cursor = MySQLCursorBuffered(StaticDataLayer.connection)
+        itr = cursor.execute(sql, params, multi=True)
+
+        n = 0
+        try:
+            for result in itr:
+                rows = result.fetchall()
+                if rows is not None:
+                    stamp = strftime('%Y-%m-%d %H:%M:%S', gmtime())
+                    for row in rows:
+                        print(stamp, end='')
+                        for field in row:
+                            print(' %s' % field, end='')
+                        print('', flush=StaticDataLayer.line_buffered)
+                        n += 1
+        except InterfaceError:
+            pass
+
+        cursor.close()
+
+        return n
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -255,32 +305,6 @@ class StaticDataLayer:
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def execute_singleton1(sql, *params):
-        """
-        Executes SQL statement that selects 1 row with 1 column. Returns the value of the selected column.
-
-        :param str sql: The SQL calling the stored procedure.
-        :param iterable params: The arguments for the stored procedure.
-
-        :rtype: int:
-        """
-        cursor = MySQLCursorBuffered(StaticDataLayer.connection)
-        cursor.execute(sql, params)
-        n = cursor.rowcount
-        if n == 1:
-            ret = cursor.fetchone()[0]
-        else:
-            ret = None  # Keep our IDE happy.
-        cursor.close()
-
-        if n != 1:
-            raise DataError("Number of rows selected by query below is %d. Expected 1.\n%s" %
-                            (n, sql))
-
-        return ret
-
-    # ------------------------------------------------------------------------------------------------------------------
-    @staticmethod
     def execute_sp_singleton1(sql, *params):
         """
         Executes a stored routine with designation type "table", i.e a stored routine that is expected to select 1 row
@@ -324,35 +348,25 @@ class StaticDataLayer:
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def execute_sp_log(sql, *params):
+    def rollback():
         """
-        Executes a stored routine with designation type "log". Returns the number of log messages.
-
-        :param str sql: The SQL statement for calling the stored routine.
-        :param iterable params: The arguments for calling the stored routine.
-
-        :rtype: int
+        Rolls back the current transaction.
+        See http://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlconnection-rollback.html
         """
-        cursor = MySQLCursorBuffered(StaticDataLayer.connection)
-        itr = cursor.execute(sql, params, multi=True)
+        StaticDataLayer.connection.rollback()
 
-        n = 0
-        try:
-            for result in itr:
-                rows = result.fetchall()
-                if rows is not None:
-                    stamp = strftime('%Y-%m-%d %H:%M:%S', gmtime())
-                    for row in rows:
-                        print(stamp, end='')
-                        for field in row:
-                            print(' %s' % field, end='')
-                        print('', flush=StaticDataLayer.line_buffered)
-                        n += 1
-        except InterfaceError:
-            pass
+    # ------------------------------------------------------------------------------------------------------------------
+    @staticmethod
+    def start_transaction(consistent_snapshot=False, isolation_level='READ-COMMITTED', readonly=None):
+        """
+        Starts a transaction.
+        See http://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlconnection-start-transaction.html
 
-        cursor.close()
-
-        return n
+        :param bool consistent_snapshot:
+        :param str isolation_level:
+        :param bool readonly:
+        """
+        StaticDataLayer.connection.start_transaction(consistent_snapshot, isolation_level, readonly)
+        
 
 # ----------------------------------------------------------------------------------------------------------------------
