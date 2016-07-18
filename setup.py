@@ -42,6 +42,8 @@ setup(
 
     packages=find_packages(exclude=['build', 'test']),
 
+    install_requires=['cleo==0.4.1'],
+
     entry_points={
         'console_scripts': [
             'pystratum = pystratum:main',
