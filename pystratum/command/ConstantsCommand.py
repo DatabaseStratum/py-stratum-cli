@@ -9,12 +9,17 @@ from pystratum.style.PyStratumStyle import PyStratumStyle
 class ConstantsCommand(Command):
     """
     Generates constants based on database IDs
-
-    constants
-        {config_file? : The audit configuration file}
     """
 
     name = 'constants'
+
+    arguments = [
+        {
+            'name': 'config_file',
+            'description': 'The audit configuration file',
+            'required': True
+        }
+    ]
 
     # ------------------------------------------------------------------------------------------------------------------
     def execute(self, inp, out):
@@ -44,7 +49,6 @@ class ConstantsCommand(Command):
         """
         config = configparser.ConfigParser()
 
-        print(config_file)
         config.read(config_file)
 
         rdbms = config.get('database', 'rdbms').lower()

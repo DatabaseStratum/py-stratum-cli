@@ -6,11 +6,22 @@ from pystratum.style.PyStratumStyle import PyStratumStyle
 class PyStratumCommand(Command):
     """
     Loads stored routines and generates a wrapper class.
-
-    stratum
-        {config_file? : The audit configuration file}
-        {sources?* : Sources with stored routines}
     """
+
+    name = 'stratum'
+
+    arguments = [
+        {
+            'name': 'config_file',
+            'description': 'The audit configuration file',
+            'required': True
+        },
+        {
+            'name': 'file_names',
+            'description': 'Sources with stored routines',
+            'list': True
+        }
+    ]
 
     # ------------------------------------------------------------------------------------------------------------------
     def handle(self):
