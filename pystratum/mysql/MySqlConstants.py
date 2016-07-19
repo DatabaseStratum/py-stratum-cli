@@ -67,9 +67,11 @@ class MySqlConstants(MySqlConnection, Constants):
                                 self._old_columns[table_name] = {column_name: column_info}
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _get_columns(self):
+    def _get_columns(self, regex):
         """
         Retrieves metadata all columns in the MySQL schema.
+
+        :param str regex: The regular expression for columns which we want to use.
         """
         query = """
 (
@@ -82,7 +84,7 @@ class MySqlConstants(MySqlConnection, Constants):
   from   information_schema.COLUMNS
   where  table_schema = database()
   and    table_name  rlike '^[a-zA-Z0-9_]*$'
-  and    column_name rlike '^[a-zA-Z0-9_]*$'
+  and    column_name rlike '{0}'
   order by table_name
   ,        ordinal_position
 )
@@ -98,12 +100,12 @@ union all
   ,      ordinal_position
   from   information_schema.COLUMNS
   where  table_name  rlike '^[a-zA-Z0-9_]*$'
-  and    column_name rlike '^[a-zA-Z0-9_]*$'
+  and    column_name rlike '{0}'
   order by table_schema
   ,        table_name
   ,        ordinal_position
 )
-"""
+""".format(regex)
 
         rows = StaticDataLayer.execute_rows(query)
 

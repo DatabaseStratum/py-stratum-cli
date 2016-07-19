@@ -4,6 +4,8 @@ import sys
 
 sys.path.append(os.path.realpath(os.path.dirname(os.path.realpath(__file__)) + '/..'))
 
-import pystratum
+from pystratum.application.PyStratumApplication import PyStratumApplication
 
-pystratum.main()
+
+application = PyStratumApplication()
+application.run()
