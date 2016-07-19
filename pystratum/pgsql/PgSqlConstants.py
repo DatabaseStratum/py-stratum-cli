@@ -67,9 +67,11 @@ class PgSqlConstants(PgSqlConnection, Constants):
                                 self._old_columns[table_name] = {column_name: column_info}
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _get_columns(self):
+    def _get_columns(self, regex):
         """
-        Retrieves metadata all columns in the MySQL schema.
+        Retrieves metadata all columns in the PgSQL schema.
+
+        :param str regex: The regular expression for columns which we want to use.
         """
         query = """
 (
@@ -83,7 +85,7 @@ class PgSqlConstants(PgSqlConnection, Constants):
   where  table_catalog = current_database()
   and    table_schema  = current_schema()
   and    table_name  similar to '[a-zA-Z0-9_]*'
-  and    column_name similar to '[a-zA-Z0-9_]*'
+  and    column_name similar to '{0}'
   order by table_name
   ,        ordinal_position
 )
@@ -100,12 +102,13 @@ union all
   from   information_schema.COLUMNS
   where  1=0 and table_catalog = current_database()
   and    table_name  similar to '[a-zA-Z0-9_]*'
-  and    column_name similar to '[a-zA-Z0-9_]*'
+  and    column_name similar to '{0}'
   order by table_schema
   ,        table_name
   ,        ordinal_position
 )
-"""
+""".format(regex)
+
         rows = StaticDataLayer.execute_rows(query)
 
         for row in rows:

@@ -90,16 +90,17 @@ class Constants:
         raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
-    def main(self, config_filename):
+    def main(self, config_filename, regex):
         """
         :param str config_filename: The config filename.
+        :param str regex: The regular expression for columns which we want to use.
 
         :rtype: int
         """
         self._read_configuration_file(config_filename)
         self.connect()
         self._get_old_columns()
-        self._get_columns()
+        self._get_columns(regex)
         self._enhance_columns()
         self._merge_columns()
         self._write_columns()
@@ -136,9 +137,11 @@ class Constants:
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
-    def _get_columns(self):
+    def _get_columns(self, regex):
         """
         Retrieves metadata all columns in the MySQL schema.
+
+        :param str regex: The regular expression for columns which we want to use.
         """
         raise NotImplementedError()
 

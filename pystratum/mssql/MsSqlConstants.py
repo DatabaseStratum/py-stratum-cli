@@ -70,9 +70,11 @@ class MsSqlConstants(MsSqlConnection, Constants):
                                 self._old_columns[schema_name] = {table_name: {column_name: column_info}}
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _get_columns(self):
+    def _get_columns(self, regex):
         """
         Retrieves metadata all columns in the MySQL schema.
+
+        :param str regex: The regular expression for columns which we want to use.
         """
         query = """
 select scm.name                   schema_name
