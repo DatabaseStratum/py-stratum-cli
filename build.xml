@@ -1,43 +1,11 @@
 <project name="PyStratum" default="build" basedir=".">
-    <taskdef name="minimizeAndHash" classname="vendor.setbased.phing-extensions.lib.Task.minimizeAndHashTask"/>
-    <taskdef name="readSemanticVersion" classname="vendor.setbased.phing-extensions.lib.Task.readSemanticVersionTask"/>
+    <taskdef name="readSemanticVersion" classname="vendor.setbased.phing-extensions.src.Task.ReadSemanticVersionTask"/>
     <property name="BUILD_DIR" value="./build"/>
     <property name="VERSION" value="0.0.0"/>
 
     <!-- Run composer update and executes various other updates -->
     <target name="composer-update">
         <exec command="composer update" checkreturn="true" passthru="true"/>
-    </target>
-
-    <!-- Merges the current branch with a remote branch -->
-    <target name="git-merge">
-        <exec command="git rev-parse --abbrev-ref HEAD" outputProperty="CURRENT_BRANCH"/>
-        <input message="Your current branch is '${CURRENT_BRANCH}'. Remote branch: " propertyName="BRANCH"/>
-        <gitbranch branchname="temp" repository="."/>
-        <gitcheckout repository="." branchname="temp"/>
-        <gitpull repository="." refspec="${BRANCH}" quiet="false"/>
-        <gitcheckout repository="." branchname="${CURRENT_BRANCH}"/>
-        <gitmerge repository="." remote="temp"/>
-        <gitbranch branchname="temp" repository="." delete="true"/>
-    </target>
-
-    <!-- Merges the current branch with a remote branch in two steps: step 1 -->
-    <target name="git-merge1">
-        <exec command="git rev-parse --abbrev-ref HEAD" outputProperty="CURRENT_BRANCH" checkreturn="true"/>
-        <exec command="git fetch -p" passthru="true" checkreturn="true"/>
-        <input message="Your current branch is '${CURRENT_BRANCH}'. Remote branch: " propertyName="BRANCH"/>
-        <gitbranch branchname="temp" repository="."/>
-        <gitcheckout repository="." branchname="temp"/>
-        <gitpull repository="." refspec="${BRANCH}" quiet="false"/>
-    </target>
-
-    <!-- Merges the current branch with a remote branch in two steps: step 2 -->
-    <target name="git-merge2">
-        <exec command="git rev-parse --abbrev-ref HEAD" outputProperty="CURRENT_BRANCH" checkreturn="true"/>
-        <input message="Your current branch is '${CURRENT_BRANCH}'. Branch: " propertyName="BRANCH"/>
-        <gitcheckout repository="." branchname="${BRANCH}"/>
-        <gitmerge repository="." remote="temp"/>
-        <gitbranch branchname="temp" repository="." delete="true"/>
     </target>
 
     <!-- Creates a new version/release. -->
@@ -57,10 +25,23 @@
                 </replaceregexp>
             </filterchain>
         </reflexive>
+        <reflexive>
+            <fileset dir=".">
+                <include name="pystratum/application/PyStratumApplication.py"/>
+            </fileset>
+            <filterchain>
+                <replaceregexp>
+                    <regexp pattern="Application.__init__\(self, 'pystratum', .*"
+                            replace="Application.__init__(self, 'pystratum', '${VERSION}')"/>
+                </replaceregexp>
+            </filterchain>
+        </reflexive>
+        <!--
         <gitcommit repository="." message="Release: ${VERSION}" allFiles="true"/>
         <gitpush repository="."/>
         <gittag repository="." name="${VERSION}"/>
         <gitpush repository="." refspec="${VERSION}" quiet="false"/>
+        -->
     </target>
 
     <!-- Creates a new distribution using setup.py -->
@@ -74,6 +55,9 @@
         <exec command="twine upload dist/PyStratum-${VERSION}.tar.gz" passthru="true" checkreturn="true"/>
     </target>
 
+    <!-- All steps for releasing a new version -->
+    <target name="new-version" depends="version,dist,upload"/>
+
     <!-- Checks the code with pylint -->
     <target name="pylint">
         <exec command="pylint --rcfile pylintrc pystratum" passthru="true"/>
@@ -81,17 +65,17 @@
 
     <!-- Runs all unit tests for MySQL-->
     <target name="my-unit">
-        <delete file="etc/mysql/test_routines.json" quiet="true"/>
+        <delete file="test/mysql/etc/routines.json" quiet="true"/>
         <exec command="cat test/mysql/ddl/create_tables.sql | mysql -utest -ptest test" passthru="true" checkreturn="true"/>
-        <exec command="bin/stratum.py -c etc/mysql/test_stratum.cfg" passthru="true" checkreturn="true"/>
+        <exec command="bin/pystratum stratum test/mysql/etc/stratum.cfg" passthru="true" checkreturn="true"/>
         <exec command="python3 -m unittest test/mysql/*.py" passthru="true" checkreturn="true"/>
     </target>
 
     <!-- Runs all unit tests for PostgreSQL-->
     <target name="pg-unit">
-        <delete file="etc/mysql/test_routines.json" quiet="true"/>
+        <delete file="test/mysql/etc/routines.json" quiet="true"/>
         <exec command="cat test/pgsql/ddl/create_tables.sql | psql -Utest test" passthru="true" checkreturn="true"/>
-        <exec command="bin/stratum.py -c etc/pgsql/test_stratum.cfg" passthru="true" checkreturn="true"/>
+        <exec command="bin/pystratum stratum test/pgsql/etc/stratum.cfg" passthru="true" checkreturn="true"/>
         <exec command="python3 -m unittest test/pgsql/*.py" passthru="true" checkreturn="true"/>
     </target>
 
