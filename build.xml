@@ -36,12 +36,10 @@
                 </replaceregexp>
             </filterchain>
         </reflexive>
-        <!--
         <gitcommit repository="." message="Release: ${VERSION}" allFiles="true"/>
         <gitpush repository="."/>
         <gittag repository="." name="${VERSION}"/>
         <gitpush repository="." refspec="${VERSION}" quiet="false"/>
-        -->
     </target>
 
     <!-- Creates a new distribution using setup.py -->
