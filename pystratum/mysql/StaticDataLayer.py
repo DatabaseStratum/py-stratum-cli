@@ -367,6 +367,6 @@ class StaticDataLayer:
         :param bool readonly:
         """
         StaticDataLayer.connection.start_transaction(consistent_snapshot, isolation_level, readonly)
-        
+
 
 # ----------------------------------------------------------------------------------------------------------------------

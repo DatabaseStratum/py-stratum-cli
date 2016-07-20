@@ -10,7 +10,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 setup(
     name='PyStratum',
 
-    version='0.9.20',
+    version='0.9.21',
 
     description='A stored procedure and function loader, wrapper generator for MySQL, SQL Server, and PostgresSQL',
     long_description=long_description,
@@ -41,6 +41,8 @@ setup(
     keywords='stored routines,stored procedure,stored procedures,wrapper, loader,MySQL,SQL Server',
 
     packages=find_packages(exclude=['build', 'test']),
+
+    install_requires=['cleo==0.4.1'],
 
     entry_points={
         'console_scripts': [
