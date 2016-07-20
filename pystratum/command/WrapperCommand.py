@@ -8,16 +8,16 @@ from pystratum.style.PyStratumStyle import PyStratumStyle
 
 class WrapperCommand(Command):
     """
-    Command for generating a class with wrapper methods for calling stored routines in a MySQL/MsSQL/PgSQL database.
+    Command for generating a class with wrapper methods for calling stored routines in a MySQL/MsSQL/PgSQL database
     """
 
     name = 'wrapper'
 
     arguments = [
         {
-            'name': 'config_file',
+            'name':        'config_file',
             'description': 'The audit configuration file',
-            'required': True
+            'required':    True
         }
     ]
 

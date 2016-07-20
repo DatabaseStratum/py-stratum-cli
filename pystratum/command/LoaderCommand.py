@@ -8,21 +8,21 @@ from pystratum.style.PyStratumStyle import PyStratumStyle
 
 class LoaderCommand(Command):
     """
-    Command for loading stored routines into a MySQL/MsSQL/PgSQL instance from pseudo SQL files.
+    Command for loading stored routines into a MySQL/MsSQL/PgSQL instance from pseudo SQL files
     """
 
     name = 'loader'
 
     arguments = [
         {
-            'name': 'config_file',
+            'name':        'config_file',
             'description': 'The audit configuration file',
-            'required': True
+            'required':    True
         },
         {
-            'name': 'file_names',
+            'name':        'file_names',
             'description': 'Sources with stored routines',
-            'list': True
+            'list':        True
         }
     ]
 

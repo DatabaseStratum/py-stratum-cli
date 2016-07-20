@@ -15,9 +15,9 @@ class ConstantsCommand(Command):
 
     arguments = [
         {
-            'name': 'config_file',
+            'name':        'config_file',
             'description': 'The audit configuration file',
-            'required': True
+            'required':    True
         }
     ]
 
