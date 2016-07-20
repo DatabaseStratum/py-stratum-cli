@@ -90,7 +90,7 @@ class Constants:
         raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
-    def main(self, config_filename):
+    def main(self, config_filename, regex):
         """
         :param str config_filename: The config filename.
 
@@ -103,7 +103,7 @@ class Constants:
         self._enhance_columns()
         self._merge_columns()
         self._write_columns()
-        self._get_labels()
+        self._get_labels(regex)
         self._fill_constants()
         self._write_target_config_file()
         self.disconnect()
@@ -171,7 +171,7 @@ class Constants:
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
-    def _get_labels(self):
+    def _get_labels(self, regex):
         """
         Gets all primary key labels from the MySQL database.
         """
