@@ -93,6 +93,7 @@ class Constants:
     def main(self, config_filename, regex):
         """
         :param str config_filename: The config filename.
+        :param str regex: The regular expression for columns which we want to use.
 
         :rtype: int
         """
