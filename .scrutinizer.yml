@@ -1,3 +1,6 @@
+before_commands:
+    - pip3 install cleo
+
 build:
     dependencies:
         before:
