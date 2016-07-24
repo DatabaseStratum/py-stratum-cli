@@ -201,9 +201,11 @@ order by  scm.name
         Util.write_two_phases(self._constants_filename, content)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _get_labels(self):
+    def _get_labels(self, regex):
         """
         Gets all primary key labels from the MySQL database.
+
+        :param str regex: The regular expression for columns which we want to use.
         """
         query_string = """
 select scm.name  schema_name
@@ -214,9 +216,9 @@ from       sys.schemas     scm
 inner join sys.tables      tab  on  tab.[schema_id] = scm.[schema_id]
 inner join sys.all_columns cl1  on  cl1.[object_id] = tab.[object_id]
 inner join sys.all_columns cl2  on  cl2.[object_id] = tab.[object_id]
-where cl1.name like '%_label'
+where cl1.name like '{0}'
 and   cl2.name like '%_id'
-and   cl2.is_identity = 1"""
+and   cl2.is_identity = 1""".format(regex)
 
         tables = StaticDataLayer.execute_rows(query_string)
 

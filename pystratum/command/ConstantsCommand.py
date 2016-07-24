@@ -59,9 +59,10 @@ class ConstantsCommand(Command):
         config.read(config_file)
 
         rdbms = config.get('database', 'rdbms').lower()
+        label_regex = config.get('constants', 'label_regex')
 
         constants = ConstantsCommand.create_constants(rdbms)
-        constants.main(config_file)
+        constants.main(config_file, label_regex)
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
