@@ -1,10 +1,3 @@
-"""
-PyStratum
-
-Copyright 2015-2016 Set Based IT Consultancy
-
-Licence MIT
-"""
 from pystratum.pgsql.StaticDataLayer import StaticDataLayer
 
 

@@ -65,8 +65,8 @@
     <target name="my-unit">
         <delete file="test/mysql/etc/routines.json" quiet="true"/>
         <exec command="cat test/mysql/ddl/create_tables.sql | mysql -utest -ptest test" passthru="true" checkreturn="true"/>
-        <exec command="bin/pystratum stratum test/mysql/etc/stratum.cfg" passthru="true" checkreturn="true"/>
-        <exec command="python3 -m unittest test/mysql/*.py" passthru="true" checkreturn="true"/>
+        <exec command="coverage3 run -m unittest discover -s test/mysql -p \*Test.py" passthru="true" checkreturn="true"/>
+        <exec command="coverage3 html" passthru="true" checkreturn="true"/>
     </target>
 
     <!-- Runs all unit tests for PostgreSQL-->
