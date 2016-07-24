@@ -1,0 +1,4 @@
+build:
+    dependencies:
+        before:
+          - pip3 install cleo
