@@ -20,8 +20,6 @@ build:
           - psql -c "create user test with password 'test';"
           - psql -c "create database test owner=test;"
           - psql -c "create schema test authorization test;"
-          - pwd && ls -Ral
-          - python3 bin/pystratum stratum test/mysql/etc/stratum.cfg
 
         override:
             -
