@@ -1,9 +1,11 @@
 **/__pycache__/
+/.coverage
 /.idea/
 /PyStratum.egg-info/
 /bin/phing
 /composer.lock
 /dist/
+/test/html/
 /test/mssql/etc/columns.txt
 /test/mssql/etc/config.txt
 /test/mssql/etc/routines.json
