@@ -1,7 +1,7 @@
 [run]
 branch = True
 data_file = .coverage
-source = pystratum
+source = pystratum_mysql
 omit = test/*
 
 [report]
