@@ -201,9 +201,11 @@ union all
         Util.write_two_phases(self._constants_filename, content)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _get_labels(self):
+    def _get_labels(self, regex):
         """
         Gets all primary key labels from the MySQL database.
+
+        :param str regex: The regular expression for columns which we want to use.
         """
         query_string = """
 select t1.table_name  "table_name"
@@ -216,8 +218,8 @@ and   t1.table_schema = current_schema()
 and   t1.column_default like 'nextval(%%)'
 and   t2.table_catalog = current_database()
 and   t2.table_schema  = current_schema()
-and   t2.column_name like '%%_label'
-"""
+and   t2.column_name similar to '{0}'
+""".format(regex)
 
         tables = StaticDataLayer.execute_rows(query_string)
 
