@@ -1,3 +1,10 @@
+"""
+PyStratum
+
+Copyright 2015-2016 Set Based IT Consultancy
+
+Licence MIT
+"""
 from pystratum.RoutineWrapperGenerator import RoutineWrapperGenerator
 from pystratum.mssql.MsSqlConnection import MsSqlConnection
 from pystratum.mssql.wrapper import create_routine_wrapper

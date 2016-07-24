@@ -1,3 +1,10 @@
+"""
+PyStratum
+
+Copyright 2015-2016 Set Based IT Consultancy
+
+Licence MIT
+"""
 from cleo import OutputFormatterStyle
 from cleo.styles import CleoStyle
 

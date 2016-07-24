@@ -1,3 +1,10 @@
+"""
+PyStratum
+
+Copyright 2015-2016 Set Based IT Consultancy
+
+Licence MIT
+"""
 from test.pgsql.DataLayer import DataLayer
 from test.pgsql.StratumTestCase import StratumTestCase
 import datetime

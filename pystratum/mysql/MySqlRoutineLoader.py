@@ -1,3 +1,10 @@
+"""
+PyStratum
+
+Copyright 2015-2016 Set Based IT Consultancy
+
+Licence MIT
+"""
 from pystratum.RoutineLoader import RoutineLoader
 from pystratum.mysql.MySqlConnection import MySqlConnection
 from pystratum.mysql.MySqlRoutineLoaderHelper import MySqlRoutineLoaderHelper

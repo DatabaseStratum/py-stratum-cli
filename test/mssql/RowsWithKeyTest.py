@@ -1,3 +1,10 @@
+"""
+PyStratum
+
+Copyright 2015-2016 Set Based IT Consultancy
+
+Licence MIT
+"""
 from pprint import pprint
 from test.mssql.StratumTestCase import StratumTestCase
 from test.mssql.DataLayer import DataLayer

@@ -1,3 +1,10 @@
+"""
+PyStratum
+
+Copyright 2015-2016 Set Based IT Consultancy
+
+Licence MIT
+"""
 from mysql.connector import DataError
 from test.mysql.StratumTestCase import StratumTestCase
 from test.mysql.DataLayer import DataLayer
