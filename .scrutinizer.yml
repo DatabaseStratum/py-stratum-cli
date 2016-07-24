@@ -10,13 +10,13 @@ build:
 
     tests:
         before:
-          - mysql --version
           - mysql -u root -e "create database if not exists test;"
           - mysql -u root -e "create user 'test'@'localhost' identified by 'test';"
           - mysql -u root -e "grant all on test.*  to 'test'@'localhost';"
           - mysql -u root -e "set global binlog_format = 'row';"
           - mysql -u root -e "set global log_bin_trust_function_creators = 1;"
-          - psql --version
+          - cat test/mysql/ddl/create_tables.sql | mysql -utest -ptest test
+
           - psql -c "create user test with password 'test';"
           - psql -c "create database test owner=test;"
           - psql -c "create schema test authorization test;"
