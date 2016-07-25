@@ -8,15 +8,14 @@ Licence MIT
 import unittest
 
 from cleo import CommandTester
-
 from pystratum.application.PyStratumApplication import PyStratumApplication
 
 
-# ----------------------------------------------------------------------------------------------------------------------
 class AAATest(unittest.TestCase):
     """
     This test must run before all other tests because this test loads the stored routines.
     """
+
     # ------------------------------------------------------------------------------------------------------------------
     def test1(self):
         """

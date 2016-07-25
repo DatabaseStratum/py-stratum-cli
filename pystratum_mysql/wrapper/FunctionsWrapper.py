@@ -8,7 +8,6 @@ Licence MIT
 from pystratum.mysql.wrapper.MySqlWrapper import MySqlWrapper
 
 
-# ----------------------------------------------------------------------------------------------------------------------
 class FunctionsWrapper(MySqlWrapper):
     """
     Wrapper method generator for stored functions.

@@ -8,7 +8,6 @@ Licence MIT
 from pystratum.mysql.wrapper.MySqlWrapper import MySqlWrapper
 
 
-# ----------------------------------------------------------------------------------------------------------------------
 class RowsWrapper(MySqlWrapper):
     """
     Wrapper method generator for stored procedures that are selecting 0, 1, or more rows.

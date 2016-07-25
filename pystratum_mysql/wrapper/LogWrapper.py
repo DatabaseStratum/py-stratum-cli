@@ -8,7 +8,6 @@ Licence MIT
 from pystratum.mysql.wrapper.MySqlWrapper import MySqlWrapper
 
 
-# ----------------------------------------------------------------------------------------------------------------------
 class LogWrapper(MySqlWrapper):
     """
     Wrapper method generator for stored procedures with designation type log.

@@ -8,7 +8,6 @@ Licence MIT
 from pystratum.mysql.wrapper.MySqlWrapper import MySqlWrapper
 
 
-# ----------------------------------------------------------------------------------------------------------------------
 class NoneWrapper(MySqlWrapper):
     """
     Wrapper method generator for stored procedures without any result set.

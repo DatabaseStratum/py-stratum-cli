@@ -10,11 +10,11 @@ import re
 
 from pystratum.Constants import Constants
 from pystratum.Util import Util
-from pystratum.mysql.MySqlConnection import MySqlConnection
-from pystratum.mysql.StaticDataLayer import StaticDataLayer
+
+from pystratum_mysql.MySqlConnection import MySqlConnection
+from pystratum_mysql.StaticDataLayer import StaticDataLayer
 
 
-# ----------------------------------------------------------------------------------------------------------------------
 class MySqlConstants(MySqlConnection, Constants):
     """
     Class for creating constants based on column widths, and auto increment columns and labels for MySQL databases.

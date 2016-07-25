@@ -6,10 +6,10 @@ Copyright 2015-2016 Set Based IT Consultancy
 Licence MIT
 """
 from pystratum import Connection
-from pystratum.mysql.StaticDataLayer import StaticDataLayer
+
+from pystratum_mysql.StaticDataLayer import StaticDataLayer
 
 
-# ----------------------------------------------------------------------------------------------------------------------
 class MySqlConnection(Connection.Connection):
     """
     Class for connecting to MySQL instances and reading MySQL specific connection parameters from configuration files.

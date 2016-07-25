@@ -10,7 +10,6 @@ import abc
 from pystratum.wrapper.Wrapper import Wrapper
 
 
-# ----------------------------------------------------------------------------------------------------------------------
 class MySqlWrapper(Wrapper):
     """
     Parent class for wrapper method generators for stored procedures and functions.

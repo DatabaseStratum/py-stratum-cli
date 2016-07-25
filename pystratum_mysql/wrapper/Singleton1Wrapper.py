@@ -8,7 +8,6 @@ Licence MIT
 from pystratum.mysql.wrapper.MySqlWrapper import MySqlWrapper
 
 
-# ----------------------------------------------------------------------------------------------------------------------
 class Singleton1Wrapper(MySqlWrapper):
     """
     Wrapper method generator for stored procedures that are selecting 1 row with one column only.

@@ -6,11 +6,11 @@ Copyright 2015-2016 Set Based IT Consultancy
 Licence MIT
 """
 from pystratum.RoutineWrapperGenerator import RoutineWrapperGenerator
-from pystratum.mysql.MySqlConnection import MySqlConnection
-from pystratum.mysql.wrapper import create_routine_wrapper
+
+from pystratum_mysql.MySqlConnection import MySqlConnection
+from pystratum_mysql.wrapper import create_routine_wrapper
 
 
-# ----------------------------------------------------------------------------------------------------------------------
 class MySqlRoutineWrapperGenerator(MySqlConnection, RoutineWrapperGenerator):
     """
     Class for generating a class with wrapper methods for calling stored routines in a MySQL database.

@@ -7,11 +7,11 @@ Licence MIT
 """
 from pystratum.RoutineLoader import RoutineLoader
 from pystratum.mysql.MySqlConnection import MySqlConnection
-from mysql.MySqlRoutineLoaderHelper import MySqlRoutineLoaderHelper
 from pystratum.mysql.StaticDataLayer import StaticDataLayer
 
+from pystratum_mysql.MySqlRoutineLoaderHelper import MySqlRoutineLoaderHelper
 
-# ----------------------------------------------------------------------------------------------------------------------
+
 class MySqlRoutineLoader(MySqlConnection, RoutineLoader):
     """
     Class for loading stored routines into a MySQL instance from (pseudo) SQL files.

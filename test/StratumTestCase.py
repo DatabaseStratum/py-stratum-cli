@@ -12,9 +12,7 @@ from io import StringIO
 from test import DataLayer
 
 
-# ----------------------------------------------------------------------------------------------------------------------
 class StratumTestCase(unittest.TestCase):
-
     # ------------------------------------------------------------------------------------------------------------------
     def setUp(self):
         DataLayer.config['host'] = 'localhost'

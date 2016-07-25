@@ -11,7 +11,6 @@ from mysql.connector import DataError, MySQLConnection, InterfaceError
 from mysql.connector.cursor import MySQLCursorBufferedDict, MySQLCursorBuffered, MySQLCursor
 
 
-# ----------------------------------------------------------------------------------------------------------------------
 class StaticDataLayer:
     """
     Class for connecting to a MySQL instance and executing SQL statements. Also, a parent class for classes with
@@ -374,6 +373,5 @@ class StaticDataLayer:
         :param bool readonly:
         """
         StaticDataLayer.connection.start_transaction(consistent_snapshot, isolation_level, readonly)
-
 
 # ----------------------------------------------------------------------------------------------------------------------

@@ -9,7 +9,6 @@ from pystratum.mysql.wrapper.MySqlWrapper import MySqlWrapper
 from pystratum.wrapper.RowsWithIndexWrapper import RowsWithIndexWrapper as BaseRowsWithIndexWrapper
 
 
-# ----------------------------------------------------------------------------------------------------------------------
 class RowsWithIndexWrapper(BaseRowsWithIndexWrapper, MySqlWrapper):
     """
     Wrapper method generator for stored procedures whose result set must be returned using tree structure using a
