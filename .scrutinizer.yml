@@ -4,7 +4,7 @@ build:
           - pip3 install cleo
           - pip3 install coverage
           - pip3 install pystratum
-          - apt-get install python3-mysql.connector
+          - sudo apt-get install python3-mysql.connector
 
     tests:
         before:
