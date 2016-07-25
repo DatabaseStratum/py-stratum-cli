@@ -13,7 +13,6 @@ import os
 from pystratum.Util import Util
 
 
-# ----------------------------------------------------------------------------------------------------------------------
 class RoutineWrapperGenerator:
     """
     Class for generating a class with wrapper methods for calling stored routines in a MySQL database.

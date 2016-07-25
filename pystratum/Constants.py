@@ -11,7 +11,6 @@ import configparser
 from pystratum.Util import Util
 
 
-# ----------------------------------------------------------------------------------------------------------------------
 class Constants:
     """
     Abstract parent class for RDBMS specific classes for creating constants based on column widths, and auto increment

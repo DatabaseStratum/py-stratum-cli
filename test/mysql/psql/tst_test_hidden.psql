@@ -1,9 +1,0 @@
-/**
- * Test for designation type hidden.
- */
-create procedure tst_test_hidden()
-reads sql data
--- type: hidden
-begin
-  select 1;
-end

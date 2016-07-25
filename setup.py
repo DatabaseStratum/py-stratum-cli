@@ -12,12 +12,12 @@ setup(
 
     version='0.9.21',
 
-    description='A stored procedure and function loader, wrapper generator for MySQL, SQL Server, and PostgresSQL',
+    description='A stored procedure and function loader and wrapper generator for MySQL, SQL Server, and PostgresSQL',
     long_description=long_description,
 
     url='https://github.com/SetBased/py-stratum',
 
-    author='Paul Water, Valery Zuban',
+    author='Set Based IT Consultancy',
     author_email='info@setbased.nl',
 
     license='MIT',
@@ -38,7 +38,7 @@ setup(
         'Programming Language :: Python :: 3.5',
     ],
 
-    keywords='stored routines,stored procedure,stored procedures,wrapper, loader,MySQL,SQL Server',
+    keywords='stored routines, stored procedure, stored procedures, wrapper, loader, MySQL, SQL Server, PostgreSQL',
 
     packages=find_packages(exclude=['build', 'test']),
 

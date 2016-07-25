@@ -13,7 +13,6 @@ import re
 import sys
 
 
-# ----------------------------------------------------------------------------------------------------------------------
 class RoutineLoader:
     """
     Class for loading stored routines into a RDBMS instance from (pseudo) SQL files.

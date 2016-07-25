@@ -80,15 +80,15 @@ class ConstantsCommand(Command):
         #       dependencies for the other RDBMSs are not required).
 
         if rdbms == 'mysql':
-            module = locate('pystratum.mysql.MySqlConstants')
+            module = locate('pystratum_mysql.MySqlConstants')
             return module.MySqlConstants()
 
         if rdbms == 'mssql':
-            module = locate('pystratum.mssql.MsSqlConstants')
+            module = locate('pystratum_mssql.MsSqlConstants')
             return module.MsSqlConstants()
 
         if rdbms == 'pgsql':
-            module = locate('pystratum.pgsql.PgSqlConstants')
+            module = locate('pystratum_pgsql.PgSqlConstants')
             return module.PgSqlConstants()
 
         raise Exception("Unknown RDBMS '{0!s}'.".format(rdbms))

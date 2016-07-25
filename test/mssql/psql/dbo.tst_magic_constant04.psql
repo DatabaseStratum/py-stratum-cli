@@ -1,4 +1,0 @@
-create procedure dbo.tst_magic_constant04
--- type: singleton1
-as
-  select __DIR__;

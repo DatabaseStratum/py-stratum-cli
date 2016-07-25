@@ -88,15 +88,15 @@ class LoaderCommand(Command):
         #       dependencies for the other RDBMSs are not required).
 
         if rdbms == 'mysql':
-            module = locate('pystratum.mysql.MySqlRoutineLoader')
+            module = locate('pystratum_mysql.MySqlRoutineLoader')
             return module.MySqlRoutineLoader()
 
         if rdbms == 'mssql':
-            module = locate('pystratum.mssql.MsSqlRoutineLoader')
+            module = locate('pystratum_mssql.MsSqlRoutineLoader')
             return module.MsSqlRoutineLoader()
 
         if rdbms == 'pgsql':
-            module = locate('pystratum.pgsql.PgSqlRoutineLoader')
+            module = locate('pystratum_pgsql.PgSqlRoutineLoader')
             return module.PgSqlRoutineLoader()
 
         raise Exception("Unknown RDBMS '{0!s}'.".format(rdbms))

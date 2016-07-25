@@ -1,9 +1,0 @@
-/**
- * Test for magic constant.
- */
-create procedure tst_magic_constant04()
-reads sql data
--- type: singleton1
-begin
-  select __DIR__;
-end

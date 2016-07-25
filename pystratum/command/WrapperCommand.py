@@ -18,6 +18,7 @@ class WrapperCommand(Command):
     Command for generating a class with wrapper methods for calling stored routines in a MySQL/MsSQL/PgSQL database
     """
 
+    # ------------------------------------------------------------------------------------------------------------------
     name = 'wrapper'
 
     arguments = [
@@ -78,15 +79,15 @@ class WrapperCommand(Command):
         #       dependencies for the other RDBMSs are not required).
 
         if rdbms == 'mysql':
-            module = locate('pystratum.mysql.MySqlRoutineWrapperGenerator')
+            module = locate('pystratum_mysql.MySqlRoutineWrapperGenerator')
             return module.MySqlRoutineWrapperGenerator()
 
         if rdbms == 'mssql':
-            module = locate('pystratum.mssql.MsSqlRoutineWrapperGenerator')
+            module = locate('pystratum_mssql.MsSqlRoutineWrapperGenerator')
             return module.MsSqlRoutineWrapperGenerator()
 
         if rdbms == 'pgsql':
-            module = locate('pystratum.pgsql.PgSqlRoutineWrapperGenerator')
+            module = locate('pystratum_pgsql.PgSqlRoutineWrapperGenerator')
             return module.PgSqlRoutineWrapperGenerator()
 
         raise Exception("Unknown RDBMS '{0!s}'.".format(rdbms))

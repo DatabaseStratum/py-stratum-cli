@@ -6,13 +6,4 @@
 /composer.lock
 /dist/
 /test/html/
-/test/mssql/etc/columns.txt
-/test/mssql/etc/config.txt
-/test/mssql/etc/routines.json
-/test/mysql/etc/columns.txt
-/test/mysql/etc/config.txt
-/test/mysql/etc/routines.json
-/test/pgsql/etc/columns.txt
-/test/pgsql/etc/config.txt
-/test/pgsql/etc/routines.json
 /vendor/

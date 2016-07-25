@@ -1,7 +1,13 @@
+"""
+PyStratum
+
+Copyright 2015-2016 Set Based IT Consultancy
+
+Licence MIT
+"""
 import abc
 
 
-# ----------------------------------------------------------------------------------------------------------------------
 class Wrapper:
     """
     Parent class for classes that generate Python code, i.e. wrappers, for calling a stored procedures and functions.

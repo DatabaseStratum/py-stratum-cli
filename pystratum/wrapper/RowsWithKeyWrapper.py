@@ -1,9 +1,15 @@
+"""
+PyStratum
+
+Copyright 2015-2016 Set Based IT Consultancy
+
+Licence MIT
+"""
 import abc
 
 from pystratum.wrapper.Wrapper import Wrapper
 
 
-# ----------------------------------------------------------------------------------------------------------------------
 class RowsWithKeyWrapper(Wrapper):
     """
     Parent class wrapper wrapper method generator for stored procedures whose result set must be returned using tree

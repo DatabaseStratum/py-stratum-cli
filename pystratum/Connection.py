@@ -9,7 +9,6 @@ import os
 from configparser import ConfigParser
 
 
-# ----------------------------------------------------------------------------------------------------------------------
 class Connection:
     """
     Parent class for RDBMS connections.
