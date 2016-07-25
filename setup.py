@@ -1,6 +1,7 @@
-from setuptools import setup, find_packages
 from codecs import open
 from os import path
+
+from setuptools import setup, find_packages
 
 here = path.abspath(path.dirname(__file__))
 
@@ -42,7 +43,7 @@ setup(
 
     packages=find_packages(exclude=['build', 'test']),
 
-    install_requires=['cleo==0.4.1', 'configparser'],
+    install_requires=['cleo==0.4.1'],
 
     entry_points={
         'console_scripts': [
