@@ -1,13 +1,13 @@
-from pystratum.mysql.wrapper.FunctionsWrapper import FunctionsWrapper
-from pystratum.mysql.wrapper.LogWrapper import LogWrapper
-from pystratum.mysql.wrapper.NoneWrapper import NoneWrapper
-from pystratum.mysql.wrapper.Row0Wrapper import Row0Wrapper
-from pystratum.mysql.wrapper.Row1Wrapper import Row1Wrapper
-from pystratum.mysql.wrapper.RowsWithIndexWrapper import RowsWithIndexWrapper
-from pystratum.mysql.wrapper.RowsWithKeyWrapper import RowsWithKeyWrapper
-from pystratum.mysql.wrapper.RowsWrapper import RowsWrapper
-from pystratum.mysql.wrapper.Singleton0Wrapper import Singleton0Wrapper
-from pystratum.mysql.wrapper.Singleton1Wrapper import Singleton1Wrapper
+from pystratum_mysql.wrapper.FunctionsWrapper import FunctionsWrapper
+from pystratum_mysql.wrapper.LogWrapper import LogWrapper
+from pystratum_mysql.wrapper.NoneWrapper import NoneWrapper
+from pystratum_mysql.wrapper.Row0Wrapper import Row0Wrapper
+from pystratum_mysql.wrapper.Row1Wrapper import Row1Wrapper
+from pystratum_mysql.wrapper.RowsWithIndexWrapper import RowsWithIndexWrapper
+from pystratum_mysql.wrapper.RowsWithKeyWrapper import RowsWithKeyWrapper
+from pystratum_mysql.wrapper.RowsWrapper import RowsWrapper
+from pystratum_mysql.wrapper.Singleton0Wrapper import Singleton0Wrapper
+from pystratum_mysql.wrapper.Singleton1Wrapper import Singleton1Wrapper
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -18,7 +18,7 @@ def create_routine_wrapper(routine, lob_as_string_flag):
     :param dict[str,str] routine: The metadata of the sored routine.
     :param bool lob_as_string_flag: If True BLOBs and CLOBs must be treated as strings.
 
-    :rtype: pystratum.mysql.wrapper.MySqlWrapper.MySqlWrapper
+    :rtype: pystratum_mysql.wrapper.MySqlWrapper.MySqlWrapper
     """
     if routine['designation'] == 'none':
         wrapper = NoneWrapper(routine, lob_as_string_flag)

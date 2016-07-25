@@ -1,7 +1,9 @@
 from pystratum_mysql.StaticDataLayer import StaticDataLayer
 
 
+# ----------------------------------------------------------------------------------------------------------------------
 class DataLayer(StaticDataLayer):
+
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
     def tst_magic_constant01():
@@ -24,27 +26,13 @@ class DataLayer(StaticDataLayer):
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def tst_parameter_types01(p_param00, p_param01, p_param02, p_param03, p_param04, p_param05, p_param06, p_param07,
-                              p_param08, p_param09, p_param10, p_param11, p_param12, p_param13, p_param14, p_param15,
-                              p_param16, p_param17, p_param26, p_param27):
-        return StaticDataLayer.execute_sp_none(
-            "call tst_parameter_types01(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-            p_param00, p_param01, p_param02, p_param03, p_param04, p_param05, p_param06, p_param07, p_param08,
-            p_param09, p_param10, p_param11, p_param12, p_param13, p_param14, p_param15, p_param16, p_param17,
-            p_param26, p_param27)
+    def tst_parameter_types01(p_param00, p_param01, p_param02, p_param03, p_param04, p_param05, p_param06, p_param07, p_param08, p_param09, p_param10, p_param11, p_param12, p_param13, p_param14, p_param15, p_param16, p_param17, p_param26, p_param27):
+        return StaticDataLayer.execute_sp_none("call tst_parameter_types01(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", p_param00, p_param01, p_param02, p_param03, p_param04, p_param05, p_param06, p_param07, p_param08, p_param09, p_param10, p_param11, p_param12, p_param13, p_param14, p_param15, p_param16, p_param17, p_param26, p_param27)
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def tst_parameter_types02(p_param00, p_param01, p_param02, p_param03, p_param04, p_param05, p_param06, p_param07,
-                              p_param08, p_param09, p_param10, p_param11, p_param12, p_param13, p_param14, p_param15,
-                              p_param16, p_param17, p_param18, p_param19, p_param20, p_param21, p_param22, p_param23,
-                              p_param24, p_param25, p_param26, p_param27):
-        return StaticDataLayer.execute_sp_none(
-            "call tst_parameter_types02(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-            p_param00, p_param01, p_param02, p_param03, p_param04, p_param05, p_param06, p_param07, p_param08,
-            p_param09, p_param10, p_param11, p_param12, p_param13, p_param14, p_param15, p_param16, p_param17,
-            p_param18, p_param19, p_param20, p_param21, p_param22, p_param23, p_param24, p_param25, p_param26,
-            p_param27)
+    def tst_parameter_types02(p_param00, p_param01, p_param02, p_param03, p_param04, p_param05, p_param06, p_param07, p_param08, p_param09, p_param10, p_param11, p_param12, p_param13, p_param14, p_param15, p_param16, p_param17, p_param18, p_param19, p_param20, p_param21, p_param22, p_param23, p_param24, p_param25, p_param26, p_param27):
+        return StaticDataLayer.execute_sp_none("call tst_parameter_types02(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", p_param00, p_param01, p_param02, p_param03, p_param04, p_param05, p_param06, p_param07, p_param08, p_param09, p_param10, p_param11, p_param12, p_param13, p_param14, p_param15, p_param16, p_param17, p_param18, p_param19, p_param20, p_param21, p_param22, p_param23, p_param24, p_param25, p_param26, p_param27)
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -195,5 +183,6 @@ class DataLayer(StaticDataLayer):
     @staticmethod
     def tst_test_singleton1a_with_lob(p_count, p_blob):
         return StaticDataLayer.execute_sp_singleton1("call tst_test_singleton1a_with_lob(%s, %s)", p_count, p_blob)
+
 
 # ----------------------------------------------------------------------------------------------------------------------

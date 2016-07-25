@@ -9,7 +9,7 @@ import sys
 import unittest
 from io import StringIO
 
-from test import DataLayer
+from test.DataLayer import DataLayer
 
 
 class StratumTestCase(unittest.TestCase):

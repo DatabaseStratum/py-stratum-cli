@@ -7,8 +7,8 @@ Licence MIT
 """
 from mysql.connector import DataError
 
-from test import DataLayer
-from test import StratumTestCase
+from test.DataLayer import DataLayer
+from test.StratumTestCase import StratumTestCase
 
 
 class Row1Test(StratumTestCase):

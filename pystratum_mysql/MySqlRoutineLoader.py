@@ -6,10 +6,10 @@ Copyright 2015-2016 Set Based IT Consultancy
 Licence MIT
 """
 from pystratum.RoutineLoader import RoutineLoader
-from pystratum.mysql.MySqlConnection import MySqlConnection
-from pystratum.mysql.StaticDataLayer import StaticDataLayer
 
+from pystratum_mysql.MySqlConnection import MySqlConnection
 from pystratum_mysql.MySqlRoutineLoaderHelper import MySqlRoutineLoaderHelper
+from pystratum_mysql.StaticDataLayer import StaticDataLayer
 
 
 class MySqlRoutineLoader(MySqlConnection, RoutineLoader):
@@ -73,7 +73,7 @@ order by table_schema
         :param dict pystratum_old_metadata: The old metadata of the stored routine from PyStratum.
         :param dict rdbms_old_metadata:  The old metadata of the stored routine from MySQL.
 
-        :rtype: pystratum.mysql.MySqlRoutineLoaderHelper.MySqlRoutineLoaderHelper
+        :rtype: pystratum_mysql.MySqlRoutineLoaderHelper.MySqlRoutineLoaderHelper
         """
         return MySqlRoutineLoaderHelper(self._source_file_names[routine_name],
                                         self._source_file_encoding,

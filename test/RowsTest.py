@@ -5,8 +5,8 @@ Copyright 2015-2016 Set Based IT Consultancy
 
 Licence MIT
 """
-from test import DataLayer
-from test import StratumTestCase
+from test.DataLayer import DataLayer
+from test.StratumTestCase import StratumTestCase
 
 
 class RowsTest(StratumTestCase):

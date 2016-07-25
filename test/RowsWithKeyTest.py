@@ -5,8 +5,8 @@ Copyright 2015-2016 Set Based IT Consultancy
 
 Licence MIT
 """
-from test import DataLayer
-from test import StratumTestCase
+from test.DataLayer import DataLayer
+from test.StratumTestCase import StratumTestCase
 
 
 class RowsWithKeyTest(StratumTestCase):
@@ -15,6 +15,7 @@ class RowsWithKeyTest(StratumTestCase):
         """
         Stored routine with designation type rows_with_key must return multi dimensional array.
         """
+        from test.DataLayer import DataLayer
         rows = DataLayer.tst_test_rows_with_key1(100)
         self.assertIsInstance(rows, dict)
         self.assertEqual(1, len(rows))

@@ -7,8 +7,8 @@ Licence MIT
 """
 from mysql.connector import DataError
 
-from test import DataLayer
-from test import StratumTestCase
+from test.DataLayer import DataLayer
+from test.StratumTestCase import StratumTestCase
 
 
 class Singleton1Test(StratumTestCase):
@@ -17,6 +17,7 @@ class Singleton1Test(StratumTestCase):
         """
         Stored routine with designation type singleton1 must return 1 value and 1 value only.
         """
+        from test.DataLayer import DataLayer
         ret = DataLayer.tst_test_singleton1a(1)
         self.assertEqual(1, ret)
 

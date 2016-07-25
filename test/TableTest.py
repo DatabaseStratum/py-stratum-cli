@@ -7,8 +7,8 @@ Licence MIT
 """
 import sys
 
-from test import DataLayer
-from test import StratumTestCase
+from test.DataLayer import DataLayer
+from test.StratumTestCase import StratumTestCase
 
 
 class TableTest(StratumTestCase):

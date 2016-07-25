@@ -7,8 +7,8 @@ Licence MIT
 """
 from mysql.connector import DataError
 
-from test import DataLayer
-from test import StratumTestCase
+from test.DataLayer import DataLayer
+from test.StratumTestCase import StratumTestCase
 
 
 class Singleton0Test(StratumTestCase):
@@ -17,6 +17,7 @@ class Singleton0Test(StratumTestCase):
         """
         Stored routine with designation type singleton0 must return null.
         """
+        from test.DataLayer import DataLayer
         ret = DataLayer.tst_test_singleton0a(0)
         self.assertIsNone(ret)
 

@@ -16,7 +16,7 @@ setup(
     description='A stored procedure and function loader, wrapper generator for MySQL',
     long_description=long_description,
 
-    url='https://github.com/SetBased/py-stratum',
+    url='https://github.com/SetBased/py-stratum-mysql',
 
     author='Set Based IT Consultancy',
     author_email='info@setbased.nl',
@@ -44,10 +44,4 @@ setup(
     packages=find_packages(exclude=['build', 'test']),
 
     install_requires=['cleo==0.4.1', 'mysql', 'pystratum'],
-
-    entry_points={
-        'console_scripts': [
-            'pystratum = pystratum:main',
-        ],
-    }
 )
