@@ -2,7 +2,6 @@ build:
     dependencies:
         before:
           - pip3 install cleo
-          - pip3 install configparser
           - pip3 install coverage
           - wget https://dev.mysql.com/get/Downloads/Connector-Python/mysql-connector-python-2.1.3.tar.gz;
           - tar zxvf mysql-connector-python-2.1.3.tar.gz
@@ -19,12 +18,3 @@ build:
           - psql -c "create user test with password 'test';"
           - psql -c "create database test owner=test;"
           - psql -c "create schema test authorization test;"
-
-        override:
-            -
-                # command: coverage run -m unittest discover -s test/mysql -p *Test.py
-                # coverage:
-                #     file: '.coverage'
-                #     config_file: '.coveragerc'
-                #     format: 'py-cc'
-
