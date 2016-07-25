@@ -2,6 +2,7 @@ build:
     dependencies:
         before:
           - pip3 install cleo
+          - pip3 install configparser
           - pip3 install coverage
           - pip3 install pystratum
           - wget https://dev.mysql.com/get/Downloads/Connector-Python/mysql-connector-python-2.1.3.tar.gz
