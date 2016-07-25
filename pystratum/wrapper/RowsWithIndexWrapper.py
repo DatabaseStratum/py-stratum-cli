@@ -23,6 +23,9 @@ class RowsWithIndexWrapper(Wrapper):
 
     # ------------------------------------------------------------------------------------------------------------------
     def _write_result_handler(self, routine):
+        """
+        Generates code for calling the stored routine in the wrapper method.
+        """
         self._write_line('ret = {}')
         self._write_execute_rows(routine)
         self._write_line('for row in rows:')
