@@ -43,5 +43,5 @@ setup(
 
     packages=find_packages(exclude=['build', 'test']),
 
-    install_requires=['mysql', 'pystratum'],
+    install_requires=['pystratum'],
 )
