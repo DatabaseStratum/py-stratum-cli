@@ -29,5 +29,4 @@ before_script:
 script: 
   - cd $TRAVIS_BUILD_DIR
   - cat test/ddl/create_tables.sql | mysql -utest -ptest test
-  - python3 bin/pystratum stratum test/etc/stratum.cfg
-  - python3 -m unittest test/mysql/*.py
+  - python3 -m unittest test/*.py
