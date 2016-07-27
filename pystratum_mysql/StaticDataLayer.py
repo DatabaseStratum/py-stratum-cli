@@ -350,7 +350,7 @@ class StaticDataLayer:
         :rtype: int
         """
         # todo methods for showing table
-        raise NotImplementedError
+        raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
