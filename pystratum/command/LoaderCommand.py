@@ -34,28 +34,18 @@ class LoaderCommand(Command):
     ]
 
     # ------------------------------------------------------------------------------------------------------------------
-    def execute(self, inp, out):
-        """
-        Executes loader command when PyStratumCommand is activated.
-        """
-        self.io = PyStratumStyle(inp, out)
-
-        config_file = inp.get_argument('config_file')
-        sources = inp.get_argument('file_names')
-
-        LoaderCommand.run_command(config_file, sources)
-
-    # ------------------------------------------------------------------------------------------------------------------
     def handle(self):
         """
         Executes loader command.
         """
-        self.io = PyStratumStyle(self.input, self.output)
+        self.output = PyStratumStyle(self.input, self.output)
 
         config_file = self.argument('config_file')
         sources = self.argument('file_names')
 
-        LoaderCommand.run_command(config_file, sources)
+        status = LoaderCommand.run_command(config_file, sources)
+
+        return status
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -70,7 +60,9 @@ class LoaderCommand(Command):
         rdbms = config.get('database', 'rdbms').lower()
 
         loader = LoaderCommand.create_routine_loader(rdbms)
-        loader.main(config_file, sources)
+        status = loader.main(config_file, sources)
+
+        return status
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
