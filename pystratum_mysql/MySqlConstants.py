@@ -10,7 +10,7 @@ import re
 
 from pystratum.Constants import Constants
 from pystratum.Util import Util
-from pystratum_mysql.MetadataDataLayer import MetadataDataLayer
+from pystratum_mysql.MySqlMetadataDataLayer import MySqlMetadataDataLayer
 from pystratum_mysql.MySqlConnection import MySqlConnection
 
 
@@ -83,7 +83,7 @@ class MySqlConstants(MySqlConnection, Constants):
         """
         Retrieves metadata about all table columns in the MySQL schema.
         """
-        rows = MetadataDataLayer.get_all_table_columns()
+        rows = MySqlMetadataDataLayer.get_all_table_columns()
         for row in rows:
             # Enhance row with the actual length of the column.
             row['length'] = self.derive_field_length(row)
@@ -176,9 +176,9 @@ class MySqlConstants(MySqlConnection, Constants):
 
         :param str regex: The regular expression for columns which we want to use.
         """
-        tables = MetadataDataLayer.get_label_tables(regex)
+        tables = MySqlMetadataDataLayer.get_label_tables(regex)
         for table in tables:
-            rows = MetadataDataLayer.get_labels_from_table(table['table_name'], table['id'], table['label'])
+            rows = MySqlMetadataDataLayer.get_labels_from_table(table['table_name'], table['id'], table['label'])
             for row in rows:
                 self._labels[row['label']] = row['id']
 

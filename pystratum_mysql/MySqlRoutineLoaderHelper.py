@@ -8,7 +8,7 @@ Licence MIT
 import re
 
 from pystratum.RoutineLoaderHelper import RoutineLoaderHelper
-from pystratum_mysql.MetadataDataLayer import MetadataDataLayer
+from pystratum_mysql.MySqlMetadataDataLayer import MySqlMetadataDataLayer
 from pystratum_mysql.helper.MySqlDataTypeHelper import MySqlDataTypeHelper
 
 
@@ -177,23 +177,23 @@ class MySqlRoutineLoaderHelper(RoutineLoaderHelper):
         self._unset_magic_constants()
         self._drop_routine()
 
-        MetadataDataLayer.set_sql_mode(self._sql_mode)
+        MySqlMetadataDataLayer.set_sql_mode(self._sql_mode)
 
-        MetadataDataLayer.set_character_set(self._character_set, self._collate)
+        MySqlMetadataDataLayer.set_character_set(self._character_set, self._collate)
 
-        MetadataDataLayer.execute_none(routine_source)
+        MySqlMetadataDataLayer.execute_none(routine_source)
 
     # ------------------------------------------------------------------------------------------------------------------
     def get_bulk_insert_table_columns_info(self):
         """
         Gets the column names and column types of the current table for bulk insert.
         """
-        table_is_non_temporary = MetadataDataLayer.check_table_exists(self._table_name)
+        table_is_non_temporary = MySqlMetadataDataLayer.check_table_exists(self._table_name)
 
         if not table_is_non_temporary:
-            MetadataDataLayer.call_stored_routine(self._routine_name)
+            MySqlMetadataDataLayer.call_stored_routine(self._routine_name)
 
-        columns = MetadataDataLayer.describe_table(self._table_name)
+        columns = MySqlMetadataDataLayer.describe_table(self._table_name)
 
         tmp_column_types = []
         tmp_fields = []
@@ -209,7 +209,7 @@ class MySqlRoutineLoaderHelper(RoutineLoaderHelper):
         n2 = len(self._columns)
 
         if not table_is_non_temporary:
-            MetadataDataLayer.drop_temporary_table(self._table_name)
+            MySqlMetadataDataLayer.drop_temporary_table(self._table_name)
 
         if n1 != n2:
             raise Exception("Number of fields %d and number of columns %d don't match." % (n1, n2))
@@ -264,8 +264,7 @@ class MySqlRoutineLoaderHelper(RoutineLoaderHelper):
         """
         Retrieves information about the stored routine parameters from the meta data of MySQL.
         """
-        routine_parameters = MetadataDataLayer.get_routine_parameters(self._routine_name)
-
+        routine_parameters = MySqlMetadataDataLayer.get_routine_parameters(self._routine_name)
         for routine_parameter in routine_parameters:
             if routine_parameter['parameter_name']:
                 value = routine_parameter['column_type']
@@ -288,6 +287,6 @@ class MySqlRoutineLoaderHelper(RoutineLoaderHelper):
         Drops the stored routine if it exists.
         """
         if self._rdbms_old_metadata:
-            MetadataDataLayer.drop_stored_routine(self._rdbms_old_metadata['routine_type'], self._routine_name)
+            MySqlMetadataDataLayer.drop_stored_routine(self._rdbms_old_metadata['routine_type'], self._routine_name)
 
 # ----------------------------------------------------------------------------------------------------------------------

@@ -5,12 +5,11 @@ Copyright 2015-2016 Set Based IT Consultancy
 
 Licence MIT
 """
-import os
-
+from pystratum.MetadataDataLayer import MetadataDataLayer
 from pystratum_mysql.StaticDataLayer import StaticDataLayer
 
 
-class MetadataDataLayer:
+class MySqlMetadataDataLayer(MetadataDataLayer):
     """
     Data layer for retrieving metadata and loading stored routines.
     """
@@ -20,31 +19,6 @@ class MetadataDataLayer:
 
     :type: pystratum_mysql.StaticDataLayer.StaticDataLayer|None
     """
-
-    io = None
-    """
-    The Output decorator.
-
-    :type: pystratum.style.PyStratumStyle.PyStratumStyle|None
-    """
-
-    # ------------------------------------------------------------------------------------------------------------------
-    @staticmethod
-    def __log_query(query):
-        """
-        Logs the query on the console.
-
-        :param str query: The query.
-        """
-        query = query.strip()
-
-        if os.linesep in query:
-            # Query is a multi line query
-            MetadataDataLayer.io.log_very_verbose('Executing query:')
-            MetadataDataLayer.io.log_very_verbose('<sql>{0}</sql>'.format(query))
-        else:
-            # Query is a single line query.
-            MetadataDataLayer.io.log_very_verbose('Executing query: <sql>{0}</sql>'.format(query))
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -58,7 +32,7 @@ class MetadataDataLayer:
         """
         sql = 'call {0}()'.format(routine_name)
 
-        return MetadataDataLayer.execute_none(sql)
+        return MySqlMetadataDataLayer.execute_none(sql)
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -76,7 +50,7 @@ information_schema.TABLES
 where TABLE_SCHEMA = database()
 and   TABLE_NAME   = '{0}'""".format(table_name)
 
-        return MetadataDataLayer.execute_none(sql)
+        return MySqlMetadataDataLayer.execute_none(sql)
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -84,8 +58,8 @@ and   TABLE_NAME   = '{0}'""".format(table_name)
         """
         Connects to a MySQL instance.
         """
-        MetadataDataLayer.__dl = StaticDataLayer()
-        MetadataDataLayer.__dl.connect()
+        MySqlMetadataDataLayer.__dl = StaticDataLayer()
+        MySqlMetadataDataLayer.__dl.connect()
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -99,7 +73,7 @@ and   TABLE_NAME   = '{0}'""".format(table_name)
         """
         sql = 'describe `{0}`'.format(table_name)
 
-        return MetadataDataLayer.execute_rows(sql)
+        return MySqlMetadataDataLayer.execute_rows(sql)
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -107,7 +81,7 @@ and   TABLE_NAME   = '{0}'""".format(table_name)
         """
         Disconnects from the MySQL instance.
         """
-        MetadataDataLayer.__dl.disconnect()
+        MySqlMetadataDataLayer.__dl.disconnect()
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -120,7 +94,7 @@ and   TABLE_NAME   = '{0}'""".format(table_name)
         """
         sql = 'drop {0} if exists `{1}`'.format(routine_type, routine_name)
 
-        MetadataDataLayer.execute_none(sql)
+        MySqlMetadataDataLayer.execute_none(sql)
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -132,7 +106,7 @@ and   TABLE_NAME   = '{0}'""".format(table_name)
         """
         sql = 'drop temporary table `{0}`'.format(table_name)
 
-        MetadataDataLayer.execute_none(sql)
+        MySqlMetadataDataLayer.execute_none(sql)
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -144,9 +118,9 @@ and   TABLE_NAME   = '{0}'""".format(table_name)
 
         :rtype: int
         """
-        MetadataDataLayer.__log_query(query)
+        MySqlMetadataDataLayer._log_query(query)
 
-        return MetadataDataLayer.__dl.execute_none(query)
+        return MySqlMetadataDataLayer.__dl.execute_none(query)
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -158,9 +132,9 @@ and   TABLE_NAME   = '{0}'""".format(table_name)
 
         :rtype: list[dict[str,Object]]
         """
-        MetadataDataLayer.__log_query(query)
+        MySqlMetadataDataLayer._log_query(query)
 
-        return MetadataDataLayer.__dl.execute_rows(query)
+        return MySqlMetadataDataLayer.__dl.execute_rows(query)
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -172,9 +146,9 @@ and   TABLE_NAME   = '{0}'""".format(table_name)
 
         :rtype: Object
         """
-        MetadataDataLayer.__log_query(query)
+        MySqlMetadataDataLayer._log_query(query)
 
-        return MetadataDataLayer.__dl.execute_singleton1(query)
+        return MySqlMetadataDataLayer.__dl.execute_singleton1(query)
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -222,7 +196,7 @@ union all
 )
 """
 
-        return MetadataDataLayer.execute_rows(sql)
+        return MySqlMetadataDataLayer.execute_rows(sql)
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -234,11 +208,11 @@ union all
 
         :rtype: str
         """
-        MetadataDataLayer.set_sql_mode(sql_mode)
+        MySqlMetadataDataLayer.set_sql_mode(sql_mode)
 
         sql = 'select @@sql_mode'
 
-        return MetadataDataLayer.execute_singleton1(sql)
+        return MySqlMetadataDataLayer.execute_singleton1(sql)
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -261,7 +235,7 @@ and   t1.EXTRA        = 'auto_increment'
 and   t2.TABLE_SCHEMA = database()
 and   t2.COLUMN_NAME rlike '{0}'""".format(regex)
 
-        return MetadataDataLayer.execute_rows(sql)
+        return MySqlMetadataDataLayer.execute_rows(sql)
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -283,7 +257,7 @@ where   nullif(`{1}`,'') is not null""".format(id_column_name,
                                                label_column_name,
                                                table_name)
 
-        return MetadataDataLayer.execute_rows(sql)
+        return MySqlMetadataDataLayer.execute_rows(sql)
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -310,7 +284,7 @@ left outer join information_schema.PARAMETERS t2  on  t2.SPECIFIC_SCHEMA = t1.RO
 where t1.ROUTINE_SCHEMA = database()
 and   t1.ROUTINE_NAME   = '{0}'""".format(routine_name)
 
-        return MetadataDataLayer.execute_rows(sql)
+        return MySqlMetadataDataLayer.execute_rows(sql)
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -330,7 +304,7 @@ from  information_schema.ROUTINES
 where ROUTINE_SCHEMA = database()
 order by routine_name"""
 
-        return MetadataDataLayer.execute_rows(sql)
+        return MySqlMetadataDataLayer.execute_rows(sql)
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -343,7 +317,7 @@ order by routine_name"""
         """
         sql = "set names '{0}' collate '{1}'".format(character_set, collate)
 
-        MetadataDataLayer.execute_none(sql)
+        MySqlMetadataDataLayer.execute_none(sql)
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -355,6 +329,6 @@ order by routine_name"""
         """
         sql = "set sql_mode = '{0}'".format(sql_mode)
 
-        MetadataDataLayer.execute_none(sql)
+        MySqlMetadataDataLayer.execute_none(sql)
 
 # ----------------------------------------------------------------------------------------------------------------------

@@ -6,7 +6,7 @@ Copyright 2015-2016 Set Based IT Consultancy
 Licence MIT
 """
 from pystratum.RoutineLoader import RoutineLoader
-from pystratum_mysql.MetadataDataLayer import MetadataDataLayer
+from pystratum_mysql.MySqlMetadataDataLayer import MySqlMetadataDataLayer
 
 from pystratum_mysql.MySqlConnection import MySqlConnection
 from pystratum_mysql.MySqlRoutineLoaderHelper import MySqlRoutineLoaderHelper
@@ -32,7 +32,7 @@ class MySqlRoutineLoader(MySqlConnection, RoutineLoader):
         """
         Selects schema, table, column names and the column type from MySQL and saves them as replace pairs.
         """
-        rows = MetadataDataLayer.get_all_table_columns()
+        rows = MySqlMetadataDataLayer.get_all_table_columns()
         for row in rows:
             key = '@' + row['table_name'] + '.' + row['column_name'] + '%type@'
             key = key.lower()
@@ -69,7 +69,7 @@ class MySqlRoutineLoader(MySqlConnection, RoutineLoader):
         """
         Retrieves information about all stored routines in the current schema.
         """
-        rows = MetadataDataLayer.get_routines()
+        rows = MySqlMetadataDataLayer.get_routines()
         self._rdbms_old_metadata = {}
         for row in rows:
             self._rdbms_old_metadata[row['routine_name']] = row
@@ -79,7 +79,7 @@ class MySqlRoutineLoader(MySqlConnection, RoutineLoader):
         """
         Gets the SQL mode in the order as preferred by MySQL.
         """
-        self._sql_mode = MetadataDataLayer.get_correct_sql_mode(self._sql_mode)
+        self._sql_mode = MySqlMetadataDataLayer.get_correct_sql_mode(self._sql_mode)
 
     # ------------------------------------------------------------------------------------------------------------------
     def _drop_obsolete_routines(self):
@@ -90,7 +90,7 @@ class MySqlRoutineLoader(MySqlConnection, RoutineLoader):
         for routine_name, values in self._rdbms_old_metadata.items():
             if routine_name not in self._source_file_names:
                 self._io.writeln("Dropping {0} <dbo>{1}</dbo>".format(values['routine_type'].lower(), routine_name))
-                MetadataDataLayer.drop_stored_routine(values['routine_type'], routine_name)
+                MySqlMetadataDataLayer.drop_stored_routine(values['routine_type'], routine_name)
 
     # ------------------------------------------------------------------------------------------------------------------
     def _read_configuration_file(self, config_filename: str):

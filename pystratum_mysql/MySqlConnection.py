@@ -5,13 +5,15 @@ Copyright 2015-2016 Set Based IT Consultancy
 
 Licence MIT
 """
-from pystratum import Connection
-from pystratum_mysql.MetadataDataLayer import MetadataDataLayer
+from pystratum.Connection import Connection
+
+from pystratum.MetadataDataLayer import MetadataDataLayer
+from pystratum_mysql.MySqlMetadataDataLayer import MySqlMetadataDataLayer
 
 from pystratum_mysql.StaticDataLayer import StaticDataLayer
 
 
-class MySqlConnection(Connection.Connection):
+class MySqlConnection(Connection):
     """
     Class for connecting to MySQL instances and reading MySQL specific connection parameters from configuration files.
     """
@@ -23,6 +25,8 @@ class MySqlConnection(Connection.Connection):
 
         :param pystratum.style.PyStratumStyle.PyStratumStyle io: The output decorator.
         """
+        Connection.__init__(self, io)
+
         self._host = None
         """
         The hostname of the MySQL instance.
@@ -79,13 +83,6 @@ class MySqlConnection(Connection.Connection):
         :type: str
         """
 
-        self.io = io
-        """
-        The output decorator.
-
-        :type: pystratum.style.PyStratumStyle.PyStratumStyle
-        """
-
     # ------------------------------------------------------------------------------------------------------------------
     def connect(self):
         """
@@ -100,8 +97,8 @@ class MySqlConnection(Connection.Connection):
         StaticDataLayer.config['collation'] = self._collation_connection
         StaticDataLayer.config['sql_mode'] = self._sql_mode
 
-        MetadataDataLayer.io = self.io
-        MetadataDataLayer.connect()
+        MetadataDataLayer.io = self._io
+        MySqlMetadataDataLayer.connect()
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -109,7 +106,7 @@ class MySqlConnection(Connection.Connection):
         """
         Disconnects from the MySQL instance.
         """
-        MetadataDataLayer.disconnect()
+        MySqlMetadataDataLayer.disconnect()
 
     # ------------------------------------------------------------------------------------------------------------------
     def _read_configuration_file(self, config_filename):
