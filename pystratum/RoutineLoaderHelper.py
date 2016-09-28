@@ -236,8 +236,8 @@ class RoutineLoaderHelper(metaclass=abc.ABCMeta):
 
             return self._pystratum_metadata
 
-        except Exception as e:
-            self._io.error(e)
+        except Exception as exception:
+            self._io.error(exception)
             return False
 
     # ------------------------------------------------------------------------------------------------------------------

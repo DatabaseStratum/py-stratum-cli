@@ -176,7 +176,7 @@ class Wrapper(metaclass=abc.ABCMeta):
     def __write_docstring(self, routine):
         """
         Writes the docstring for the wrapper method of a stored routine.
-        
+
         :param dict routine: The metadata of the stored routine.
         """
         self._write_line('"""')

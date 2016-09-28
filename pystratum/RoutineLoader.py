@@ -329,8 +329,8 @@ class RoutineLoader:
         """
         Writes the metadata of all stored routines to the metadata file.
         """
-        with open(self._pystratum_metadata_filename, 'w') as f:
-            json.dump(self._pystratum_metadata, f, indent=4, sort_keys=True)
+        with open(self._pystratum_metadata_filename, 'w') as stream:
+            json.dump(self._pystratum_metadata, stream, indent=4, sort_keys=True)
 
     # ------------------------------------------------------------------------------------------------------------------
     def find_source_files_from_list(self, file_names):
