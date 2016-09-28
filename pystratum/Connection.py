@@ -13,6 +13,19 @@ class Connection:
     """
     Parent class for RDBMS connections.
     """
+    # ------------------------------------------------------------------------------------------------------------------
+    def __init__(self, io):
+        """
+        Object constructor.
+
+        :param pystratum.style.PyStratumStyle.PyStratumStyle io: The output decorator.
+        """
+        self._io = io
+        """
+        The output decorator.
+
+        :type: pystratum.style.PyStratumStyle.PyStratumStyle
+        """
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
