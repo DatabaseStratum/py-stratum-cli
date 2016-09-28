@@ -36,11 +36,10 @@ class WrapperCommand(Command):
         self.output = PyStratumStyle(self.input, self.output)
 
         config_file = self.input.get_argument('config_file')
-        WrapperCommand.run_command(config_file)
+        self.run_command(config_file)
 
     # ------------------------------------------------------------------------------------------------------------------
-    @staticmethod
-    def run_command(config_file):
+    def run_command(self, config_file):
         """
         :param str config_file: The name of config file.
         """
@@ -49,12 +48,11 @@ class WrapperCommand(Command):
 
         rdbms = config.get('database', 'rdbms').lower()
 
-        wrapper = WrapperCommand.create_routine_wrapper_generator(rdbms)
+        wrapper = self.create_routine_wrapper_generator(rdbms)
         wrapper.run(config_file)
 
     # ------------------------------------------------------------------------------------------------------------------
-    @staticmethod
-    def create_routine_wrapper_generator(rdbms):
+    def create_routine_wrapper_generator(self, rdbms):
         """
         Factory for creating a Constants objects (i.e. objects for generating a class with wrapper methods for calling
         stored routines in a database).
@@ -69,15 +67,15 @@ class WrapperCommand(Command):
 
         if rdbms == 'mysql':
             module = locate('pystratum_mysql.MySqlRoutineWrapperGenerator')
-            return module.MySqlRoutineWrapperGenerator()
+            return module.MySqlRoutineWrapperGenerator(self.output)
 
         if rdbms == 'mssql':
             module = locate('pystratum_mssql.MsSqlRoutineWrapperGenerator')
-            return module.MsSqlRoutineWrapperGenerator()
+            return module.MsSqlRoutineWrapperGenerator(self.output)
 
         if rdbms == 'pgsql':
             module = locate('pystratum_pgsql.PgSqlRoutineWrapperGenerator')
-            return module.PgSqlRoutineWrapperGenerator()
+            return module.PgSqlRoutineWrapperGenerator(self.output)
 
         raise Exception("Unknown RDBMS '{0!s}'.".format(rdbms))
 

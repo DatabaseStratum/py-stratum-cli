@@ -39,13 +39,12 @@ class LoaderCommand(Command):
         config_file = self.argument('config_file')
         sources = self.argument('file_names')
 
-        status = LoaderCommand.run_command(config_file, sources)
+        status = self.run_command(config_file, sources)
 
         return status
 
     # ------------------------------------------------------------------------------------------------------------------
-    @staticmethod
-    def run_command(config_file, sources):
+    def run_command(self, config_file, sources):
         """
         :param str config_file: The name of config file.
         :param list sources: The list with source files.
@@ -55,14 +54,13 @@ class LoaderCommand(Command):
 
         rdbms = config.get('database', 'rdbms').lower()
 
-        loader = LoaderCommand.create_routine_loader(rdbms)
+        loader = self.create_routine_loader(rdbms)
         status = loader.main(config_file, sources)
 
         return status
 
     # ------------------------------------------------------------------------------------------------------------------
-    @staticmethod
-    def create_routine_loader(rdbms):
+    def create_routine_loader(self, rdbms):
         """
         Factory for creating a Routine Loader objects (i.e. objects for loading stored routines into a RDBMS instance
         from (pseudo) SQL files.
@@ -77,15 +75,15 @@ class LoaderCommand(Command):
 
         if rdbms == 'mysql':
             module = locate('pystratum_mysql.MySqlRoutineLoader')
-            return module.MySqlRoutineLoader()
+            return module.MySqlRoutineLoader(self.output)
 
         if rdbms == 'mssql':
             module = locate('pystratum_mssql.MsSqlRoutineLoader')
-            return module.MsSqlRoutineLoader()
+            return module.MsSqlRoutineLoader(self.output)
 
         if rdbms == 'pgsql':
             module = locate('pystratum_pgsql.PgSqlRoutineLoader')
-            return module.PgSqlRoutineLoader()
+            return module.PgSqlRoutineLoader(self.output)
 
         raise Exception("Unknown RDBMS '{0!s}'.".format(rdbms))
 

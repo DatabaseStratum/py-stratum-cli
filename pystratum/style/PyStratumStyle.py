@@ -40,4 +40,9 @@ class PyStratumStyle(CleoStyle):
         style = OutputFormatterStyle('magenta', None, ['bold'])
         output.get_formatter().set_style('sql', style)
 
+    # ------------------------------------------------------------------------------------------------------------------
+    def log_very_verbose(self, message):
+        if self.is_very_verbose():
+            self.writeln(message)
+
 # ----------------------------------------------------------------------------------------------------------------------

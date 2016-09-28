@@ -36,11 +36,10 @@ class ConstantsCommand(Command):
         self.output = PyStratumStyle(self.input, self.output)
 
         config_file = self.input.get_argument('config_file')
-        ConstantsCommand.run_command(config_file)
+        self.run_command(config_file)
 
     # ------------------------------------------------------------------------------------------------------------------
-    @staticmethod
-    def run_command(config_file):
+    def run_command(self, config_file):
         """
         :param str config_file: The name of config file.
         """
@@ -51,12 +50,11 @@ class ConstantsCommand(Command):
         rdbms = config.get('database', 'rdbms').lower()
         label_regex = config.get('constants', 'label_regex')
 
-        constants = ConstantsCommand.create_constants(rdbms)
+        constants = self.create_constants(rdbms)
         constants.main(config_file, label_regex)
 
     # ------------------------------------------------------------------------------------------------------------------
-    @staticmethod
-    def create_constants(rdbms):
+    def create_constants(self, rdbms):
         """
         Factory for creating a Constants objects (i.e. objects for creating constants based on column widths, and auto
         increment columns and labels).
@@ -71,15 +69,15 @@ class ConstantsCommand(Command):
 
         if rdbms == 'mysql':
             module = locate('pystratum_mysql.MySqlConstants')
-            return module.MySqlConstants()
+            return module.MySqlConstants(self.output)
 
         if rdbms == 'mssql':
             module = locate('pystratum_mssql.MsSqlConstants')
-            return module.MsSqlConstants()
+            return module.MsSqlConstants(self.output)
 
         if rdbms == 'pgsql':
             module = locate('pystratum_pgsql.PgSqlConstants')
-            return module.PgSqlConstants()
+            return module.PgSqlConstants(self.output)
 
         raise Exception("Unknown RDBMS '{0!s}'.".format(rdbms))
 
