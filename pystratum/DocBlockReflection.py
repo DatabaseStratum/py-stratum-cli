@@ -172,7 +172,7 @@ class DocBlockReflection:
         tags = list()
         current = None
         for line in self._comment:
-            parts = re.match('^@(\w+)', line)
+            parts = re.match(r'^@(\w+)', line)
             if parts:
                 current = (parts.group(1), list())
                 tags.append(current)

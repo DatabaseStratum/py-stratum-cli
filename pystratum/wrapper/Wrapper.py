@@ -22,7 +22,12 @@ class Wrapper(metaclass=abc.ABCMeta):
         :param dict routine: The metadata of the stored routine.
         :param str lob_as_string_flag: If 'True' LOBs must be treated as strings/bytes.
         """
-        self.PAGE_WIDTH = 120
+        self._page_width = 120
+        """
+        The maximum number of columns in the source code.
+
+        :type: int
+        """
 
         self._code = ''
         """
@@ -92,7 +97,7 @@ class Wrapper(metaclass=abc.ABCMeta):
         """
         Inserts a horizontal (commented) line tot the generated code.
         """
-        tmp = self.PAGE_WIDTH - ((4 * self.__indent_level) + 2)
+        tmp = self._page_width - ((4 * self.__indent_level) + 2)
         self._write_line('# ' + ('-' * tmp))
 
     # ------------------------------------------------------------------------------------------------------------------
