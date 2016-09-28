@@ -16,37 +16,26 @@ from pystratum.style.PyStratumStyle import PyStratumStyle
 class WrapperCommand(Command):
     """
     Command for generating a class with wrapper methods for calling stored routines in a MySQL/MsSQL/PgSQL database
+
+    wrapper
+        {config_file : The audit configuration file}
     """
 
     # ------------------------------------------------------------------------------------------------------------------
-    name = 'wrapper'
+    def execute(self, i, o):
+        self.input = i
+        self.output = o
 
-    arguments = [
-        {
-            'name':        'config_file',
-            'description': 'The audit configuration file',
-            'required':    True
-        }
-    ]
-
-    # ------------------------------------------------------------------------------------------------------------------
-    def execute(self, inp, out):
-        """
-        Executes wrapper command when PyStratumCommand is activated.
-        """
-        self.io = PyStratumStyle(inp, out)
-
-        config_file = inp.get_argument('config_file')
-        WrapperCommand.run_command(config_file)
+        return self.handle()
 
     # ------------------------------------------------------------------------------------------------------------------
     def handle(self):
         """
-        Executes wrapper command.
+        Executes wrapper command when PyStratumCommand is activated.
         """
-        self.io = PyStratumStyle(self.input, self.output)
+        self.output = PyStratumStyle(self.input, self.output)
 
-        config_file = self.argument('config_file')
+        config_file = self.input.get_argument('config_file')
         WrapperCommand.run_command(config_file)
 
     # ------------------------------------------------------------------------------------------------------------------

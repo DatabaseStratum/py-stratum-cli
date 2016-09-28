@@ -16,36 +16,26 @@ from pystratum.style.PyStratumStyle import PyStratumStyle
 class ConstantsCommand(Command):
     """
     Generates constants based on database IDs
+
+    constants
+        {config_file : The audit configuration file}
     """
 
-    name = 'constants'
-
-    arguments = [
-        {
-            'name':        'config_file',
-            'description': 'The audit configuration file',
-            'required':    True
-        }
-    ]
-
     # ------------------------------------------------------------------------------------------------------------------
-    def execute(self, inp, out):
-        """
-        Executes constants command when PyStratumCommand is activated.
-        """
-        self.io = PyStratumStyle(inp, out)
+    def execute(self, i, o):
+        self.input = i
+        self.output = o
 
-        config_file = inp.get_argument('config_file')
-        ConstantsCommand.run_command(config_file)
+        return self.handle()
 
     # ------------------------------------------------------------------------------------------------------------------
     def handle(self):
         """
-        Executes constants command.
+        Executes constants command when PyStratumCommand is activated.
         """
-        self.io = PyStratumStyle(self.input, self.output)
+        self.output = PyStratumStyle(self.input, self.output)
 
-        config_file = self.argument('config_file')
+        config_file = self.input.get_argument('config_file')
         ConstantsCommand.run_command(config_file)
 
     # ------------------------------------------------------------------------------------------------------------------

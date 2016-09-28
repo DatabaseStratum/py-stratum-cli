@@ -16,22 +16,18 @@ from pystratum.style.PyStratumStyle import PyStratumStyle
 class LoaderCommand(Command):
     """
     Command for loading stored routines into a MySQL/MsSQL/PgSQL instance from pseudo SQL files
+
+    loader
+        {config_file : The audit configuration file}
+        {file_names?* : Sources with stored routines}
     """
 
-    name = 'loader'
+    # ------------------------------------------------------------------------------------------------------------------
+    def execute(self, i, o):
+        self.input = i
+        self.output = o
 
-    arguments = [
-        {
-            'name':        'config_file',
-            'description': 'The audit configuration file',
-            'required':    True
-        },
-        {
-            'name':        'file_names',
-            'description': 'Sources with stored routines',
-            'list':        True
-        }
-    ]
+        return self.handle()
 
     # ------------------------------------------------------------------------------------------------------------------
     def handle(self):
