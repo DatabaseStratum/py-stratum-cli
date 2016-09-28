@@ -6,10 +6,10 @@ Copyright 2015-2016 Set Based IT Consultancy
 Licence MIT
 """
 from pystratum.RoutineLoader import RoutineLoader
+from pystratum_mysql.MetadataDataLayer import MetadataDataLayer
 
 from pystratum_mysql.MySqlConnection import MySqlConnection
 from pystratum_mysql.MySqlRoutineLoaderHelper import MySqlRoutineLoaderHelper
-from pystratum_mysql.StaticDataLayer import StaticDataLayer
 
 
 class MySqlRoutineLoader(MySqlConnection, RoutineLoader):
@@ -18,44 +18,23 @@ class MySqlRoutineLoader(MySqlConnection, RoutineLoader):
     """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __init__(self):
+    def __init__(self, io):
         """
         Object constructor.
+
+        :param pystratum.style.PyStratumStyle.PyStratumStyle io: The output decorator.
         """
         RoutineLoader.__init__(self)
-        MySqlConnection.__init__(self)
+        MySqlConnection.__init__(self, io)
 
     # ------------------------------------------------------------------------------------------------------------------
     def _get_column_type(self):
         """
         Selects schema, table, column names and the column type from MySQL and saves them as replace pairs.
         """
-        sql = """
-select TABLE_NAME                                    table_name
-,      COLUMN_NAME                                   column_name
-,      COLUMN_TYPE                                   column_type
-,      CHARACTER_SET_NAME                            character_set_name
-,      null                                          table_schema
-from   information_schema.COLUMNS
-where  TABLE_SCHEMA = database()
-union all
-select TABLE_NAME                                    table_name
-,      COLUMN_NAME                                   column_name
-,      COLUMN_TYPE                                   column_type
-,      CHARACTER_SET_NAME                            character_set_name
-,      TABLE_SCHEMA                                  table_schema
-from   information_schema.COLUMNS
-order by table_schema
-,        table_name
-,        column_name"""
-
-        rows = StaticDataLayer.execute_rows(sql)
-
+        rows = MetadataDataLayer.get_all_table_columns()
         for row in rows:
-            key = '@'
-            if row['table_schema']:
-                key += row['table_schema'] + '.'
-            key += row['table_name'] + '.' + row['column_name'] + '%type@'
+            key = '@' + row['table_name'] + '.' + row['column_name'] + '%type@'
             key = key.lower()
             value = row['column_type']
 
@@ -89,17 +68,7 @@ order by table_schema
         """
         Retrieves information about all stored routines in the current schema.
         """
-        query = """
-select ROUTINE_NAME           routine_name
-,      ROUTINE_TYPE           routine_type
-,      SQL_MODE               sql_mode
-,      CHARACTER_SET_CLIENT   character_set_client
-,      COLLATION_CONNECTION   collation_connection
-from  information_schema.ROUTINES
-where ROUTINE_SCHEMA = database()
-order by routine_name"""
-
-        rows = StaticDataLayer.execute_rows(query)
+        rows = MetadataDataLayer.get_routines()
         self._rdbms_old_metadata = {}
         for row in rows:
             self._rdbms_old_metadata[row['routine_name']] = row
@@ -109,12 +78,7 @@ order by routine_name"""
         """
         Gets the SQL mode in the order as preferred by MySQL.
         """
-        sql = "set sql_mode = {0!s}".format(self._sql_mode)
-        StaticDataLayer.execute_none(sql)
-
-        query = "select @@sql_mode;"
-        tmp = StaticDataLayer.execute_rows(query)
-        self._sql_mode = tmp[0]['@@sql_mode']
+        self._sql_mode = MetadataDataLayer.get_correct_sql_mode(self._sql_mode)
 
     # ------------------------------------------------------------------------------------------------------------------
     def _drop_obsolete_routines(self):
@@ -125,8 +89,7 @@ order by routine_name"""
         for routine_name, values in self._rdbms_old_metadata.items():
             if routine_name not in self._source_file_names:
                 print("Dropping {0!s} {1!s}".format(values['routine_type'], routine_name))
-                sql = "drop {0!s} if exists {1!s}".format(values['routine_type'], routine_name)
-                StaticDataLayer.execute_none(sql)
+                MetadataDataLayer.drop_stored_routine(values['routine_type'], routine_name)
 
     # ------------------------------------------------------------------------------------------------------------------
     def _read_configuration_file(self, config_filename: str):
