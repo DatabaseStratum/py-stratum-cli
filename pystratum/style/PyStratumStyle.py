@@ -42,6 +42,11 @@ class PyStratumStyle(CleoStyle):
 
     # ------------------------------------------------------------------------------------------------------------------
     def log_very_verbose(self, message):
+        """
+        Logs a message only when logging level is very verbose.
+
+        :param str|list[str] message: The message.
+        """
         if self.is_very_verbose():
             self.writeln(message)
 
