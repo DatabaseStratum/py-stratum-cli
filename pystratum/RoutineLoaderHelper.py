@@ -8,7 +8,6 @@ Licence MIT
 import abc
 import os
 import re
-import sys
 
 from pystratum.DocBlockReflection import DocBlockReflection
 
@@ -24,7 +23,8 @@ class RoutineLoaderHelper(metaclass=abc.ABCMeta):
                  routine_file_encoding,
                  pystratum_old_metadata,
                  replace_pairs,
-                 rdbms_old_metadata):
+                 rdbms_old_metadata,
+                 io):
         """
         Object constructor.
 
@@ -33,6 +33,7 @@ class RoutineLoaderHelper(metaclass=abc.ABCMeta):
         :param dict pystratum_old_metadata: The metadata of the stored routine from PyStratum.
         :param dict[str,str] replace_pairs: A map from placeholders to their actual values.
         :param dict rdbms_old_metadata: The old metadata of the stored routine from MS SQL Server.
+        :param pystratum.style.PyStratumStyle.PyStratumStyle io: The output decorator.
         """
 
         self._source_filename = routine_filename
@@ -173,6 +174,13 @@ class RoutineLoaderHelper(metaclass=abc.ABCMeta):
         :type: list
         """
 
+        self._io = io
+        """
+        The output decorator.
+
+        :type: pystratum.style.PyStratumStyle.PyStratumStyle
+        """
+
     # ------------------------------------------------------------------------------------------------------------------
     def load_stored_routine(self):
         """
@@ -229,7 +237,7 @@ class RoutineLoaderHelper(metaclass=abc.ABCMeta):
             return self._pystratum_metadata
 
         except Exception as e:
-            print('Error', e, file=sys.stderr)
+            self._io.error(e)
             return False
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -262,8 +270,8 @@ class RoutineLoaderHelper(metaclass=abc.ABCMeta):
             for tmp in matches:
                 placeholder = tmp[0]
                 if placeholder.lower() not in self._replace_pairs:
-                    print("Error: Unknown placeholder '%s' in file '%s'." % (placeholder, self._source_filename),
-                          file=sys.stderr)
+                    self._io.error("Unknown placeholder '{0}' in file <fso>{1}</fso>".
+                                   format(placeholder, self._source_filename))
                     ret = False
                 if placeholder not in placeholders:
                     placeholders.append(placeholder)

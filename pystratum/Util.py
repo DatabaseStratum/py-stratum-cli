@@ -15,7 +15,7 @@ class Util:
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def write_two_phases(filename, data):
+    def write_two_phases(filename, data, io):
         """
         Writes a file in two phase to the filesystem.
 
@@ -28,6 +28,7 @@ class Util:
 
         :param str filename: The name of the file were the data must be stored.
         :param str data: The data that must be written.
+        :param pystratum.style.PyStratumStyle.PyStratumStyle io: The output decorator.
         """
         write_flag = True
         if os.path.exists(filename):
@@ -41,6 +42,6 @@ class Util:
             with open(tmp_filename, 'w+') as file:
                 file.write(data)
             os.replace(tmp_filename, filename)
-            print("Wrote: '{0!s}'.".format(filename))
+            io.writeln('Wrote: <fso>{0}</fso>'.format(filename))
 
 # ----------------------------------------------------------------------------------------------------------------------

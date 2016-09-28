@@ -19,7 +19,12 @@ class RoutineWrapperGenerator:
     """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __init__(self):
+    def __init__(self, io):
+        """
+        Object constructor.
+
+        :param pystratum.style.PyStratumStyle.PyStratumStyle io: The output decorator.
+        """
         self._code = ''
         """
         The generated Python code buffer.
@@ -69,6 +74,13 @@ class RoutineWrapperGenerator:
         :type: str
         """
 
+        self._io = io
+        """
+        The output decorator.
+
+        :type: pystratum.style.PyStratumStyle.PyStratumStyle
+        """
+
     # ------------------------------------------------------------------------------------------------------------------
     def run(self, config_filename):
         """
@@ -89,11 +101,11 @@ class RoutineWrapperGenerator:
                 if routines[routine_name]['designation'] != 'hidden':
                     self._write_routine_function(routines[routine_name])
         else:
-            print("No files with stored routines found.")
+            self._io.error('No files with stored routines found')
 
         self._write_class_trailer()
 
-        Util.write_two_phases(self._wrapper_filename, self._code)
+        Util.write_two_phases(self._wrapper_filename, self._code, self._io)
 
         return 0
 

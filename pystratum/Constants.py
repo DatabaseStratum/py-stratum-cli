@@ -18,11 +18,12 @@ class Constants:
     """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __init__(self):
+    def __init__(self, io):
         """
         Object constructor.
-        """
 
+        :param pystratum.style.PyStratumStyle.PyStratumStyle io: The output decorator.
+        """
         self._constants = {}
         """
         All constants.
@@ -77,6 +78,13 @@ class Constants:
         All primary key labels, their widths and constant names.
 
         :type: dict
+        """
+
+        self._io = io
+        """
+        The output decorator.
+
+        :type: pystratum.style.PyStratumStyle.PyStratumStyle
         """
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -201,6 +209,6 @@ class Constants:
             content += "{0!s} = {1!s}\n".format(str(constant), str(value))
 
             # Save the configuration file.
-        Util.write_two_phases(self._config_filename, content)
+        Util.write_two_phases(self._config_filename, content, self._io)
 
 # ----------------------------------------------------------------------------------------------------------------------
