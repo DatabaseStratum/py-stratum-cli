@@ -82,7 +82,7 @@ class RoutineWrapperGenerator:
         """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def run(self, config_filename):
+    def main(self, config_filename):
         """
         The "main" of the wrapper generator. Returns 0 on success, 1 if one or more errors occurred.
 
@@ -92,6 +92,20 @@ class RoutineWrapperGenerator:
         """
         self._read_configuration_file(config_filename)
 
+        if self._wrapper_class_name:
+            self._io.title('Wrapper')
+
+            self.__generate_wrapper_class()
+        else:
+            self._io.log_verbose('Wrapper not enabled')
+
+        return 0
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def __generate_wrapper_class(self):
+        """
+        Generates the wrapper class.
+        """
         routines = self._read_routine_metadata()
 
         self._write_class_header()
@@ -106,8 +120,6 @@ class RoutineWrapperGenerator:
         self._write_class_trailer()
 
         Util.write_two_phases(self._wrapper_filename, self._code, self._io)
-
-        return 0
 
     # ------------------------------------------------------------------------------------------------------------------
     def _read_configuration_file(self, config_filename):

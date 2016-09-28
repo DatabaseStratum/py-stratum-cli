@@ -49,7 +49,7 @@ class WrapperCommand(Command):
         rdbms = config.get('database', 'rdbms').lower()
 
         wrapper = self.create_routine_wrapper_generator(rdbms)
-        wrapper.run(config_file)
+        wrapper.main(config_file)
 
     # ------------------------------------------------------------------------------------------------------------------
     def create_routine_wrapper_generator(self, rdbms):

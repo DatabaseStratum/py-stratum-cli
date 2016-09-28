@@ -34,14 +34,20 @@ class PyStratumCommand(Command):
         self.output = PyStratumStyle(self.input, self.output)
 
         command = self.get_application().find('constants')
-        command.execute(self.input, self.output)
+        ret = command.execute(self.input, self.output)
+        if ret:
+            return ret
 
         command = self.get_application().find('loader')
-        command.execute(self.input, self.output)
+        ret = command.execute(self.input, self.output)
+        if ret:
+            return ret
 
         command = self.get_application().find('wrapper')
-        command.execute(self.input, self.output)
+        ret = command.execute(self.input, self.output)
 
         self.output.writeln('')
+
+        return ret
 
 # ----------------------------------------------------------------------------------------------------------------------

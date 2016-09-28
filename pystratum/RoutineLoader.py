@@ -117,6 +117,8 @@ class RoutineLoader:
 
         :rtype: int The status of exit.
         """
+        self._io.title('Loader')
+
         if file_names:
             self._load_list(config_filename, file_names)
         else:
@@ -267,6 +269,8 @@ class RoutineLoader:
         """
         Loads all stored routines into the RDBMS instance instance.
         """
+        self._io.writeln('')
+
         for routine_name in sorted(self._source_file_names):
             if routine_name in self._pystratum_metadata:
                 old_metadata = self._pystratum_metadata[routine_name]
@@ -357,6 +361,7 @@ class RoutineLoader:
         Temp solution for replace constants.
         """
         if os.path.exists(self._constants_filename):
+            count = 0
             with open(self._constants_filename, 'r') as file:
                 for line in file:
                     if line.strip() != "\n":
@@ -370,5 +375,9 @@ class RoutineLoader:
                             if name in self._replace_pairs:
                                 raise Exception("Duplicate placeholder '%s'" % name)
                             self._replace_pairs[name] = value
+                    count += 1
+
+            self._io.writeln('Read {0} constants for substitution from <fso>{1}</fso>'.
+                             format(count, self._constants_filename))
 
 # ----------------------------------------------------------------------------------------------------------------------

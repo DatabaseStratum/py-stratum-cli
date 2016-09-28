@@ -112,18 +112,37 @@ class Constants:
         :rtype: int
         """
         self._read_configuration_file(config_filename)
-        self.connect()
-        self._get_old_columns()
-        self._get_columns()
-        self._enhance_columns()
-        self._merge_columns()
-        self._write_columns()
-        self._get_labels(regex)
-        self._fill_constants()
-        self._write_target_config_file()
-        self.disconnect()
+
+        if self._constants_filename:
+            self._io.title('Constants')
+
+            self.connect()
+            self._get_old_columns()
+            self._get_columns()
+            self._enhance_columns()
+            self._merge_columns()
+            self._write_columns()
+            self._get_labels(regex)
+            self._fill_constants()
+            self._write_target_config_file()
+            self.disconnect()
+            self.__log_number_of_constants()
+        else:
+            self._io.log_verbose('Constants not enabled')
 
         return 0
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def __log_number_of_constants(self):
+        """
+        Logs the number of constants generated.
+        """
+        n_id = len(self._labels)
+        n_widths = len(self._constants) - n_id
+
+        self._io.writeln('')
+        self._io.writeln('Number of constants based on column widths: {0}'.format(n_widths))
+        self._io.writeln('Number of constants based on database IDs : {0}'.format(n_id))
 
     # ------------------------------------------------------------------------------------------------------------------
     def _read_configuration_file(self, config_filename):

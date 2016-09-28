@@ -43,5 +43,7 @@ class Util:
                 file.write(data)
             os.replace(tmp_filename, filename)
             io.writeln('Wrote: <fso>{0}</fso>'.format(filename))
+        else:
+            io.writeln('File <fso>{0}</fso> is up to date'.format(filename))
 
 # ----------------------------------------------------------------------------------------------------------------------
