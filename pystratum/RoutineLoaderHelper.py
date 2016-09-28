@@ -10,8 +10,10 @@ import os
 import re
 import sys
 
+from pystratum.DocBlockReflection import DocBlockReflection
 
-class RoutineLoaderHelper:
+
+class RoutineLoaderHelper(metaclass=abc.ABCMeta):
     """
     Class for loading a single stored routine into a RDBMS instance from a (pseudo) SQL file.
     """
@@ -122,6 +124,20 @@ class RoutineLoaderHelper:
         :type: str
         """
 
+        self._doc_block_parts_source = dict()
+        """
+        All DocBlock parts as found in the source of the stored routine.
+
+        :type: dict
+        """
+
+        self._doc_block_parts_wrapper = dict()
+        """
+        The DocBlock parts to be used by the wrapper generator.
+
+        :type: dict
+        """
+
         self._columns_types = None
         """
         The column types of columns of the table for bulk insert of the stored routine.
@@ -140,7 +156,7 @@ class RoutineLoaderHelper:
         """
         The information about the parameters of the stored routine.
 
-        :type: list
+        :type: list[dict]
         """
 
         self._table_name = None
@@ -158,7 +174,7 @@ class RoutineLoaderHelper:
         """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def load_stored_routine(self) -> dict:
+    def load_stored_routine(self):
         """
         Loads the stored routine into the instance of MySQL.
 
@@ -205,6 +221,8 @@ class RoutineLoaderHelper:
                     self.get_bulk_insert_table_columns_info()
 
                 self._get_routine_parameters_info()
+
+                self.__get_doc_block_parts_wrapper()
 
                 self._update_metadata()
 
@@ -257,6 +275,7 @@ class RoutineLoaderHelper:
         return ret
 
     # ------------------------------------------------------------------------------------------------------------------
+    @abc.abstractmethod
     def _get_designation_type(self):
         """
         Extracts the designation type of the stored routine.
@@ -265,7 +284,110 @@ class RoutineLoaderHelper:
 
         :rtype: bool
         """
-        pass
+        raise NotImplementedError()
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @abc.abstractmethod
+    def _is_start_or_store_routine(self, line):
+        """
+        Returns True if a line is the start of the code of the stored routine.
+
+        :param str line: The line with source code of the stored routine.
+
+        :rtype: bool
+        """
+        raise NotImplementedError()
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def __get_doc_block_lines(self):
+        """
+        Returns the start and end line of the DOcBlock of the stored routine code.
+        """
+        line1 = None
+        line2 = None
+
+        i = 0
+        for line in self._routine_source_code_lines:
+            if re.match(r'\s*/\*\*', line):
+                line1 = i
+
+            if re.match(r'\s*\*/', line):
+                line2 = i
+
+            if self._is_start_or_store_routine(line):
+                break
+
+            i += 1
+
+        return line1, line2
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def __get_doc_block_parts_source(self):
+        """
+        Extracts the DocBlock (in parts) from the source of the stored routine source.
+        """
+        line1, line2 = self.__get_doc_block_lines()
+
+        if line1 is not None and line2 is not None and line1 <= line2:
+            doc_block = self._routine_source_code_lines[line1:line2 - line1 + 1]
+        else:
+            doc_block = list()
+
+        reflection = DocBlockReflection(doc_block)
+
+        self._doc_block_parts_source['description'] = reflection.get_description()
+
+        self._doc_block_parts_source['parameters'] = list()
+        for tag in reflection.get_tags('param'):
+            parts = re.match(r'^(@param)\s+(\w+)\s*(.+)?', tag, re.DOTALL)
+            if parts:
+                self._doc_block_parts_source['parameters'].append({'name':        parts.group(2),
+                                                                   'description': parts.group(3)})
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def __get_parameter_doc_description(self, name):
+        """
+        Returns the description by name of the parameter as found in the DocBlock of the stored routine.
+
+        :param str name: The name of the parameter.
+
+        :rtype: str
+        """
+        for param in self._doc_block_parts_source['parameters']:
+            if param['name'] == name:
+                return param['description']
+
+        return ''
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @abc.abstractmethod
+    def _get_data_type_helper(self):
+        """
+        Returns a data type helper object appropriate for the RDBMS.
+
+        :rtype: pystratum.helper.DataTypeHelper.DataTypeHelper
+        """
+        raise NotImplementedError()
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def __get_doc_block_parts_wrapper(self):
+        """
+        Generates the DocBlock parts to be used by the wrapper generator.
+        """
+        self.__get_doc_block_parts_source()
+
+        helper = self._get_data_type_helper()
+
+        parameters = list()
+        for parameter_info in self._parameters:
+            parameters.append(
+                {'parameter_name':       parameter_info['name'],
+                 'python_type':          helper.column_type_to_python_type(parameter_info),
+                 'data_type_descriptor': parameter_info['data_type_descriptor'],
+                 'description':          self.__get_parameter_doc_description(parameter_info['name'])})
+
+        self._doc_block_parts_wrapper['description'] = self._doc_block_parts_source['description']
+        self._doc_block_parts_wrapper['parameters'] = parameters
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
@@ -317,6 +439,7 @@ class RoutineLoaderHelper:
         self._pystratum_metadata['column_types'] = self._columns_types
         self._pystratum_metadata['timestamp'] = self._m_time
         self._pystratum_metadata['replace'] = self._replace
+        self._pystratum_metadata['pydoc'] = self._doc_block_parts_wrapper
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod

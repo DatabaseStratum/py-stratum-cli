@@ -17,6 +17,15 @@ class RowsWithIndexWrapper(Wrapper):
     """
 
     # ------------------------------------------------------------------------------------------------------------------
+    def _get_docstring_return_type(self):
+        """
+        Returns the return type of the wrapper methods the be used in the docstring.
+
+        :rtype: str
+        """
+        return 'dict'
+
+    # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
     def _write_execute_rows(self, routine):
         raise NotImplementedError()

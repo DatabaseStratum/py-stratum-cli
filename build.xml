@@ -61,6 +61,11 @@
         <exec command="pylint --rcfile pylintrc pystratum" passthru="true"/>
     </target>
 
+    <!-- Runs all unit tests-->
+    <target name="unit">
+        <exec command="python3 -m unittest discover -s test -p \*Test.py" passthru="true" checkreturn="true"/>
+    </target>
+
     <!-- Runs all unit tests for MySQL-->
     <target name="my-unit">
         <delete file="test/mysql/etc/routines.json" quiet="true"/>
