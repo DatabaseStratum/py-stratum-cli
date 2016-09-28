@@ -6,7 +6,6 @@ Copyright 2015-2016 Set Based IT Consultancy
 Licence MIT
 """
 import re
-import sys
 
 from pystratum.RoutineLoaderHelper import RoutineLoaderHelper
 from pystratum_mysql.MetadataDataLayer import MetadataDataLayer
@@ -27,7 +26,8 @@ class MySqlRoutineLoaderHelper(RoutineLoaderHelper):
                  rdbms_old_metadata,
                  sql_mode,
                  character_set,
-                 collate):
+                 collate,
+                 io):
         """
         Object constructor.
 
@@ -39,6 +39,7 @@ class MySqlRoutineLoaderHelper(RoutineLoaderHelper):
         :param str sql_mode: The SQL mode under which the stored routine must be loaded and run.
         :param str character_set: The default character set under which the stored routine must be loaded and run.
         :param str collate: The default collate under which the stored routine must be loaded and run.
+        :param pystratum.style.PyStratumStyle.PyStratumStyle io: The output decorator.
         """
 
         RoutineLoaderHelper.__init__(self,
@@ -46,7 +47,8 @@ class MySqlRoutineLoaderHelper(RoutineLoaderHelper):
                                      routine_file_encoding,
                                      pystratum_old_metadata,
                                      replace_pairs,
-                                     rdbms_old_metadata)
+                                     rdbms_old_metadata,
+                                     io)
 
         self._sql_mode = sql_mode
         """
@@ -117,14 +119,15 @@ class MySqlRoutineLoaderHelper(RoutineLoaderHelper):
             self._routine_type = matches[0][0].lower()
 
             if self._routine_name != matches[0][1]:
-                print("Error: Stored routine name '%s' does not match filename in file '%s'." % (
-                    matches[0][1], self._source_filename))
+                self._io.error('Stored routine name <dbo>{0}</dbo> does not match filename in file <fso>{1}</fso>'.
+                               format(matches[0][1], self._source_filename))
                 ret = False
         else:
             ret = False
 
         if not self._routine_type:
-            print("Error: Unable to find the stored routine name and type in file '%s'." % self._source_filename)
+            self._io.error('Unable to find the stored routine name and type in file <fso>{0}</fso>'.
+                           format(self._source_filename))
 
         return ret
 
@@ -153,7 +156,7 @@ class MySqlRoutineLoaderHelper(RoutineLoaderHelper):
         """
         Loads the stored routine into the MySQL instance.
         """
-        print("Loading %s %s" % (self._routine_type, self._routine_name))
+        self._io.writeln('Loading {0} <dbo>{1}</dbo>'.format(self._routine_type, self._routine_name))
 
         self._set_magic_constants()
 
@@ -237,8 +240,8 @@ class MySqlRoutineLoaderHelper(RoutineLoaderHelper):
                     info = n.findall(tmp)
 
                     if not info:
-                        print("Error: Expected: -- type: bulk_insert <table_name> <columns> in file '%s'." %
-                              self._source_filename, file=sys.stderr)
+                        self._io.error('Expected: -- type: bulk_insert <table_name> <columns> in file <fso>{0}</fso>'.
+                                       format(self._source_filename))
                     self._table_name = info[0][0]
                     self._columns = str(info[0][1]).split(',')
 
@@ -251,8 +254,8 @@ class MySqlRoutineLoaderHelper(RoutineLoaderHelper):
             ret = False
 
         if not ret:
-            print("Error: Unable to find the designation type of the stored routine in file '%s'." %
-                  self._source_filename, file=sys.stderr)
+            self._io.error("Unable to find the designation type of the stored routine in file <fso>{0}</fso>".
+                           format(self._source_filename))
 
         return ret
 

@@ -24,7 +24,7 @@ class MySqlRoutineLoader(MySqlConnection, RoutineLoader):
 
         :param pystratum.style.PyStratumStyle.PyStratumStyle io: The output decorator.
         """
-        RoutineLoader.__init__(self)
+        RoutineLoader.__init__(self, io)
         MySqlConnection.__init__(self, io)
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -61,7 +61,8 @@ class MySqlRoutineLoader(MySqlConnection, RoutineLoader):
                                         rdbms_old_metadata,
                                         self._sql_mode,
                                         self._character_set_client,
-                                        self._collation_connection)
+                                        self._collation_connection,
+                                        self._io)
 
     # ------------------------------------------------------------------------------------------------------------------
     def _get_old_stored_routine_info(self):
@@ -88,7 +89,7 @@ class MySqlRoutineLoader(MySqlConnection, RoutineLoader):
         """
         for routine_name, values in self._rdbms_old_metadata.items():
             if routine_name not in self._source_file_names:
-                print("Dropping {0!s} {1!s}".format(values['routine_type'], routine_name))
+                self._io.writeln("Dropping {0} <dbo>{1}</dbo>".format(values['routine_type'].lower(), routine_name))
                 MetadataDataLayer.drop_stored_routine(values['routine_type'], routine_name)
 
     # ------------------------------------------------------------------------------------------------------------------

@@ -24,7 +24,7 @@ class MySqlRoutineWrapperGenerator(MySqlConnection, RoutineWrapperGenerator):
         :param pystratum.style.PyStratumStyle.PyStratumStyle io: The output decorator.
         """
         MySqlConnection.__init__(self, io)
-        RoutineWrapperGenerator.__init__(self)
+        RoutineWrapperGenerator.__init__(self, io)
 
     # ------------------------------------------------------------------------------------------------------------------
     def _read_configuration_file(self, config_filename):

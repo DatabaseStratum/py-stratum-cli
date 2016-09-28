@@ -26,7 +26,7 @@ class MySqlConstants(MySqlConnection, Constants):
 
         :param pystratum.style.PyStratumStyle.PyStratumStyle io: The output decorator.
         """
-        Constants.__init__(self)
+        Constants.__init__(self, io)
         MySqlConnection.__init__(self, io)
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -126,8 +126,8 @@ class MySqlConstants(MySqlConnection, Constants):
                             self._columns[table_name][column_name]['constant_name'] = column['constant_name']
                         except KeyError:
                             # Either the column or table is not present anymore.
-                            print('Dropping constant {0} because column is not present anymore'.
-                                  format(column['constant_name']))
+                            self._io.warning('Dropping constant {0} because column is not present anymore'.
+                                             format(column['constant_name']))
 
     # ------------------------------------------------------------------------------------------------------------------
     def _write_columns(self):
@@ -163,7 +163,7 @@ class MySqlConstants(MySqlConnection, Constants):
             content += "\n"
 
         # Save the columns, width and constants to the filesystem.
-        Util.write_two_phases(self._constants_filename, content)
+        Util.write_two_phases(self._constants_filename, content, self._io)
 
     # ------------------------------------------------------------------------------------------------------------------
     def _get_labels(self, regex):
