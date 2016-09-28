@@ -80,14 +80,12 @@ and   TABLE_NAME   = '{0}'""".format(table_name)
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def connect(config=StaticDataLayer.config):
+    def connect():
         """
         Connects to a MySQL instance.
-
-        :param dict config: The connection parameters.
         """
         MetadataDataLayer.__dl = StaticDataLayer()
-        MetadataDataLayer.__dl.connect(config)
+        MetadataDataLayer.__dl.connect()
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -111,8 +109,7 @@ and   TABLE_NAME   = '{0}'""".format(table_name)
         """
         MetadataDataLayer.__dl.disconnect()
 
-        # ------------------------------------------------------------------------------------------------------------------
-
+    # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
     def drop_stored_routine(routine_type, routine_name):
         """
