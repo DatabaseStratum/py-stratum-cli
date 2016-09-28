@@ -112,8 +112,8 @@ class MySqlRoutineLoaderHelper(RoutineLoaderHelper):
         :rtype: bool
         """
         ret = True
-        p = re.compile("create\\s+(procedure|function)\\s+([a-zA-Z0-9_]+)")
-        matches = p.findall(self._routine_source_code)
+        prog = re.compile("create\\s+(procedure|function)\\s+([a-zA-Z0-9_]+)")
+        matches = prog.findall(self._routine_source_code)
 
         if matches:
             self._routine_type = matches[0][0].lower()
@@ -200,8 +200,8 @@ class MySqlRoutineLoaderHelper(RoutineLoaderHelper):
 
         n1 = 0
         for column in columns:
-            p = re.compile('(\\w+)')
-            c_type = p.findall(column['Type'])
+            prog = re.compile('(\\w+)')
+            c_type = prog.findall(column['Type'])
             tmp_column_types.append(c_type[0])
             tmp_fields.append(column['Field'])
             n1 += 1
@@ -229,8 +229,8 @@ class MySqlRoutineLoaderHelper(RoutineLoaderHelper):
         key = self._routine_source_code_lines.index('begin')
 
         if key != -1:
-            p = re.compile(r'\s*--\s+type:\s*(\w+)\s*(.+)?\s*')
-            matches = p.findall(self._routine_source_code_lines[key - 1])
+            prog = re.compile(r'\s*--\s+type:\s*(\w+)\s*(.+)?\s*')
+            matches = prog.findall(self._routine_source_code_lines[key - 1])
 
             if matches:
                 self._designation_type = matches[0][0]
@@ -261,6 +261,9 @@ class MySqlRoutineLoaderHelper(RoutineLoaderHelper):
 
     # ------------------------------------------------------------------------------------------------------------------
     def _get_routine_parameters_info(self):
+        """
+        Retrieves information about the stored routine parameters from the meta data of MySQL.
+        """
         routine_parameters = MetadataDataLayer.get_routine_parameters(self._routine_name)
 
         for routine_parameter in routine_parameters:

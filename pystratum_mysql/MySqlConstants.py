@@ -41,9 +41,9 @@ class MySqlConstants(MySqlConnection, Constants):
                 for line in file:
                     line_number += 1
                     if line != "\n":
-                        p = re.compile(r'\s*(?:([a-zA-Z0-9_]+)\.)?([a-zA-Z0-9_]+)\.'
-                                       r'([a-zA-Z0-9_]+)\s+(\d+)\s*(\*|[a-zA-Z0-9_]+)?\s*')
-                        matches = p.findall(line)
+                        prog = re.compile(r'\s*(?:([a-zA-Z0-9_]+)\.)?([a-zA-Z0-9_]+)\.'
+                                          r'([a-zA-Z0-9_]+)\s+(\d+)\s*(\*|[a-zA-Z0-9_]+)?\s*')
+                        matches = prog.findall(line)
 
                         if matches:
                             matches = matches[0]
@@ -73,6 +73,10 @@ class MySqlConstants(MySqlConnection, Constants):
                                     self._old_columns[table_name][column_name] = column_info
                             else:
                                 self._old_columns[table_name] = {column_name: column_info}
+
+                        else:
+                            raise RuntimeError("Illegal format at line {0} in file {1}".
+                                               format(line_number, self._constants_filename))
 
     # ------------------------------------------------------------------------------------------------------------------
     def _get_columns(self):
@@ -136,7 +140,7 @@ class MySqlConstants(MySqlConnection, Constants):
         constants_filename.
         """
         content = ''
-        for table_name, table in sorted(self._columns.items()):
+        for _, table in sorted(self._columns.items()):
             width1 = 0
             width2 = 0
 
@@ -146,7 +150,7 @@ class MySqlConstants(MySqlConnection, Constants):
                 width1 = max(len(str(column['column_name'])), width1)
                 width2 = max(len(str(column['length'])), width2)
 
-            for ord_position, column_name in sorted(key_map.items()):
+            for _, column_name in sorted(key_map.items()):
                 if table[column_name]['length'] is not None:
                     if 'constant_name' in table[column_name]:
                         line_format = "%s.%-{0:d}s %{1:d}d %s\n".format(int(width1), int(width2))
@@ -184,7 +188,7 @@ class MySqlConstants(MySqlConnection, Constants):
         Merges columns and labels (i.e. all known constants) into constants.
         """
         for table_name, table in sorted(self._columns.items()):
-            for column_name, column in sorted(table.items()):
+            for _, column in sorted(table.items()):
                 if 'constant_name' in column:
                     self._constants[column['constant_name']] = column['length']
 

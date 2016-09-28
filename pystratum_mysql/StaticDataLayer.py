@@ -61,14 +61,12 @@ class StaticDataLayer:
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def connect(config=config):
+    def connect():
         """
         Connects to a MySQL instance. See http://dev.mysql.com/doc/connector-python/en/connector-python-connectargs.html
         for a complete overview of all possible keys in config.
-
-        :param dict config: The connection parameters.
         """
-        StaticDataLayer.connection = MySQLConnection(**config)
+        StaticDataLayer.connection = MySQLConnection(**StaticDataLayer.config)
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -140,16 +138,16 @@ class StaticDataLayer:
         """
         cursor = MySQLCursorBuffered(StaticDataLayer.connection)
         cursor.execute(sql, params)
-        n = cursor.rowcount
-        if n == 1:
+        rowcount = cursor.rowcount
+        if rowcount == 1:
             ret = cursor.fetchone()[0]
         else:
             ret = None  # Keep our IDE happy.
         cursor.close()
 
-        if n != 1:
+        if rowcount != 1:
             raise DataError("Number of rows selected by query below is %d. Expected 1.\n%s" %
-                            (n, sql))
+                            (rowcount, sql))
 
         return ret
 
@@ -167,7 +165,7 @@ class StaticDataLayer:
         cursor = MySQLCursorBuffered(StaticDataLayer.connection)
         itr = cursor.execute(sql, params, multi=True)
 
-        n = 0
+        rowcount = 0
         try:
             for result in itr:
                 rows = result.fetchall()
@@ -178,13 +176,13 @@ class StaticDataLayer:
                         for field in row:
                             print(' %s' % field, end='')
                         print('', flush=StaticDataLayer.line_buffered)
-                        n += 1
+                        rowcount += 1
         except InterfaceError:
             pass
 
         cursor.close()
 
-        return n
+        return rowcount
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -200,10 +198,10 @@ class StaticDataLayer:
         cursor = MySQLCursor(StaticDataLayer.connection)
         itr = cursor.execute(sql, params, multi=True)
         result = itr.__next__()
-        n = result.rowcount
+        rowcount = result.rowcount
         cursor.close()
 
-        return n
+        return rowcount
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -219,17 +217,17 @@ class StaticDataLayer:
         cursor = MySQLCursorBufferedDict(StaticDataLayer.connection)
         itr = cursor.execute(sql, params, multi=True)
         result = itr.__next__()
-        n = result.rowcount
-        if n == 1:
+        rowcount = result.rowcount
+        if rowcount == 1:
             ret = result.fetchone()
         else:
             ret = None
         itr.__next__()
         cursor.close()
 
-        if not (n == 0 or n == 1):
+        if not (rowcount == 0 or rowcount == 1):
             raise DataError("Number of rows selected by query below is %d. Expected 0 or 1.\n%s" %
-                            (n, sql))
+                            (rowcount, sql))
 
         return ret
 
@@ -247,17 +245,17 @@ class StaticDataLayer:
         cursor = MySQLCursorBufferedDict(StaticDataLayer.connection)
         itr = cursor.execute(sql, params, multi=True)
         result = itr.__next__()
-        n = result.rowcount
-        if n == 1:
+        rowcount = result.rowcount
+        if rowcount == 1:
             ret = result.fetchone()
         else:
             ret = None  # Keep our IDE happy.
         itr.__next__()
         cursor.close()
 
-        if n != 1:
+        if rowcount != 1:
             raise DataError("Number of rows selected by query below is %d. Expected 1.\n%s" %
-                            (n, sql))
+                            (rowcount, sql))
 
         return ret
 
@@ -295,17 +293,17 @@ class StaticDataLayer:
         cursor = MySQLCursorBuffered(StaticDataLayer.connection)
         itr = cursor.execute(sql, params, multi=True)
         result = itr.__next__()
-        n = result.rowcount
-        if n == 1:
+        rowcount = result.rowcount
+        if rowcount == 1:
             ret = result.fetchone()[0]
         else:
             ret = None
         itr.__next__()
         cursor.close()
 
-        if not (n == 0 or n == 1):
+        if not (rowcount == 0 or rowcount == 1):
             raise DataError("Number of rows selected by query below is %d. Expected 0 or 1.\n%s" %
-                            (n, sql))
+                            (rowcount, sql))
 
         return ret
 
@@ -324,17 +322,17 @@ class StaticDataLayer:
         cursor = MySQLCursorBuffered(StaticDataLayer.connection)
         itr = cursor.execute(sql, params, multi=True)
         result = itr.__next__()
-        n = result.rowcount
-        if n == 1:
+        rowcount = result.rowcount
+        if rowcount == 1:
             ret = result.fetchone()[0]
         else:
             ret = None  # Keep our IDE happy.
         itr.__next__()
         cursor.close()
 
-        if n != 1:
+        if rowcount != 1:
             raise DataError("Number of rows selected by query below is %d. Expected 1.\n%s" %
-                            (n, sql))
+                            (rowcount, sql))
 
         return ret
 
