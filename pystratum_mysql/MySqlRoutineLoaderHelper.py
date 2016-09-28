@@ -11,7 +11,7 @@ import sys
 from pystratum.RoutineLoaderHelper import RoutineLoaderHelper
 
 from pystratum_mysql.StaticDataLayer import StaticDataLayer
-from pystratum_mysql.helper.DataTypeHelper import MySqlDataTypeHelper
+from pystratum_mysql.helper.MySqlDataTypeHelper import MySqlDataTypeHelper
 
 
 class MySqlRoutineLoaderHelper(RoutineLoaderHelper):
@@ -132,7 +132,7 @@ class MySqlRoutineLoaderHelper(RoutineLoaderHelper):
     # ------------------------------------------------------------------------------------------------------------------
     def _get_data_type_helper(self):
         """
-        Returns a data type helper object appropriate for the RDBMS.
+        Returns a data type helper object for MySQL.
 
         :rtype: pystratum.helper.DataTypeHelper.DataTypeHelper
         """

@@ -11,7 +11,7 @@ from pystratum.helper.DataTypeHelper import DataTypeHelper
 
 class MySqlDataTypeHelper(DataTypeHelper):
     """
-    Utility class for deriving information based on a DBMS native data type.
+    Utility class for deriving information based on a MySQL data type.
     """
 
     # ------------------------------------------------------------------------------------------------------------------
