@@ -66,14 +66,6 @@ class MySqlWrapper(Wrapper):
         return has_lob
 
     # ------------------------------------------------------------------------------------------------------------------
-    @abc.abstractmethod
-    def _write_result_handler(self, routine):
-        """
-        Generates code for calling the stored routine in the wrapper method.
-        """
-        raise NotImplementedError()
-
-    # ------------------------------------------------------------------------------------------------------------------
     def _generate_command(self, routine):
         """
         Generates SQL statement for calling a stored routine.

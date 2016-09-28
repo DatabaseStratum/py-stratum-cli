@@ -1,13 +1,13 @@
-from pystratum_mysql.wrapper.FunctionsWrapper import FunctionsWrapper
-from pystratum_mysql.wrapper.LogWrapper import LogWrapper
-from pystratum_mysql.wrapper.NoneWrapper import NoneWrapper
-from pystratum_mysql.wrapper.Row0Wrapper import Row0Wrapper
-from pystratum_mysql.wrapper.Row1Wrapper import Row1Wrapper
-from pystratum_mysql.wrapper.RowsWithIndexWrapper import RowsWithIndexWrapper
-from pystratum_mysql.wrapper.RowsWithKeyWrapper import RowsWithKeyWrapper
-from pystratum_mysql.wrapper.RowsWrapper import RowsWrapper
-from pystratum_mysql.wrapper.Singleton0Wrapper import Singleton0Wrapper
-from pystratum_mysql.wrapper.Singleton1Wrapper import Singleton1Wrapper
+from pystratum_mysql.wrapper.MySqlFunctionsWrapper import MySqlFunctionsWrapper
+from pystratum_mysql.wrapper.MySqlLogWrapper import MySqlLogWrapper
+from pystratum_mysql.wrapper.MySqlNoneWrapper import MySqlNoneWrapper
+from pystratum_mysql.wrapper.MySqlRow0Wrapper import MySqlRow0Wrapper
+from pystratum_mysql.wrapper.MySqlRow1Wrapper import MySqlRow1Wrapper
+from pystratum_mysql.wrapper.MySqlRowsWithIndexWrapper import MySqlRowsWithIndexWrapper
+from pystratum_mysql.wrapper.MySqlRowsWithKeyWrapper import MySqlRowsWithKeyWrapper
+from pystratum_mysql.wrapper.MySqlRowsWrapper import MySqlRowsWrapper
+from pystratum_mysql.wrapper.MySqlSingleton0Wrapper import MySqlSingleton0Wrapper
+from pystratum_mysql.wrapper.MySqlSingleton1Wrapper import MySqlSingleton1Wrapper
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -21,27 +21,27 @@ def create_routine_wrapper(routine, lob_as_string_flag):
     :rtype: pystratum_mysql.wrapper.MySqlWrapper.MySqlWrapper
     """
     if routine['designation'] == 'none':
-        wrapper = NoneWrapper(routine, lob_as_string_flag)
+        wrapper = MySqlNoneWrapper(routine, lob_as_string_flag)
     elif routine['designation'] == 'row0':
-        wrapper = Row0Wrapper(routine, lob_as_string_flag)
+        wrapper = MySqlRow0Wrapper(routine, lob_as_string_flag)
     elif routine['designation'] == 'row1':
-        wrapper = Row1Wrapper(routine, lob_as_string_flag)
+        wrapper = MySqlRow1Wrapper(routine, lob_as_string_flag)
     elif routine['designation'] == 'rows':
-        wrapper = RowsWrapper(routine, lob_as_string_flag)
+        wrapper = MySqlRowsWrapper(routine, lob_as_string_flag)
     elif routine['designation'] == 'rows_with_index':
-        wrapper = RowsWithIndexWrapper(routine, lob_as_string_flag)
+        wrapper = MySqlRowsWithIndexWrapper(routine, lob_as_string_flag)
     elif routine['designation'] == 'rows_with_key':
-        wrapper = RowsWithKeyWrapper(routine, lob_as_string_flag)
+        wrapper = MySqlRowsWithKeyWrapper(routine, lob_as_string_flag)
     elif routine['designation'] == 'singleton0':
-        wrapper = Singleton0Wrapper(routine, lob_as_string_flag)
+        wrapper = MySqlSingleton0Wrapper(routine, lob_as_string_flag)
     elif routine['designation'] == 'singleton1':
-        wrapper = Singleton1Wrapper(routine, lob_as_string_flag)
+        wrapper = MySqlSingleton1Wrapper(routine, lob_as_string_flag)
     elif routine['designation'] == 'function':
-        wrapper = FunctionsWrapper(routine, lob_as_string_flag)
+        wrapper = MySqlFunctionsWrapper(routine, lob_as_string_flag)
     elif routine['designation'] == 'log':
-        wrapper = LogWrapper(routine, lob_as_string_flag)
+        wrapper = MySqlLogWrapper(routine, lob_as_string_flag)
     # elif routine['designation'] == 'table':
-    #    wrapper = TableWrapper(routine, lob_as_string_flag)
+    #    wrapper = MySqlTableWrapper(routine, lob_as_string_flag)
     # elif routine['designation'] == 'bulk':
     #    wrapper = BulkWrapper(routine, lob_as_string_flag)
     # elif routine['designation'] == 'bulk_insert':

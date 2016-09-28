@@ -6,13 +6,13 @@ Copyright 2015-2016 Set Based IT Consultancy
 Licence MIT
 """
 from pystratum_mysql.wrapper.MySqlWrapper import MySqlWrapper
-from pystratum.wrapper.RowsWithIndexWrapper import RowsWithIndexWrapper as BaseRowsWithIndexWrapper
+from pystratum.wrapper.RowsWithKeyWrapper import RowsWithKeyWrapper
 
 
-class RowsWithIndexWrapper(BaseRowsWithIndexWrapper, MySqlWrapper):
+class MySqlRowsWithKeyWrapper(RowsWithKeyWrapper, MySqlWrapper):
     """
     Wrapper method generator for stored procedures whose result set must be returned using tree structure using a
-    combination of non-unique columns.
+    combination of unique columns.
     """
 
     # ------------------------------------------------------------------------------------------------------------------

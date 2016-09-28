@@ -11,6 +11,7 @@ import sys
 from pystratum.RoutineLoaderHelper import RoutineLoaderHelper
 
 from pystratum_mysql.StaticDataLayer import StaticDataLayer
+from pystratum_mysql.helper.DataTypeHelper import MySqlDataTypeHelper
 
 
 class MySqlRoutineLoaderHelper(RoutineLoaderHelper):
@@ -127,6 +128,26 @@ class MySqlRoutineLoaderHelper(RoutineLoaderHelper):
             print("Error: Unable to find the stored routine name and type in file '%s'." % self._source_filename)
 
         return ret
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def _get_data_type_helper(self):
+        """
+        Returns a data type helper object appropriate for the RDBMS.
+
+        :rtype: pystratum.helper.DataTypeHelper.DataTypeHelper
+        """
+        return MySqlDataTypeHelper()
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def _is_start_or_store_routine(self, line):
+        """
+        Returns True if a line is the start of the code of the stored routine.
+
+        :param str line: The line with source code of the stored routine.
+
+        :rtype: bool
+        """
+        return re.match(r'^\s*create\s+(procedure|function)', line) is not None
 
     # ------------------------------------------------------------------------------------------------------------------
     def _load_routine_file(self):
@@ -252,6 +273,8 @@ and   TABLE_NAME   = '%s'""" % self._table_name
         query = """
 select t2.PARAMETER_NAME      parameter_name
 ,      t2.DATA_TYPE           parameter_type
+,      t2.NUMERIC_PRECISION   numeric_precision
+,      t2.NUMERIC_SCALE       numeric_scale
 ,      t2.DTD_IDENTIFIER      column_type
 ,      t2.CHARACTER_SET_NAME  character_set_name
 ,      t2.COLLATION_NAME      collation
@@ -274,9 +297,11 @@ and   t1.ROUTINE_NAME   = '%s'""" % self._routine_name
                     if routine_parameter['character_set_name']:
                         value += ' collation %s' % routine_parameter['collation']
 
-                self._parameters.append({'name': routine_parameter     ['parameter_name'],
-                                         'data_type': routine_parameter['parameter_type'],
-                                         'data_type_descriptor':       value})
+                self._parameters.append({'name': routine_parameter             ['parameter_name'],
+                                         'data_type': routine_parameter        ['parameter_type'],
+                                         'numeric_precision': routine_parameter['numeric_precision'],
+                                         'numeric_scale': routine_parameter    ['numeric_scale'],
+                                         'data_type_descriptor':               value})
 
     # ------------------------------------------------------------------------------------------------------------------
     def _drop_routine(self):
