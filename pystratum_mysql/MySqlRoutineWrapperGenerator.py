@@ -16,11 +16,14 @@ class MySqlRoutineWrapperGenerator(MySqlConnection, RoutineWrapperGenerator):
     Class for generating a class with wrapper methods for calling stored routines in a MySQL database.
     """
 
-    def __init__(self):
+    # ------------------------------------------------------------------------------------------------------------------
+    def __init__(self, io):
         """
         Object constructor.
+
+        :param pystratum.style.PyStratumStyle.PyStratumStyle io: The output decorator.
         """
-        MySqlConnection.__init__(self)
+        MySqlConnection.__init__(self, io)
         RoutineWrapperGenerator.__init__(self)
 
     # ------------------------------------------------------------------------------------------------------------------

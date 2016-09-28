@@ -9,8 +9,7 @@ import re
 import sys
 
 from pystratum.RoutineLoaderHelper import RoutineLoaderHelper
-
-from pystratum_mysql.StaticDataLayer import StaticDataLayer
+from pystratum_mysql.MetadataDataLayer import MetadataDataLayer
 from pystratum_mysql.helper.MySqlDataTypeHelper import MySqlDataTypeHelper
 
 
@@ -175,33 +174,23 @@ class MySqlRoutineLoaderHelper(RoutineLoaderHelper):
         self._unset_magic_constants()
         self._drop_routine()
 
-        sql = "set sql_mode ='%s'" % self._sql_mode
-        StaticDataLayer.execute_none(sql)
+        MetadataDataLayer.set_sql_mode(self._sql_mode)
 
-        sql = "set names '%s' collate '%s'" % (self._character_set, self._collate)
-        StaticDataLayer.execute_none(sql)
+        MetadataDataLayer.set_character_set(self._character_set, self._collate)
 
-        StaticDataLayer.execute_none(routine_source)
+        MetadataDataLayer.execute_none(routine_source)
 
     # ------------------------------------------------------------------------------------------------------------------
     def get_bulk_insert_table_columns_info(self):
         """
         Gets the column names and column types of the current table for bulk insert.
         """
-        query = """
-select 1 from
-information_schema.TABLES
-where TABLE_SCHEMA = database()
-and   TABLE_NAME   = '%s'""" % self._table_name
+        table_is_non_temporary = MetadataDataLayer.check_table_exists(self._table_name)
 
-        table_is_non_temporary = StaticDataLayer.execute_rows(query)
+        if not table_is_non_temporary:
+            MetadataDataLayer.call_stored_routine(self._routine_name)
 
-        if len(table_is_non_temporary) == 0:
-            query = 'call %s()' % self._routine_name
-            StaticDataLayer.execute_sp_none(query)
-
-        query = "describe `%s`" % self._table_name
-        columns = StaticDataLayer.execute_rows(query)
+        columns = MetadataDataLayer.describe_table(self._table_name)
 
         tmp_column_types = []
         tmp_fields = []
@@ -216,9 +205,8 @@ and   TABLE_NAME   = '%s'""" % self._table_name
 
         n2 = len(self._columns)
 
-        if len(table_is_non_temporary) == 0:
-            query = "drop temporary table `%s`" % self._table_name
-            StaticDataLayer.execute_none(query)
+        if not table_is_non_temporary:
+            MetadataDataLayer.drop_temporary_table(self._table_name)
 
         if n1 != n2:
             raise Exception("Number of fields %d and number of columns %d don't match." % (n1, n2))
@@ -270,22 +258,7 @@ and   TABLE_NAME   = '%s'""" % self._table_name
 
     # ------------------------------------------------------------------------------------------------------------------
     def _get_routine_parameters_info(self):
-        query = """
-select t2.PARAMETER_NAME      parameter_name
-,      t2.DATA_TYPE           parameter_type
-,      t2.NUMERIC_PRECISION   numeric_precision
-,      t2.NUMERIC_SCALE       numeric_scale
-,      t2.DTD_IDENTIFIER      column_type
-,      t2.CHARACTER_SET_NAME  character_set_name
-,      t2.COLLATION_NAME      collation
-from            information_schema.ROUTINES   t1
-left outer join information_schema.PARAMETERS t2  on  t2.SPECIFIC_SCHEMA = t1.ROUTINE_SCHEMA and
-                                                      t2.SPECIFIC_NAME   = t1.ROUTINE_NAME and
-                                                      t2.PARAMETER_MODE   is not null
-where t1.ROUTINE_SCHEMA = database()
-and   t1.ROUTINE_NAME   = '%s'""" % self._routine_name
-
-        routine_parameters = StaticDataLayer.execute_rows(query)
+        routine_parameters = MetadataDataLayer.get_routine_parameters(self._routine_name)
 
         for routine_parameter in routine_parameters:
             if routine_parameter['parameter_name']:
@@ -309,7 +282,6 @@ and   t1.ROUTINE_NAME   = '%s'""" % self._routine_name
         Drops the stored routine if it exists.
         """
         if self._rdbms_old_metadata:
-            sql = "drop %s if exists %s" % (self._rdbms_old_metadata['routine_type'], self._routine_name)
-            StaticDataLayer.execute_none(sql)
+            MetadataDataLayer.drop_stored_routine(self._rdbms_old_metadata['routine_type'], self._routine_name)
 
 # ----------------------------------------------------------------------------------------------------------------------

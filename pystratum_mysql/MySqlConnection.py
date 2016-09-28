@@ -6,6 +6,7 @@ Copyright 2015-2016 Set Based IT Consultancy
 Licence MIT
 """
 from pystratum import Connection
+from pystratum_mysql.MetadataDataLayer import MetadataDataLayer
 
 from pystratum_mysql.StaticDataLayer import StaticDataLayer
 
@@ -16,7 +17,12 @@ class MySqlConnection(Connection.Connection):
     """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __init__(self):
+    def __init__(self, io):
+        """
+        Object constructor.
+
+        :param pystratum.style.PyStratumStyle.PyStratumStyle io: The output decorator.
+        """
         self._host = None
         """
         The hostname of the MySQL instance.
@@ -73,6 +79,13 @@ class MySqlConnection(Connection.Connection):
         :type: str
         """
 
+        self.io = io
+        """
+        The output decorator.
+
+        :type: pystratum.style.PyStratumStyle.PyStratumStyle
+        """
+
     # ------------------------------------------------------------------------------------------------------------------
     def connect(self):
         """
@@ -87,7 +100,8 @@ class MySqlConnection(Connection.Connection):
         StaticDataLayer.config['collation'] = self._collation_connection
         StaticDataLayer.config['sql_mode'] = self._sql_mode
 
-        StaticDataLayer.connect()
+        MetadataDataLayer.io = self.io
+        MetadataDataLayer.connect()
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -95,7 +109,7 @@ class MySqlConnection(Connection.Connection):
         """
         Disconnects from the MySQL instance.
         """
-        StaticDataLayer.disconnect()
+        MetadataDataLayer.disconnect()
 
     # ------------------------------------------------------------------------------------------------------------------
     def _read_configuration_file(self, config_filename):

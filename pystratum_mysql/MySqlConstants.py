@@ -10,9 +10,8 @@ import re
 
 from pystratum.Constants import Constants
 from pystratum.Util import Util
-
+from pystratum_mysql.MetadataDataLayer import MetadataDataLayer
 from pystratum_mysql.MySqlConnection import MySqlConnection
-from pystratum_mysql.StaticDataLayer import StaticDataLayer
 
 
 class MySqlConstants(MySqlConnection, Constants):
@@ -21,12 +20,14 @@ class MySqlConstants(MySqlConnection, Constants):
     """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __init__(self):
+    def __init__(self, io):
         """
         Object constructor.
+
+        :param pystratum.style.PyStratumStyle.PyStratumStyle io: The output decorator.
         """
         Constants.__init__(self)
-        MySqlConnection.__init__(self)
+        MySqlConnection.__init__(self, io)
 
     # ------------------------------------------------------------------------------------------------------------------
     def _get_old_columns(self):
@@ -76,44 +77,9 @@ class MySqlConstants(MySqlConnection, Constants):
     # ------------------------------------------------------------------------------------------------------------------
     def _get_columns(self):
         """
-        Retrieves metadata all columns in the MySQL schema.
+        Retrieves metadata about all table columns in the MySQL schema.
         """
-        query = """
-(
-  select table_name
-  ,      column_name
-  ,      data_type
-  ,      character_maximum_length
-  ,      numeric_precision
-  ,      ordinal_position
-  from   information_schema.COLUMNS
-  where  table_schema = database()
-  and    table_name  rlike '^[a-zA-Z0-9_]*$'
-  and    column_name rlike '^[a-zA-Z0-9_]*$'
-  order by table_name
-  ,        ordinal_position
-)
-
-union all
-
-(
-  select concat(table_schema,'.',table_name) table_name
-  ,      column_name
-  ,      data_type
-  ,      character_maximum_length
-  ,      numeric_precision
-  ,      ordinal_position
-  from   information_schema.COLUMNS
-  where  table_name  rlike '^[a-zA-Z0-9_]*$'
-  and    column_name rlike '^[a-zA-Z0-9_]*$'
-  order by table_schema
-  ,        table_name
-  ,        ordinal_position
-)
-"""
-
-        rows = StaticDataLayer.execute_rows(query)
-
+        rows = MetadataDataLayer.get_all_table_columns()
         for row in rows:
             # Enhance row with the actual length of the column.
             row['length'] = self.derive_field_length(row)
@@ -160,7 +126,7 @@ union all
                             self._columns[table_name][column_name]['constant_name'] = column['constant_name']
                         except KeyError:
                             # Either the column or table is not present anymore.
-                            print('Dropping constant {1} because column is not present anymore'.
+                            print('Dropping constant {0} because column is not present anymore'.
                                   format(column['constant_name']))
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -206,30 +172,9 @@ union all
 
         :param str regex: The regular expression for columns which we want to use.
         """
-        query_string = """
-select t1.TABLE_NAME  table_name
-,      t1.COLUMN_NAME id
-,      t2.COLUMN_NAME label
-from       information_schema.COLUMNS t1
-inner join information_schema.COLUMNS t2 on t1.TABLE_NAME = t2.TABLE_NAME
-where t1.TABLE_SCHEMA = database()
-and   t1.EXTRA        = 'auto_increment'
-and   t2.TABLE_SCHEMA = database()
-and   t2.COLUMN_NAME rlike '{0}'""".format(regex)
-
-        tables = StaticDataLayer.execute_rows(query_string)
-
+        tables = MetadataDataLayer.get_label_tables(regex)
         for table in tables:
-            query_string = """
-select `{0!s}`  as `id`
-,      `{1!s}`  as `label`
-from   `{2!s}`
-where   nullif(`{3!s}`,'') is not null""".format(table['id'],
-                                                 table['label'],
-                                                 table['table_name'],
-                                                 table['label'])
-
-            rows = StaticDataLayer.execute_rows(query_string)
+            rows = MetadataDataLayer.get_labels_from_table(table['table_name'], table['id'], table['label'])
             for row in rows:
                 self._labels[row['label']] = row['id']
 
