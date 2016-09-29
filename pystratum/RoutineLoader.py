@@ -377,7 +377,7 @@ class RoutineLoader:
                             self._replace_pairs[name] = value
                     count += 1
 
-            self._io.writeln('Read {0} constants for substitution from <fso>{1}</fso>'.
+            self._io.text('Read {0} constants for substitution from <fso>{1}</fso>'.
                              format(count, self._constants_filename))
 
 # ----------------------------------------------------------------------------------------------------------------------

@@ -9,6 +9,8 @@ import abc
 import os
 import re
 
+import math
+
 from pystratum.DocBlockReflection import DocBlockReflection
 
 
@@ -237,8 +239,19 @@ class RoutineLoaderHelper(metaclass=abc.ABCMeta):
             return self._pystratum_metadata
 
         except Exception as exception:
-            self._io.error(exception)
+            self._log_exception(exception)
             return False
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def _log_exception(self, exception):
+        """
+        Logs an exception.
+
+        :param Exception exception: The exception.
+
+        :rtype: None
+        """
+        self._io.error(str(exception).strip().split(os.linesep))
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
@@ -484,5 +497,26 @@ class RoutineLoaderHelper(metaclass=abc.ABCMeta):
 
         if '__LINE__' in self._replace:
             del self._replace['__LINE__']
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def _print_sql_with_error(self, sql, error_line):
+        """
+        Writes a SQL statement with an syntax error to the output. The line where the error occurs is highlighted.
+
+        :param str sql: The SQL statement.
+        :param int error_line: The line where the error occurs.
+        """
+        if os.linesep in sql:
+            lines = sql.split(os.linesep)
+            digits = math.ceil(math.log(len(lines) + 1, 10))
+            i = 1
+            for line in lines:
+                if i == error_line:
+                    self._io.text('<error>{0:{width}} {1}</error>'.format(i, line, width=digits, ))
+                else:
+                    self._io.text('{0:{width}} {1}'.format(i, line, width=digits, ))
+                i += 1
+        else:
+            self._io.text(sql)
 
 # ----------------------------------------------------------------------------------------------------------------------

@@ -141,8 +141,8 @@ class Constants:
         n_widths = len(self._constants) - n_id
 
         self._io.writeln('')
-        self._io.writeln('Number of constants based on column widths: {0}'.format(n_widths))
-        self._io.writeln('Number of constants based on database IDs : {0}'.format(n_id))
+        self._io.text('Number of constants based on column widths: {0}'.format(n_widths))
+        self._io.text('Number of constants based on database IDs : {0}'.format(n_id))
 
     # ------------------------------------------------------------------------------------------------------------------
     def _read_configuration_file(self, config_filename):

@@ -41,6 +41,20 @@ class PyStratumStyle(CleoStyle):
         output.get_formatter().set_style('sql', style)
 
     # ------------------------------------------------------------------------------------------------------------------
+    def warning(self, message):
+        self.block(message, 'WARNING', 'fg=white;bg=red', padding=True)
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def text(self, message):
+        if isinstance(message, list):
+            messages = message
+        else:
+            messages = [message]
+
+        for line in messages:
+            self.writeln(' {0}'.format(line))
+
+    # ------------------------------------------------------------------------------------------------------------------
     def log_verbose(self, message):
         """
         Logs a message only when logging level is verbose.
