@@ -261,6 +261,16 @@ where   nullif(`{1}`,'') is not null""".format(id_column_name,
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
+    def last_sql():
+        """
+        The last executed SQL statement.
+
+        :rtype: str|None
+        """
+        return MySqlMetadataDataLayer.__dl.last_sql
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @staticmethod
     def get_routine_parameters(routine_name):
         """
         Selects metadata of the parameters of a stored routine.

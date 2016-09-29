@@ -5,8 +5,7 @@ Copyright 2015-2016 Set Based IT Consultancy
 
 Licence MIT
 """
-from mysql.connector import DataError
-
+from pystratum.exception.ResultException import ResultException
 from test.DataLayer import DataLayer
 from test.StratumTestCase import StratumTestCase
 
@@ -27,7 +26,7 @@ class Singleton1Test(StratumTestCase):
         An exception must be thrown when a stored routine with designation type singleton1 returns 0 values.
         @expectedException Exception
         """
-        with self.assertRaises(DataError):
+        with self.assertRaises(ResultException):
             DataLayer.tst_test_singleton1a(0)
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -36,7 +35,7 @@ class Singleton1Test(StratumTestCase):
         An exception must be thrown when a stored routine with designation type singleton1 returns more than 1 values.
         @expectedException Exception
         """
-        with self.assertRaises(DataError):
+        with self.assertRaises(ResultException):
             DataLayer.tst_test_singleton1a(2)
 
 # ----------------------------------------------------------------------------------------------------------------------

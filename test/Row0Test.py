@@ -5,8 +5,7 @@ Copyright 2015-2016 Set Based IT Consultancy
 
 Licence MIT
 """
-from mysql.connector import DataError
-
+from pystratum.exception.ResultException import ResultException
 from test.DataLayer import DataLayer
 from test.StratumTestCase import StratumTestCase
 
@@ -34,7 +33,7 @@ class Row0Test(StratumTestCase):
         An exception must be thrown when a stored routine with designation type row0 returns more than 1 rows.
         @expectedException Exception
         """
-        with self.assertRaises(DataError):
+        with self.assertRaises(ResultException):
             DataLayer.tst_test_row0a(2)
 
 # ----------------------------------------------------------------------------------------------------------------------

@@ -43,7 +43,7 @@ class MySqlRoutineLoader(MySqlConnection, RoutineLoader):
 
             self._replace_pairs[key] = value
 
-        self._io.writeln('Selected {0} column types for substitution'.format(len(rows)))
+        self._io.text('Selected {0} column types for substitution'.format(len(rows)))
 
     # ------------------------------------------------------------------------------------------------------------------
     def create_routine_loader_helper(self, routine_name, pystratum_old_metadata, rdbms_old_metadata):

@@ -7,6 +7,8 @@ Licence MIT
 """
 import re
 
+from mysql import connector
+
 from pystratum.RoutineLoaderHelper import RoutineLoaderHelper
 from pystratum_mysql.MySqlMetadataDataLayer import MySqlMetadataDataLayer
 from pystratum_mysql.helper.MySqlDataTypeHelper import MySqlDataTypeHelper
@@ -156,7 +158,7 @@ class MySqlRoutineLoaderHelper(RoutineLoaderHelper):
         """
         Loads the stored routine into the MySQL instance.
         """
-        self._io.writeln('Loading {0} <dbo>{1}</dbo>'.format(self._routine_type, self._routine_name))
+        self._io.text('Loading {0} <dbo>{1}</dbo>'.format(self._routine_type, self._routine_name))
 
         self._set_magic_constants()
 
@@ -182,6 +184,30 @@ class MySqlRoutineLoaderHelper(RoutineLoaderHelper):
         MySqlMetadataDataLayer.set_character_set(self._character_set, self._collate)
 
         MySqlMetadataDataLayer.execute_none(routine_source)
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def _log_exception(self, exception):
+        """
+        Logs an exception.
+
+        :param Exception exception: The exception.
+        """
+        RoutineLoaderHelper._log_exception(self, exception)
+
+        if isinstance(exception, connector.errors.Error):
+            if exception.errno == 1064:
+                # Exception is caused by an invalid SQL statement.
+                sql = MySqlMetadataDataLayer.last_sql()
+                if sql:
+                    sql = sql.strip()
+                    # The format of a 1064 message is: %s near '%s' at line %d
+                    parts = re.search(r'(\d+)$', exception.msg)
+                    if parts:
+                        error_line = int(parts.group(1))
+                    else:
+                        error_line = 0
+
+                    self._print_sql_with_error(sql, error_line)
 
     # ------------------------------------------------------------------------------------------------------------------
     def get_bulk_insert_table_columns_info(self):
