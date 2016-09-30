@@ -283,7 +283,7 @@ class RoutineLoaderHelper(metaclass=abc.ABCMeta):
             for tmp in matches:
                 placeholder = tmp[0]
                 if placeholder.lower() not in self._replace_pairs:
-                    self._io.error("Unknown placeholder '{0}' in file <fso>{1}</fso>".
+                    self._io.error("Unknown placeholder '{0}' in file {1}".
                                    format(placeholder, self._source_filename))
                     ret = False
                 if placeholder not in placeholders:
