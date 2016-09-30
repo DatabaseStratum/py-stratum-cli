@@ -5,6 +5,7 @@ Copyright 2015-2016 Set Based IT Consultancy
 
 Licence MIT
 """
+from cleo import Output
 from cleo import OutputFormatterStyle
 from cleo.styles import CleoStyle
 
@@ -61,7 +62,7 @@ class PyStratumStyle(CleoStyle):
 
         :param str|list[str] message: The message.
         """
-        if self.is_verbose():
+        if self.get_verbosity() >= Output.VERBOSITY_VERBOSE:
             self.writeln(message)
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -71,7 +72,7 @@ class PyStratumStyle(CleoStyle):
 
         :param str|list[str] message: The message.
         """
-        if self.is_very_verbose():
+        if self.get_verbosity() >= Output.VERBOSITY_VERY_VERBOSE:
             self.writeln(message)
 
 # ----------------------------------------------------------------------------------------------------------------------
