@@ -199,6 +199,32 @@ class StaticDataLayer:
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
+    def execute_sp_multi(sql, *params):
+        """
+        Executes a stored routine with designation type "multi". Returns a list of the result sets.
+
+        :param str sql: The SQL statement for calling the stored routine.
+        :param iterable params: The arguments for calling the stored routine.
+
+        :rtype: list[list[dict[str,object]]]
+        """
+        cursor = MySQLCursorBufferedDict(StaticDataLayer.connection)
+        StaticDataLayer.last_sql = sql
+        itr = cursor.execute(sql, params, multi=True)
+
+        results = []
+        try:
+            for result in itr:
+                results.append(result.fetchall())
+        except InterfaceError:
+            pass
+
+        cursor.close()
+
+        return results
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @staticmethod
     def execute_sp_none(sql, *params):
         """
         Executes a stored routine that does not select any rows. Returns the number of affected rows.

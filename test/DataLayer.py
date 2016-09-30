@@ -205,6 +205,16 @@ class DataLayer(StaticDataLayer):
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
+    def tst_test_multi():
+        """
+        Test for designation type multi.
+         
+        :rtype: int
+        """
+        return StaticDataLayer.execute_sp_multi("call tst_test_multi()")
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @staticmethod
     def tst_test_none(p_count):
         """
         Test for designation type none.

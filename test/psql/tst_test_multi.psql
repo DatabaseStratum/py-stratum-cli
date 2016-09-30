@@ -1,0 +1,14 @@
+/**
+ * Test for designation type multi.
+ */
+create procedure tst_test_multi()
+reads sql data
+-- type: multi
+begin
+  select 'Hello, world';
+
+  select *
+  from   TST_FOO2
+  limit 0, 2
+  ;
+end

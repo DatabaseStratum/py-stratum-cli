@@ -1,5 +1,6 @@
 from pystratum_mysql.wrapper.MySqlFunctionsWrapper import MySqlFunctionsWrapper
 from pystratum_mysql.wrapper.MySqlLogWrapper import MySqlLogWrapper
+from pystratum_mysql.wrapper.MySqlMultiWrapper import MySqlMultiWrapper
 from pystratum_mysql.wrapper.MySqlNoneWrapper import MySqlNoneWrapper
 from pystratum_mysql.wrapper.MySqlRow0Wrapper import MySqlRow0Wrapper
 from pystratum_mysql.wrapper.MySqlRow1Wrapper import MySqlRow1Wrapper
@@ -40,12 +41,8 @@ def create_routine_wrapper(routine, lob_as_string_flag):
         wrapper = MySqlFunctionsWrapper(routine, lob_as_string_flag)
     elif routine['designation'] == 'log':
         wrapper = MySqlLogWrapper(routine, lob_as_string_flag)
-    # elif routine['designation'] == 'table':
-    #    wrapper = MySqlTableWrapper(routine, lob_as_string_flag)
-    # elif routine['designation'] == 'bulk':
-    #    wrapper = BulkWrapper(routine, lob_as_string_flag)
-    # elif routine['designation'] == 'bulk_insert':
-    #    wrapper = BulkInsertWrapper(routine, lob_as_string_flag)
+    elif routine['designation'] == 'multi':
+        wrapper = MySqlMultiWrapper(routine, lob_as_string_flag)
     else:
         raise Exception("Unknown routine type '{0!s}'.".format(routine['designation']))
 
