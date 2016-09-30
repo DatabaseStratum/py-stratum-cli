@@ -121,14 +121,14 @@ class MySqlRoutineLoaderHelper(RoutineLoaderHelper):
             self._routine_type = matches[0][0].lower()
 
             if self._routine_name != matches[0][1]:
-                self._io.error('Stored routine name <dbo>{0}</dbo> does not match filename in file <fso>{1}</fso>'.
+                self._io.error('Stored routine name {0} does not match filename in file {1}'.
                                format(matches[0][1], self._source_filename))
                 ret = False
         else:
             ret = False
 
         if not self._routine_type:
-            self._io.error('Unable to find the stored routine name and type in file <fso>{0}</fso>'.
+            self._io.error('Unable to find the stored routine name and type in file {0}'.
                            format(self._source_filename))
 
         return ret
@@ -266,7 +266,7 @@ class MySqlRoutineLoaderHelper(RoutineLoaderHelper):
                     info = n.findall(tmp)
 
                     if not info:
-                        self._io.error('Expected: -- type: bulk_insert <table_name> <columns> in file <fso>{0}</fso>'.
+                        self._io.error('Expected: -- type: bulk_insert <table_name> <columns> in file {0}'.
                                        format(self._source_filename))
                     self._table_name = info[0][0]
                     self._columns = str(info[0][1]).split(',')
@@ -280,7 +280,7 @@ class MySqlRoutineLoaderHelper(RoutineLoaderHelper):
             ret = False
 
         if not ret:
-            self._io.error("Unable to find the designation type of the stored routine in file <fso>{0}</fso>".
+            self._io.error("Unable to find the designation type of the stored routine in file {0}".
                            format(self._source_filename))
 
         return ret
