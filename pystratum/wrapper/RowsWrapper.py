@@ -20,6 +20,6 @@ class RowsWrapper(Wrapper):
 
         :rtype: str
         """
-        return 'list[dict[str,object]]'
+        return 'list[dict[str,*]]'
 
 # ----------------------------------------------------------------------------------------------------------------------

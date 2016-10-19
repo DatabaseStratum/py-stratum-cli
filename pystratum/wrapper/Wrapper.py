@@ -116,7 +116,7 @@ class Wrapper(metaclass=abc.ABCMeta):
         """
         Returns a complete wrapper method.
 
-        :param dict[str,Object] routine: The routine metadata.
+        :param dict[str,*] routine: The routine metadata.
 
         :rtype: str
         """
@@ -227,7 +227,7 @@ class Wrapper(metaclass=abc.ABCMeta):
         """
         Returns code for the parameters of the wrapper method for the stored routine.
 
-        :param dict[str,Object] routine: The routine metadata.
+        :param dict[str,*] routine: The routine metadata.
 
         :rtype: str
         """

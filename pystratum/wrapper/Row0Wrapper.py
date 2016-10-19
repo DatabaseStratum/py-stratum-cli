@@ -20,6 +20,6 @@ class Row0Wrapper(Wrapper):
 
         :rtype: str
         """
-        return 'None|dict[str,object]'
+        return 'None|dict[str,*]'
 
 # ----------------------------------------------------------------------------------------------------------------------
