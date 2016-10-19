@@ -73,10 +73,12 @@ class Wrapper(metaclass=abc.ABCMeta):
 
         :param line: The line of code (with out LF) that must be appended.
         """
-        if not line:
+        if line is None:
             self._write("\n")
             if self.__indent_level > 1:
                 self.__indent_level -= 1
+        elif line == '':
+            self._write("\n")
         else:
             line = (' ' * 4 * self.__indent_level) + line
             if line[-1:] == ':':
@@ -146,7 +148,7 @@ class Wrapper(metaclass=abc.ABCMeta):
         :param dict routine: The metadata of the stored routine.
         """
         if routine['pydoc']['parameters']:
-            self._write_line(' ')
+            self._write_line('')
 
             for param in routine['pydoc']['parameters']:
                 lines = param['description'].split(os.linesep)
@@ -169,7 +171,7 @@ class Wrapper(metaclass=abc.ABCMeta):
         """
         rtype = self._get_docstring_return_type()
         if rtype:
-            self._write_line(' ')
+            self._write_line('')
             self._write_line(':rtype: {0}'.format(rtype))
 
     # ------------------------------------------------------------------------------------------------------------------
