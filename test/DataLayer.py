@@ -82,17 +82,17 @@ class DataLayer(StaticDataLayer):
         :param int p_param13: Test parameter 13.
                               year(4)
         :param str p_param14: Test parameter 14.
-                              char(10) character set latin1 collation latin1_swedish_ci
+                              char(10) character set utf8 collation utf8_general_ci
         :param str p_param15: Test parameter 15.
-                              varchar(10) character set latin1 collation latin1_swedish_ci
+                              varchar(10) character set utf8 collation utf8_general_ci
         :param bytes p_param16: Test parameter 16.
                                 binary(10)
         :param bytes p_param17: Test parameter 17.
                                 varbinary(10)
         :param str p_param26: Test parameter 26.
-                              enum('a','b') character set latin1 collation latin1_swedish_ci
+                              enum('a','b') character set utf8 collation utf8_general_ci
         :param str p_param27: Test parameter 27.
-                              set('a','b') character set latin1 collation latin1_swedish_ci
+                              set('a','b') character set utf8 collation utf8_general_ci
          
         :rtype: int
         """
@@ -133,9 +133,9 @@ class DataLayer(StaticDataLayer):
         :param int p_param13: Test parameter 13.
                               year(4)
         :param str p_param14: Test parameter 14.
-                              char(10) character set latin1 collation latin1_swedish_ci
+                              char(10) character set utf8 collation utf8_general_ci
         :param str p_param15: Test parameter 15.
-                              varchar(10) character set latin1 collation latin1_swedish_ci
+                              varchar(10) character set utf8 collation utf8_general_ci
         :param bytes p_param16: Test parameter 16.
                                 binary(10)
         :param bytes p_param17: Test parameter 17.
@@ -149,21 +149,61 @@ class DataLayer(StaticDataLayer):
         :param bytes p_param21: Test parameter 21.
                                 longblob
         :param str p_param22: Test parameter 22.
-                              tinytext character set latin1 collation latin1_swedish_ci
+                              tinytext character set utf8 collation utf8_general_ci
         :param str p_param23: Test parameter 23.
-                              text character set latin1 collation latin1_swedish_ci
+                              text character set utf8 collation utf8_general_ci
         :param str p_param24: Test parameter 24.
-                              mediumtext character set latin1 collation latin1_swedish_ci
+                              mediumtext character set utf8 collation utf8_general_ci
         :param str p_param25: Test parameter 25.
-                              longtext character set latin1 collation latin1_swedish_ci
+                              longtext character set utf8 collation utf8_general_ci
         :param str p_param26: Test parameter 26.
-                              enum('a','b') character set latin1 collation latin1_swedish_ci
+                              enum('a','b') character set utf8 collation utf8_general_ci
         :param str p_param27: Test parameter 27.
-                              set('a','b') character set latin1 collation latin1_swedish_ci
+                              set('a','b') character set utf8 collation utf8_general_ci
          
         :rtype: int
         """
         return StaticDataLayer.execute_sp_none("call tst_parameter_types02(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", p_param00, p_param01, p_param02, p_param03, p_param04, p_param05, p_param06, p_param07, p_param08, p_param09, p_param10, p_param11, p_param12, p_param13, p_param14, p_param15, p_param16, p_param17, p_param18, p_param19, p_param20, p_param21, p_param22, p_param23, p_param24, p_param25, p_param26, p_param27)
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @staticmethod
+    def tst_test_find_designation_type01():
+        """
+        Test for designation type.
+         
+        :rtype: dict[str,object]
+        """
+        return StaticDataLayer.execute_sp_row1("call tst_test_find_designation_type01()")
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @staticmethod
+    def tst_test_find_designation_type02():
+        """
+        Test for designation type.
+         
+        :rtype: dict[str,object]
+        """
+        return StaticDataLayer.execute_sp_row1("call tst_test_find_designation_type02()")
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @staticmethod
+    def tst_test_find_designation_type03():
+        """
+        Test for designation type.
+         
+        :rtype: dict[str,object]
+        """
+        return StaticDataLayer.execute_sp_row1("call tst_test_find_designation_type03()")
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @staticmethod
+    def tst_test_find_designation_type04():
+        """
+        Test for designation type.
+         
+        :rtype: dict[str,object]
+        """
+        return StaticDataLayer.execute_sp_row1("call tst_test_find_designation_type04()")
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod

@@ -252,30 +252,29 @@ class MySqlRoutineLoaderHelper(RoutineLoaderHelper):
         """
         ret = True
 
-        key = self._routine_source_code_lines.index('begin')
-
-        if key != -1:
+        positions = self._get_create_begin_block_positions()
+        if positions[0] != -1:
             prog = re.compile(r'\s*--\s+type:\s*(\w+)\s*(.+)?\s*')
-            matches = prog.findall(self._routine_source_code_lines[key - 1])
+            for x in range(positions[0], positions[1]):
+                matches = prog.findall(self._routine_source_code_lines[x])
+                if matches:
+                    self._designation_type = matches[0][0]
+                    tmp = str(matches[0][1])
+                    if self._designation_type == 'bulk_insert':
+                        n = re.compile(r'([a-zA-Z0-9_]+)\s+([a-zA-Z0-9_,]+)')
+                        info = n.findall(tmp)
 
-            if matches:
-                self._designation_type = matches[0][0]
-                tmp = str(matches[0][1])
-                if self._designation_type == 'bulk_insert':
-                    n = re.compile(r'([a-zA-Z0-9_]+)\s+([a-zA-Z0-9_,]+)')
-                    info = n.findall(tmp)
+                        if not info:
+                            self._io.error('Expected: -- type: bulk_insert <table_name> <columns> in file {0}'.
+                                           format(self._source_filename))
+                        self._table_name = info[0][0]
+                        self._columns = str(info[0][1]).split(',')
 
-                    if not info:
-                        self._io.error('Expected: -- type: bulk_insert <table_name> <columns> in file {0}'.
-                                       format(self._source_filename))
-                    self._table_name = info[0][0]
-                    self._columns = str(info[0][1]).split(',')
-
-                elif self._designation_type == 'rows_with_key' or self._designation_type == 'rows_with_index':
-                    self._columns = str(matches[0][1]).split(',')
-                else:
-                    if matches[0][1]:
-                        ret = False
+                    elif self._designation_type == 'rows_with_key' or self._designation_type == 'rows_with_index':
+                        self._columns = str(matches[0][1]).split(',')
+                    else:
+                        if matches[0][1]:
+                            ret = False
         else:
             ret = False
 
@@ -284,6 +283,21 @@ class MySqlRoutineLoaderHelper(RoutineLoaderHelper):
                            format(self._source_filename))
 
         return ret
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def _get_create_begin_block_positions(self):
+        """
+        Return start row based on 'create procedure' and end row based on 'begin'
+
+        :rtype: tuple
+        """
+        start = 0
+        end = self._routine_source_code_lines.index('begin')
+        for (i, item) in enumerate(self._routine_source_code_lines):
+            if 'create procedure' in item:
+                start = i + 1
+
+        return start, end
 
     # ------------------------------------------------------------------------------------------------------------------
     def _get_routine_parameters_info(self):
@@ -301,11 +315,11 @@ class MySqlRoutineLoaderHelper(RoutineLoaderHelper):
                     if routine_parameter['character_set_name']:
                         value += ' collation %s' % routine_parameter['collation']
 
-                self._parameters.append({'name': routine_parameter             ['parameter_name'],
-                                         'data_type': routine_parameter        ['parameter_type'],
+                self._parameters.append({'name': routine_parameter['parameter_name'],
+                                         'data_type': routine_parameter['parameter_type'],
                                          'numeric_precision': routine_parameter['numeric_precision'],
-                                         'numeric_scale': routine_parameter    ['numeric_scale'],
-                                         'data_type_descriptor':               value})
+                                         'numeric_scale': routine_parameter['numeric_scale'],
+                                         'data_type_descriptor': value})
 
     # ------------------------------------------------------------------------------------------------------------------
     def _drop_routine(self):

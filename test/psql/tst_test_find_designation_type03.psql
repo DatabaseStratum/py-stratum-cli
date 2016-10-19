@@ -1,0 +1,10 @@
+/**
+ * Test for designation type.
+ */
+create procedure tst_test_find_designation_type03()
+reads sql data
+-- type: row1
+
+begin
+  select 'Test finding deignation type';
+end
