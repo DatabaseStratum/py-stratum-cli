@@ -1,3 +1,10 @@
+"""
+PyStratum
+
+Copyright 2015-2016 Set Based IT Consultancy
+
+Licence MIT
+"""
 import importlib
 import inspect
 import re
@@ -110,7 +117,7 @@ class ConstantClass:
         constants:
         * Start line with constants
         * Last line with constants
-        * Indent for the constatnts
+        * Indent for constants
 
         :param list[str] lines: The source of the module with the class that acts like a namespace for constants.
 
@@ -127,7 +134,7 @@ class ConstantClass:
                 if line.strip() == self.__annotation:
                     ret['start_line'] = count + 1
                     ret['last_line'] = count + 1
-                    parts = re.match('^(\s+)', line)
+                    parts = re.match(r'^(\s+)', line)
                     ret['indent'] = parts.group(1)
                     mode = 2
 
