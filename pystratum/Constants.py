@@ -8,6 +8,7 @@ Licence MIT
 import abc
 import configparser
 
+from pystratum.ConstantClass import ConstantClass
 from pystratum.Util import Util
 
 
@@ -28,7 +29,7 @@ class Constants:
         """
         All constants.
 
-        :type: dict
+        :type: dict[str,int]
         """
 
         self._old_columns = {}
@@ -52,25 +53,11 @@ class Constants:
         :type: str
         """
 
-        self._template_config_filename = None
+        self._class_name = ''
         """
-        Template filename under which the file is generated with the constants.
+        The name of the class that acts like a namespace for constants.
 
         :type: str
-        """
-
-        self._config_filename = None
-        """
-        The destination filename with constants.
-
-        :type: str
-        """
-
-        self._columns = {}
-        """
-        All columns in the MySQL schema.
-
-        :type: dict
         """
 
         self._labels = {}
@@ -124,7 +111,7 @@ class Constants:
             self._write_columns()
             self._get_labels(regex)
             self._fill_constants()
-            self._write_target_config_file()
+            self.__write_constant_class()
             self.disconnect()
             self.__log_number_of_constants()
         else:
@@ -156,8 +143,7 @@ class Constants:
 
         self._constants_filename = config.get('constants', 'columns')
         self._prefix = config.get('constants', 'prefix')
-        self._template_config_filename = config.get('constants', 'config_template')
-        self._config_filename = config.get('constants', 'config')
+        self._class_name = config.get('constants', 'class')
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
@@ -207,27 +193,28 @@ class Constants:
     @abc.abstractmethod
     def _get_labels(self, regex):
         """
-        Gets all primary key labels from the MySQL database.
+        Gets all primary key labels from the database.
         """
         raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
+    @abc.abstractmethod
     def _fill_constants(self):
         """
         Merges columns and labels (i.e. all known constants) into constants.
         """
-        pass
+        raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _write_target_config_file(self):
+    def __write_constant_class(self):
         """
-        Creates a python configuration file with constants.
+        Inserts new and replaces old (if any) constant declaration statements in the class that acts like a namespace
+        for constants.
         """
-        content = ''
-        for constant, value in sorted(self._constants.items()):
-            content += "{0!s} = {1!s}\n".format(str(constant), str(value))
+        helper = ConstantClass(self._class_name, self._io)
 
-            # Save the configuration file.
-        Util.write_two_phases(self._config_filename, content, self._io)
+        content = helper.source_with_constants(self._constants)
+
+        Util.write_two_phases(helper.file_name(), content, self._io)
 
 # ----------------------------------------------------------------------------------------------------------------------

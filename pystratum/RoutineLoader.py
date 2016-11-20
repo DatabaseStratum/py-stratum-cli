@@ -9,7 +9,8 @@ import abc
 import configparser
 import json
 import os
-import re
+
+from pystratum.ConstantClass import ConstantClass
 
 
 class RoutineLoader:
@@ -87,15 +88,9 @@ class RoutineLoader:
         :type: dict
         """
 
-        self._target_config_filename = None
+        self._constants_class_name = ''
         """
-        The name of the configuration file of the target project.
-
-        :type: str
-        """
-
-        self._constants_filename = None
-        """
+        The name of the class that acts like a namespace for constants.
 
         :type: str
         """
@@ -120,18 +115,18 @@ class RoutineLoader:
         self._io.title('Loader')
 
         if file_names:
-            self._load_list(config_filename, file_names)
+            self.__load_list(config_filename, file_names)
         else:
-            self._load_all(config_filename)
+            self.__load_all(config_filename)
 
         if self.error_file_names:
-            self._log_overview_errors()
+            self.__log_overview_errors()
             return 1
         else:
             return 0
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _log_overview_errors(self):
+    def __log_overview_errors(self):
         """
         Show info about sources files of stored routines that were not loaded successfully.
         """
@@ -156,7 +151,32 @@ class RoutineLoader:
         raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _load_list(self, config_filename, file_names):
+    def _add_replace_pair(self, name, value, quote):
+        """
+        Adds a replace part to the map of replace pairs.
+
+        :param name: The name of the replace pair.
+        :param value: The value of value of the replace pair.
+        """
+        key = '@' + name + '@'
+        key = key.lower()
+
+        class_name = value.__class__.__name__
+
+        if class_name in ['int', 'float']:
+            value = str(value)
+        elif class_name in ['bool']:
+            value = '1' if value else '0'
+        elif class_name in ['str']:
+            if quote:
+                value = "'" + value + "'"
+        else:
+            self._io.log_verbose("Ignoring constant {} which is an instance of {}".format(name, class_name))
+
+        self._replace_pairs[key] = value
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def __load_list(self, config_filename, file_names):
         """
         Loads all stored routines in a list into the RDBMS instance.
 
@@ -167,16 +187,16 @@ class RoutineLoader:
         self.connect()
         self.find_source_files_from_list(file_names)
         self._get_column_type()
-        self._read_stored_routine_metadata()
-        self._get_constants()
+        self.__read_stored_routine_metadata()
+        self.__get_constants()
         self._get_old_stored_routine_info()
         self._get_correct_sql_mode()
-        self._load_stored_routines()
-        self._write_stored_routine_metadata()
+        self.__load_stored_routines()
+        self.__write_stored_routine_metadata()
         self.disconnect()
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _load_all(self, config_filename):
+    def __load_all(self, config_filename):
         """
         Loads all stored routines into the RDBMS instance.
 
@@ -184,16 +204,16 @@ class RoutineLoader:
         """
         self._read_configuration_file(config_filename)
         self.connect()
-        self._find_source_files()
+        self.__find_source_files()
         self._get_column_type()
-        self._read_stored_routine_metadata()
-        self._get_constants()
+        self.__read_stored_routine_metadata()
+        self.__get_constants()
         self._get_old_stored_routine_info()
         self._get_correct_sql_mode()
-        self._load_stored_routines()
+        self.__load_stored_routines()
         self._drop_obsolete_routines()
-        self._remove_obsolete_metadata()
-        self._write_stored_routine_metadata()
+        self.__remove_obsolete_metadata()
+        self.__write_stored_routine_metadata()
         self.disconnect()
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -209,14 +229,13 @@ class RoutineLoader:
         self._source_directory = config.get('loader', 'source_directory')
         self._source_file_extension = config.get('loader', 'extension')
         self._source_file_encoding = config.get('loader', 'encoding')
-        self._target_config_filename = config.get('loader', 'config')
 
         self._pystratum_metadata_filename = config.get('wrapper', 'metadata')
 
-        self._constants_filename = config.get('constants', 'config')
+        self._constants_class_name = config.get('constants', 'class')
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _find_source_files(self):
+    def __find_source_files(self):
         """
         Searches recursively for all source files in a directory.
         """
@@ -234,7 +253,7 @@ class RoutineLoader:
                         self._source_file_names[basename] = relative_path
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _read_stored_routine_metadata(self):
+    def __read_stored_routine_metadata(self):
         """
         Reads the metadata of stored routines from the metadata file.
         """
@@ -265,7 +284,7 @@ class RoutineLoader:
         raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _load_stored_routines(self):
+    def __load_stored_routines(self):
         """
         Loads all stored routines into the RDBMS instance instance.
         """
@@ -317,7 +336,7 @@ class RoutineLoader:
         raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _remove_obsolete_metadata(self):
+    def __remove_obsolete_metadata(self):
         """
         Removes obsolete entries from the metadata of all stored routines.
         """
@@ -329,7 +348,7 @@ class RoutineLoader:
         self._pystratum_metadata = clean
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _write_stored_routine_metadata(self):
+    def __write_stored_routine_metadata(self):
         """
         Writes the metadata of all stored routines to the metadata file.
         """
@@ -356,28 +375,18 @@ class RoutineLoader:
                 self._io.error("File not exists: '{0}'".format(file_name))
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _get_constants(self):
+    def __get_constants(self):
         """
-        Temp solution for replace constants.
+        Gets the constants from the class that acts like a namespace for constants and adds them to the replace pairs.
         """
-        if os.path.exists(self._constants_filename):
-            count = 0
-            with open(self._constants_filename, 'r') as file:
-                for line in file:
-                    if line.strip() != "\n":
-                        pattern = re.compile(r'(?:(\w+)\s*=\s*(\w+))')
-                        matches = pattern.findall(line)
+        helper = ConstantClass(self._constants_class_name, self._io)
+        helper.reload()
+        constants = helper.constants()
 
-                        if matches:
-                            matches = matches[0]
-                            name = '@' + matches[0].lower() + '@'
-                            value = matches[1]
-                            if name in self._replace_pairs:
-                                raise Exception("Duplicate placeholder '%s'" % name)
-                            self._replace_pairs[name] = value
-                    count += 1
+        for name, value in constants.items():
+            self._add_replace_pair(name, value, True)
 
-            self._io.text('Read {0} constants for substitution from <fso>{1}</fso>'.
-                             format(count, self._constants_filename))
+        self._io.text('Read {0} constants for substitution from <fso>{1}</fso>'.
+                      format(len(constants), helper.file_name()))
 
 # ----------------------------------------------------------------------------------------------------------------------

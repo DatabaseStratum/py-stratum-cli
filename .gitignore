@@ -3,6 +3,7 @@
 /.idea/
 /PyStratum.egg-info/
 /bin/phing
+/build/
 /composer.lock
 /dist/
 /test/html/

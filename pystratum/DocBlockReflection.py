@@ -42,7 +42,7 @@ class DocBlockReflection:
         :type: list[(str,str)]
         """
 
-        self._reflect()
+        self.__reflect()
 
     # ------------------------------------------------------------------------------------------------------------------
     def get_description(self):
@@ -85,7 +85,7 @@ class DocBlockReflection:
         return tags
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _reflect(self):
+    def __reflect(self):
         """
         Parses the DocBlock.
         """
