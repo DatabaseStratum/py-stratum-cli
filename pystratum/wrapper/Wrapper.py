@@ -20,7 +20,7 @@ class Wrapper(metaclass=abc.ABCMeta):
         Object constructor.
 
         :param dict routine: The metadata of the stored routine.
-        :param str lob_as_string_flag: If 'True' LOBs must be treated as strings/bytes.
+        :param bool lob_as_string_flag: If 'True' LOBs must be treated as strings/bytes.
         """
         self._page_width = 120
         """
@@ -111,7 +111,7 @@ class Wrapper(metaclass=abc.ABCMeta):
 
         :rtype: bool
         """
-        raise NotImplementedError
+        raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
     def write_routine_method(self, routine):
@@ -141,7 +141,7 @@ class Wrapper(metaclass=abc.ABCMeta):
             self._write_line(routine['pydoc']['description'])
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __write_docstring_parameters(self, routine):
+    def _write_docstring_parameters(self, routine):
         """
         Writes the parameters part of the docstring for the wrapper method of a stored routine.
 
@@ -184,7 +184,7 @@ class Wrapper(metaclass=abc.ABCMeta):
         self._write_line('"""')
 
         self.__write_docstring_description(routine)
-        self.__write_docstring_parameters(routine)
+        self._write_docstring_parameters(routine)
         self.__write_docstring_return_type()
 
         self._write_line('"""')
@@ -233,8 +233,6 @@ class Wrapper(metaclass=abc.ABCMeta):
 
         :rtype: str
         """
-        # todo  if routine['designation'] == 'bulk':
-        # ret = 'bulk_handler'  else:
         ret = ''
 
         for parameter_info in routine['parameters']:
