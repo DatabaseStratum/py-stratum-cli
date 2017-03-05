@@ -286,7 +286,7 @@ class RoutineLoader:
     # ------------------------------------------------------------------------------------------------------------------
     def __load_stored_routines(self):
         """
-        Loads all stored routines into the RDBMS instance instance.
+        Loads all stored routines into the RDBMS instance.
         """
         self._io.writeln('')
 
@@ -373,6 +373,7 @@ class RoutineLoader:
                     self.error_file_names.add(file_name)
             else:
                 self._io.error("File not exists: '{0}'".format(file_name))
+                self.error_file_names.add(file_name)
 
     # ------------------------------------------------------------------------------------------------------------------
     def __get_constants(self):

@@ -6,12 +6,12 @@ Copyright 2015-2016 Set Based IT Consultancy
 Licence MIT
 """
 import abc
+import math
 import os
 import re
 
-import math
-
 from pystratum.DocBlockReflection import DocBlockReflection
+from pystratum.exception.LoaderException import LoaderException
 
 
 class RoutineLoaderHelper(metaclass=abc.ABCMeta):
@@ -37,7 +37,6 @@ class RoutineLoaderHelper(metaclass=abc.ABCMeta):
         :param dict rdbms_old_metadata: The old metadata of the stored routine from MS SQL Server.
         :param pystratum.style.PyStratumStyle.PyStratumStyle io: The output decorator.
         """
-
         self._source_filename = routine_filename
         """
         The source filename holding the stored routine.
@@ -188,7 +187,8 @@ class RoutineLoaderHelper(metaclass=abc.ABCMeta):
         """
         Loads the stored routine into the instance of MySQL.
 
-        Returns the metadata of the stored routine if the stored routine is loaded successfully. Otherwise return False.
+        Returns the metadata of the stored routine if the stored routine is loaded successfully. Otherwise returns
+        False.
 
         :rtype: dict[str,str]|bool
         """
@@ -199,9 +199,9 @@ class RoutineLoaderHelper(metaclass=abc.ABCMeta):
                 if os.path.isfile(self._source_filename):
                     self._m_time = int(os.path.getmtime(self._source_filename))
                 else:
-                    raise Exception("Unable to get mtime of file '%s'." % self._source_filename)
+                    raise LoaderException("Unable to get mtime of file '{}'".format(self._source_filename))
             else:
-                raise Exception("Source file '%s' does not exist." % self._source_filename)
+                raise LoaderException("Source file '{}' does not exist".format(self._source_filename))
 
             if self._pystratum_old_metadata:
                 self._pystratum_metadata = self._pystratum_old_metadata
@@ -213,22 +213,16 @@ class RoutineLoaderHelper(metaclass=abc.ABCMeta):
 
                 self._routine_source_code_lines = self._routine_source_code.split("\n")
 
-                ok = self._get_placeholders()
-                if not ok:
-                    return False
+                self.__get_placeholders()
 
-                ok = self._get_designation_type()
-                if not ok:
-                    return False
+                self._get_designation_type()
 
-                ok = self._get_name()
-                if not ok:
-                    return False
+                self._get_name()
 
                 self._load_routine_file()
 
                 if self._designation_type == 'bulk_insert':
-                    self.get_bulk_insert_table_columns_info()
+                    self._get_bulk_insert_table_columns_info()
 
                 self._get_routine_parameters_info()
 
@@ -264,13 +258,9 @@ class RoutineLoaderHelper(metaclass=abc.ABCMeta):
         raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _get_placeholders(self):
+    def __get_placeholders(self):
         """
         Extracts the placeholders from the stored routine source.
-
-        Return True if all placeholders are defined. Returns False otherwise.
-
-        :rtype: bool
         """
         ret = True
 
@@ -283,15 +273,14 @@ class RoutineLoaderHelper(metaclass=abc.ABCMeta):
             for tmp in matches:
                 placeholder = tmp[0]
                 if placeholder.lower() not in self._replace_pairs:
-                    self._io.error("Unknown placeholder '{0}' in file {1}".
-                                   format(placeholder, self._source_filename))
-                    ret = False
+                    raise LoaderException("Unknown placeholder '{0}' in file {1}".
+                                          format(placeholder, self._source_filename))
                 if placeholder not in placeholders:
                     placeholders.append(placeholder)
-        if ret:
-            for placeholder in placeholders:
-                if placeholder not in self._replace:
-                    self._replace[placeholder] = self._replace_pairs[placeholder.lower()]
+
+        for placeholder in placeholders:
+            if placeholder not in self._replace:
+                self._replace[placeholder] = self._replace_pairs[placeholder.lower()]
 
         return ret
 
@@ -301,9 +290,7 @@ class RoutineLoaderHelper(metaclass=abc.ABCMeta):
         """
         Extracts the designation type of the stored routine.
 
-        Returns True on success. Otherwise returns False.
-
-        :rtype: bool
+        :rtype: None
         """
         raise NotImplementedError()
 
@@ -402,10 +389,10 @@ class RoutineLoaderHelper(metaclass=abc.ABCMeta):
         parameters = list()
         for parameter_info in self._parameters:
             parameters.append(
-                {'parameter_name':       parameter_info['name'],
-                 'python_type':          helper.column_type_to_python_type(parameter_info),
+                {'parameter_name': parameter_info      ['name'],
+                 'python_type':                        helper.column_type_to_python_type(parameter_info),
                  'data_type_descriptor': parameter_info['data_type_descriptor'],
-                 'description':          self.__get_parameter_doc_description(parameter_info['name'])})
+                 'description':                        self.__get_parameter_doc_description(parameter_info['name'])})
 
         self._doc_block_parts_wrapper['description'] = self._doc_block_parts_source['description']
         self._doc_block_parts_wrapper['parameters'] = parameters
@@ -416,9 +403,7 @@ class RoutineLoaderHelper(metaclass=abc.ABCMeta):
         """
         Extracts the name of the stored routine and the stored routine type (i.e. procedure or function) source.
 
-        Returns True on success. Returns False otherwise.
-
-        :rtype: bool
+        :rtype: None
         """
         raise NotImplementedError()
 
@@ -432,7 +417,7 @@ class RoutineLoaderHelper(metaclass=abc.ABCMeta):
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
-    def get_bulk_insert_table_columns_info(self):
+    def _get_bulk_insert_table_columns_info(self):
         """
         Gets the column names and column types of the current table for bulk insert.
         """
