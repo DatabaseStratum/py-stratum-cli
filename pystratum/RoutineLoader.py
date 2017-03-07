@@ -91,6 +91,13 @@ class RoutineLoader:
         :type: str
         """
 
+        self.__shadow_directory = None
+        """
+        The name of the directory were copies with pure SQL of the stored routine sources must be stored.
+
+        :type: str|None
+        """
+
         self._io = io
         """
         The output decorator.
@@ -225,6 +232,7 @@ class RoutineLoader:
         self._source_directory = config.get('loader', 'source_directory')
         self._source_file_extension = config.get('loader', 'extension')
         self._source_file_encoding = config.get('loader', 'encoding')
+        self.__shadow_directory = config.get('loader', 'shadow_directory', fallback=None)
 
         self._pystratum_metadata_filename = config.get('wrapper', 'metadata')
 
@@ -298,6 +306,8 @@ class RoutineLoader:
                 old_routine_info = None
 
             routine_loader_helper = self.create_routine_loader_helper(routine_name, old_metadata, old_routine_info)
+            routine_loader_helper.shadow_directory = self.__shadow_directory
+
             metadata = routine_loader_helper.load_stored_routine()
 
             if not metadata:

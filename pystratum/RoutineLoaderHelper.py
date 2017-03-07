@@ -5,6 +5,7 @@ import abc
 import math
 import os
 import re
+import stat
 
 from pystratum.DocBlockReflection import DocBlockReflection
 from pystratum.exception.LoaderException import LoaderException
@@ -178,6 +179,13 @@ class RoutineLoaderHelper(metaclass=abc.ABCMeta):
         :type: pystratum.style.PyStratumStyle.PyStratumStyle
         """
 
+        self.shadow_directory = None
+        """
+        The name of the directory were copies with pure SQL of the stored routine sources must be stored.
+
+        :type: str|None
+        """
+
     # ------------------------------------------------------------------------------------------------------------------
     def load_stored_routine(self):
         """
@@ -204,16 +212,15 @@ class RoutineLoaderHelper(metaclass=abc.ABCMeta):
 
             load = self._must_reload()
             if load:
-                with open(self._source_filename, 'r', encoding=self._routine_file_encoding) as file:
-                    self._routine_source_code = file.read()
-
-                self._routine_source_code_lines = self._routine_source_code.split("\n")
+                self.__read_source_file()
 
                 self.__get_placeholders()
 
                 self._get_designation_type()
 
                 self._get_name()
+
+                self.__substitute_replace_pairs()
 
                 self._load_routine_file()
 
@@ -224,6 +231,8 @@ class RoutineLoaderHelper(metaclass=abc.ABCMeta):
 
                 self.__get_doc_block_parts_wrapper()
 
+                self.__save_shadow_copy()
+
                 self._update_metadata()
 
             return self._pystratum_metadata
@@ -231,6 +240,61 @@ class RoutineLoaderHelper(metaclass=abc.ABCMeta):
         except Exception as exception:
             self._log_exception(exception)
             return False
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def __read_source_file(self):
+        """
+        Reads the file with the source of the stored routine.
+        """
+        with open(self._source_filename, 'r', encoding=self._routine_file_encoding) as file:
+            self._routine_source_code = file.read()
+
+        self._routine_source_code_lines = self._routine_source_code.split("\n")
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def __save_shadow_copy(self):
+        """
+        Saves a copy of the stored routine source with pure SQL (if shadow directory is set).
+        """
+        if not self.shadow_directory:
+            return
+
+        destination_filename = os.path.join(self.shadow_directory, self._routine_name) + '.sql'
+
+        if os.path.realpath(destination_filename) == os.path.realpath(self._source_filename):
+            raise LoaderException("Shadow copy will override routine source '{}'".format(self._source_filename))
+
+        # Remove the (read only) shadow file if it exists.
+        if os.path.exists(destination_filename):
+            os.remove(destination_filename)
+
+        # Write the shadow file.
+        with open(destination_filename, 'wt', encoding=self._routine_file_encoding) as handle:
+            handle.write(self._routine_source_code)
+
+        # Make the file read only.
+        mode = os.stat(self._source_filename)[stat.ST_MODE]
+        os.chmod(destination_filename, mode & ~stat.S_IWUSR & ~stat.S_IWGRP & ~stat.S_IWOTH)
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def __substitute_replace_pairs(self):
+        """
+        Substitutes all replace pairs in the source of the stored routine.
+        """
+        self._set_magic_constants()
+
+        routine_source = []
+        i = 0
+        for line in self._routine_source_code_lines:
+            self._replace['__LINE__'] = "'%d'" % (i + 1)
+            for search, replace in self._replace.items():
+                tmp = re.findall(search, line, re.IGNORECASE)
+                if tmp:
+                    line = line.replace(tmp[0], replace)
+            routine_source.append(line)
+            i += 1
+
+        self._routine_source_code = "\n".join(routine_source)
 
     # ------------------------------------------------------------------------------------------------------------------
     def _log_exception(self, exception):
@@ -385,10 +449,10 @@ class RoutineLoaderHelper(metaclass=abc.ABCMeta):
         parameters = list()
         for parameter_info in self._parameters:
             parameters.append(
-                {'parameter_name': parameter_info      ['name'],
-                 'python_type':                        helper.column_type_to_python_type(parameter_info),
+                {'parameter_name':       parameter_info['name'],
+                 'python_type':          helper.column_type_to_python_type(parameter_info),
                  'data_type_descriptor': parameter_info['data_type_descriptor'],
-                 'description':                        self.__get_parameter_doc_description(parameter_info['name'])})
+                 'description':          self.__get_parameter_doc_description(parameter_info['name'])})
 
         self._doc_block_parts_wrapper['description'] = self._doc_block_parts_source['description']
         self._doc_block_parts_wrapper['parameters'] = parameters
