@@ -324,7 +324,7 @@ class RoutineLoaderHelper(metaclass=abc.ABCMeta):
         """
         ret = True
 
-        pattern = re.compile('(@[A-Za-z0-9_.]+(%type)?@)')
+        pattern = re.compile('(@[A-Za-z0-9_.]+(%(max-)?type)?@)')
         matches = pattern.findall(self._routine_source_code)
 
         placeholders = []
