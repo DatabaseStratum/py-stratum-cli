@@ -34,16 +34,16 @@ setup(
         'License :: OSI Approved :: MIT License',
 
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
     ],
 
     keywords='stored routines, stored procedure, stored procedures, wrapper, loader, MySQL, SQL Server, PostgreSQL',
 
     packages=find_packages(exclude=['build', 'test']),
 
-    install_requires=['cleo==0.5.0'],
+    install_requires=['cleo==0.6.1'],
 
     entry_points={
         'console_scripts': [

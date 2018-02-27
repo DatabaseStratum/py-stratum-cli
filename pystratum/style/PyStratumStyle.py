@@ -2,7 +2,6 @@
 PyStratum
 """
 from cleo import Output
-from cleo import OutputFormatterStyle
 from cleo.styles import CleoStyle
 
 
@@ -22,20 +21,16 @@ class PyStratumStyle(CleoStyle):
         CleoStyle.__init__(self, input, output)
 
         # Create style notes.
-        style = OutputFormatterStyle('yellow', None, ['bold'])
-        output.get_formatter().set_style('note', style)
+        output.get_formatter().add_style('note', 'yellow', None, ['bold'])
 
         # Create style for database objects.
-        style = OutputFormatterStyle('green', None, ['bold'])
-        output.get_formatter().set_style('dbo', style)
+        output.get_formatter().add_style('bdo', 'green', None, ['bold'])
 
         # Create style for file and directory names.
-        style = OutputFormatterStyle('white', None, ['bold'])
-        output.get_formatter().set_style('fso', style)
+        output.get_formatter().add_style('fso', 'white', None, ['bold'])
 
         # Create style for SQL statements.
-        style = OutputFormatterStyle('magenta', None, ['bold'])
-        output.get_formatter().set_style('sql', style)
+        output.get_formatter().add_style('sql', 'magenta', None, ['bold'])
 
     # ------------------------------------------------------------------------------------------------------------------
     def warning(self, message):
