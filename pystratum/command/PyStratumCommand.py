@@ -11,7 +11,7 @@ class PyStratumCommand(Command):
     Loads stored routines and generates a wrapper class
 
     stratum
-        {config_file : The audit configuration file}
+        {config_file : The stratum configuration file}
         {file_names?* : Sources with stored routines}
     """
 
