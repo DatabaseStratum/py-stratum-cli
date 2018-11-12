@@ -24,7 +24,7 @@ class PyStratumStyle(CleoStyle):
         output.get_formatter().add_style('note', 'yellow', None, ['bold'])
 
         # Create style for database objects.
-        output.get_formatter().add_style('bdo', 'green', None, ['bold'])
+        output.get_formatter().add_style('dbo', 'green', None, ['bold'])
 
         # Create style for file and directory names.
         output.get_formatter().add_style('fso', 'white', None, ['bold'])
