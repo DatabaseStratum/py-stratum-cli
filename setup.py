@@ -43,7 +43,7 @@ setup(
 
     packages=find_packages(exclude=['build', 'test']),
 
-    install_requires=['cleo==0.6.1'],
+    install_requires=['cleo==0.6.8'],
 
     entry_points={
         'console_scripts': [
