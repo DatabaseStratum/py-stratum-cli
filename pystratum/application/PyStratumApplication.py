@@ -19,7 +19,7 @@ class PyStratumApplication(Application):
         """
         Object constructor
         """
-        Application.__init__(self, 'pystratum', '0.10.17')
+        Application.__init__(self, 'pystratum', '0.10.18')
 
     # ------------------------------------------------------------------------------------------------------------------
     def get_default_commands(self):
