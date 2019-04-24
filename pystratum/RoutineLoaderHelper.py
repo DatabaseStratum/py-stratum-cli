@@ -345,20 +345,72 @@ class RoutineLoaderHelper(metaclass=abc.ABCMeta):
         return ret
 
     # ------------------------------------------------------------------------------------------------------------------
-    @abc.abstractmethod
     def _get_designation_type(self):
         """
         Extracts the designation type of the stored routine.
+        """
+        positions = self._get_specification_positions()
+        if positions[0] != -1 and positions[1] != -1:
+            pattern = re.compile(r'^\s*--\s+type\s*:\s*(\w+)\s*(.+)?\s*', re.IGNORECASE)
+            for line_number in range(positions[0], positions[1] + 1):
+                matches = pattern.findall(self._routine_source_code_lines[line_number])
+                if matches:
+                    self._designation_type = matches[0][0].lower()
+                    tmp = str(matches[0][1])
+                    if self._designation_type == 'bulk_insert':
+                        n = re.compile(r'([a-zA-Z0-9_]+)\s+([a-zA-Z0-9_,]+)', re.IGNORECASE)
+                        info = n.findall(tmp)
+                        if not info:
+                            raise LoaderException('Expected: -- type: bulk_insert <table_name> <columns> in file {0}'.
+                                                  format(self._source_filename))
+                        self._table_name = info[0][0]
+                        self._columns = str(info[0][1]).split(',')
 
-        :rtype: None
+                    elif self._designation_type == 'rows_with_key' or self._designation_type == 'rows_with_index':
+                        self._columns = str(matches[0][1]).split(',')
+                    else:
+                        if matches[0][1]:
+                            raise LoaderException('Expected: -- type: {}'.format(self._designation_type))
+
+        if not self._designation_type:
+            raise LoaderException("Unable to find the designation type of the stored routine in file {0}".
+                                  format(self._source_filename))
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def _get_specification_positions(self):
+        """
+        Returns a tuple with the start and end line numbers of the stored routine specification.
+
+        :rtype: tuple
+        """
+        start = -1
+        for (i, line) in enumerate(self._routine_source_code_lines):
+            if self._is_start_of_stored_routine(line):
+                start = i
+
+        end = -1
+        for (i, line) in enumerate(self._routine_source_code_lines):
+            if self._is_start_of_stored_routine_body(line):
+                end = i - 1
+
+        return start, end
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @abc.abstractmethod
+    def _is_start_of_stored_routine(self, line):
+        """
+        Returns True if a line is the start of the code of the stored routine.
+
+        :param str line: The line with source code of the stored routine.
+
+        :rtype: bool
         """
         raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
-    @abc.abstractmethod
-    def is_start_of_stored_routine(self, line):
+    def _is_start_of_stored_routine_body(self, line):
         """
-        Returns True if a line is the start of the code of the stored routine.
+        Returns True if a line is the start of the body of the stored routine.
 
         :param str line: The line with source code of the stored routine.
 
@@ -382,7 +434,7 @@ class RoutineLoaderHelper(metaclass=abc.ABCMeta):
             if re.match(r'\s*\*/', line):
                 line2 = i
 
-            if self.is_start_of_stored_routine(line):
+            if self._is_start_of_stored_routine(line):
                 break
 
             i += 1
