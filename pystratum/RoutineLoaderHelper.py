@@ -356,7 +356,7 @@ class RoutineLoaderHelper(metaclass=abc.ABCMeta):
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
-    def _is_start_or_store_routine(self, line):
+    def is_start_of_stored_routine(self, line):
         """
         Returns True if a line is the start of the code of the stored routine.
 
@@ -382,7 +382,7 @@ class RoutineLoaderHelper(metaclass=abc.ABCMeta):
             if re.match(r'\s*\*/', line):
                 line2 = i
 
-            if self._is_start_or_store_routine(line):
+            if self.is_start_of_stored_routine(line):
                 break
 
             i += 1
