@@ -3,6 +3,9 @@ PyStratum
 """
 import abc
 import configparser
+from typing import Dict, Optional
+
+from pystratum.style.PyStratumStyle import PyStratumStyle
 
 from pystratum.ConstantClass import ConstantClass
 from pystratum.Util import Util
@@ -15,64 +18,51 @@ class Constants:
     """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __init__(self, io):
+    def __init__(self, io: PyStratumStyle):
         """
         Object constructor.
 
-        :param pystratum.style.PyStratumStyle.PyStratumStyle io: The output decorator.
+        :param PyStratumStyle io: The output decorator.
         """
-        self._constants = {}
+        self._constants: Dict[str, int] = {}
         """
         All constants.
-
-        :type: dict[str,int]
         """
 
-        self._old_columns = {}
+        self._old_columns: Dict = {}
         """
         The previous column names, widths, and constant names (i.e. the content of $myConstantsFilename upon
         starting this program).
-
-        :type: dict
         """
 
-        self._constants_filename = None
+        self._constants_filename: Optional[str] = None
         """
         Filename with column names, their widths, and constant names.
-
-        :type: str
         """
 
-        self._prefix = None
+        self._prefix: Optional[str] = None
         """
         The prefix used for designations a unknown constants.
-        :type: str
         """
 
-        self._class_name = ''
+        self._class_name: str = ''
         """
         The name of the class that acts like a namespace for constants.
-
-        :type: str
         """
 
-        self._labels = {}
+        self._labels: Dict = {}
         """
         All primary key labels, their widths and constant names.
-
-        :type: dict
         """
 
-        self._io = io
+        self._io: PyStratumStyle = io
         """
         The output decorator.
-
-        :type: pystratum.style.PyStratumStyle.PyStratumStyle
         """
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
-    def connect(self):
+    def connect(self) -> None:
         """
         Connects to the database.
         """
@@ -80,14 +70,14 @@ class Constants:
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
-    def disconnect(self):
+    def disconnect(self) -> None:
         """
         Disconnects from the database.
         """
         raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
-    def main(self, config_filename, regex):
+    def main(self, config_filename: str, regex: str) -> int:
         """
         :param str config_filename: The config filename.
         :param str regex: The regular expression for columns which we want to use.
@@ -116,7 +106,7 @@ class Constants:
         return 0
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __log_number_of_constants(self):
+    def __log_number_of_constants(self) -> None:
         """
         Logs the number of constants generated.
         """
@@ -128,7 +118,7 @@ class Constants:
         self._io.text('Number of constants based on database IDs : {0}'.format(n_id))
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _read_configuration_file(self, config_filename):
+    def _read_configuration_file(self, config_filename: str) -> None:
         """
         Reads parameters from the configuration file.
 
@@ -143,7 +133,7 @@ class Constants:
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
-    def _get_old_columns(self):
+    def _get_old_columns(self) -> None:
         """
         Reads from file constants_filename the previous table and column names, the width of the column,
         and the constant name (if assigned) and stores this data in old_columns.
@@ -152,7 +142,7 @@ class Constants:
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
-    def _get_columns(self):
+    def _get_columns(self) -> None:
         """
         Retrieves metadata all columns in the MySQL schema.
         """
@@ -160,7 +150,7 @@ class Constants:
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
-    def _enhance_columns(self):
+    def _enhance_columns(self) -> None:
         """
         Enhances old_columns as follows:
         If the constant name is *, is is replaced with the column name prefixed by prefix in uppercase.
@@ -170,7 +160,7 @@ class Constants:
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
-    def _merge_columns(self):
+    def _merge_columns(self) -> None:
         """
         Preserves relevant data in old_columns into columns.
         """
@@ -178,7 +168,7 @@ class Constants:
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
-    def _write_columns(self):
+    def _write_columns(self) -> None:
         """
         Writes table and column names, the width of the column, and the constant name (if assigned) to
         constants_filename.
@@ -187,7 +177,7 @@ class Constants:
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
-    def _get_labels(self, regex):
+    def _get_labels(self, regex: str) -> None:
         """
         Gets all primary key labels from the database.
         """
@@ -195,14 +185,14 @@ class Constants:
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
-    def _fill_constants(self):
+    def _fill_constants(self) -> None:
         """
         Merges columns and labels (i.e. all known constants) into constants.
         """
         raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __write_constant_class(self):
+    def __write_constant_class(self) -> None:
         """
         Inserts new and replaces old (if any) constant declaration statements in the class that acts like a namespace
         for constants.

@@ -5,6 +5,9 @@ import abc
 import configparser
 import json
 import os
+from typing import Optional, Dict, Any
+
+from pystratum.style.PyStratumStyle import PyStratumStyle
 
 from pystratum.Util import Util
 
@@ -15,70 +18,54 @@ class RoutineWrapperGenerator:
     """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __init__(self, io):
+    def __init__(self, io: PyStratumStyle):
         """
         Object constructor.
 
-        :param pystratum.style.PyStratumStyle.PyStratumStyle io: The output decorator.
+        :param PyStratumStyle io: The output decorator.
         """
-        self._code = ''
+        self._code: str = ''
         """
         The generated Python code buffer.
-
-        :type: str
         """
 
-        self._lob_as_string_flag = False
+        self._lob_as_string_flag: bool = False
         """
         If true BLOBs and CLOBs must be treated as strings.
-
-        :type: bool
         """
 
-        self._metadata_filename = None
+        self._metadata_filename: Optional[str] = None
         """
         The filename of the file with the metadata of all stored procedures.
-
-        :type: str
         """
 
-        self._parent_class_name = None
+        self._parent_class_name: Optional[str] = None
         """
         The class name of the parent class of the routine wrapper.
-
-        :type: str
         """
 
-        self._parent_class_namespace = None
+        self._parent_class_namespace: Optional[str] = None
         """
         The namespace of the parent class of the routine wrapper.
-
-        :type: str
         """
 
-        self._wrapper_class_name = None
+        self._wrapper_class_name: Optional[str] = None
         """
         The class name of the routine wrapper.
-
-        :type: str
         """
 
-        self._wrapper_filename = None
+        self._wrapper_filename: Optional[str] = None
         """
         The filename where the generated wrapper class must be stored.
-
-        :type: str
         """
 
-        self._io = io
+        self._io: PyStratumStyle = io
         """
         The output decorator.
-
-        :type: pystratum.style.PyStratumStyle.PyStratumStyle
         """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def main(self, config_filename):
+    def main(self, config_filename: str) -> int:
         """
         The "main" of the wrapper generator. Returns 0 on success, 1 if one or more errors occurred.
 
@@ -98,7 +85,7 @@ class RoutineWrapperGenerator:
         return 0
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __generate_wrapper_class(self):
+    def __generate_wrapper_class(self) -> None:
         """
         Generates the wrapper class.
         """
@@ -118,7 +105,7 @@ class RoutineWrapperGenerator:
         Util.write_two_phases(self._wrapper_filename, self._code, self._io)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _read_configuration_file(self, config_filename):
+    def _read_configuration_file(self, config_filename: str) -> None:
         """
         Reads parameters from the configuration file.
 
@@ -135,7 +122,7 @@ class RoutineWrapperGenerator:
         self._lob_as_string_flag = config.get('wrapper', 'lob_as_string')
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _read_routine_metadata(self):
+    def _read_routine_metadata(self) -> Dict:
         """
         Returns the metadata of stored routines.
 
@@ -149,10 +136,12 @@ class RoutineWrapperGenerator:
         return metadata
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _write_class_header(self):
+    def _write_class_header(self) -> None:
         """
         Generate a class header for stored routine wrapper.
         """
+        self._write_line('from typing import Any, Dict, List, Optional')
+        self._write_line()
         self._write_line('from {0!s} import {1!s}'.format(self._parent_class_namespace, self._parent_class_name))
         self._write_line()
         self._write_line()
@@ -163,7 +152,7 @@ class RoutineWrapperGenerator:
         self._write_line('    """')
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _write_line(self, text=''):
+    def _write_line(self, text: str = '') -> None:
         """
         Writes a line with Python code to the generate code buffer.
 
@@ -175,7 +164,7 @@ class RoutineWrapperGenerator:
             self._code += "\n"
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _write_class_trailer(self):
+    def _write_class_trailer(self) -> None:
         """
         Generate a class trailer for stored routine wrapper.
         """
@@ -185,7 +174,7 @@ class RoutineWrapperGenerator:
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
-    def _write_routine_function(self, routine):
+    def _write_routine_function(self, routine: Dict[str, Any]) -> None:
         """
         Generates a complete wrapper method for a stored routine.
 

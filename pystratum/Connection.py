@@ -3,6 +3,9 @@ PyStratum
 """
 import os
 from configparser import ConfigParser
+from typing import Optional, Tuple
+
+from pystratum.style.PyStratumStyle import PyStratumStyle
 
 
 class Connection:
@@ -10,22 +13,24 @@ class Connection:
     Parent class for RDBMS connections.
     """
     # ------------------------------------------------------------------------------------------------------------------
-    def __init__(self, io):
+    def __init__(self, io: PyStratumStyle):
         """
         Object constructor.
 
-        :param pystratum.style.PyStratumStyle.PyStratumStyle io: The output decorator.
+        :param PyStratumStyle io: The output decorator.
         """
-        self._io = io
+        self._io: PyStratumStyle = io
         """
         The output decorator.
-
-        :type: pystratum.style.PyStratumStyle.PyStratumStyle
         """
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def _get_option(config, supplement, section, option, fallback=None):
+    def _get_option(config: ConfigParser,
+                    supplement: ConfigParser,
+                    section: str,
+                    option: str,
+                    fallback: Optional[str] = None) -> str:
         """
         Reads an option for a configuration file.
 
@@ -51,13 +56,13 @@ class Connection:
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def _read_configuration(config_filename):
+    def _read_configuration(config_filename: str) -> Tuple[ConfigParser, ConfigParser]:
         """
         Checks the supplement file.
 
         :param str config_filename: The name of the configuration file.
 
-        :rtype: (configparser.ConfigParser,configparser.ConfigParser)
+        :rtype: (ConfigParser,ConfigParser)
         """
         config = ConfigParser()
         config.read(config_filename)

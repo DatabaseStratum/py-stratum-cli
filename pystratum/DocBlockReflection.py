@@ -3,6 +3,7 @@ PyStratum
 """
 import os
 import re
+from typing import List, Tuple
 
 
 class DocBlockReflection:
@@ -11,37 +12,31 @@ class DocBlockReflection:
     """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __init__(self, comment):
+    def __init__(self, comment: List[str]):
         """
         Object constructor.
 
         :param list[str] comment: The comment as a list of strings.
         """
-        self._comment = comment
+        self._comment: List[str] = comment
         """
         The DocBlock as a list of strings.
-
-        :type: list[str]
         """
 
-        self._description = ''
+        self._description: str = ''
         """
         The description.
-
-        :type: str|None
         """
 
-        self._tags = list()
+        self._tags: List[Tuple[str, str]] = list()
         """
         The tags in the DocBlock
-
-        :type: list[(str,str)]
         """
 
         self.__reflect()
 
     # ------------------------------------------------------------------------------------------------------------------
-    def get_description(self):
+    def get_description(self) -> str:
         """
         Returns the description.
 
@@ -50,7 +45,7 @@ class DocBlockReflection:
         return self._description
 
     # ------------------------------------------------------------------------------------------------------------------
-    def get_tag(self, name):
+    def get_tag(self, name: str) -> str:
         """
         Returns a tag.
 
@@ -65,7 +60,7 @@ class DocBlockReflection:
         return ''
 
     # ------------------------------------------------------------------------------------------------------------------
-    def get_tags(self, name):
+    def get_tags(self, name: str) ->List[str]:
         """
         Returns a list of tags.
 
@@ -81,7 +76,7 @@ class DocBlockReflection:
         return tags
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __reflect(self):
+    def __reflect(self) -> None:
         """
         Parses the DocBlock.
         """
@@ -91,7 +86,7 @@ class DocBlockReflection:
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def __remove_leading_empty_lines(lines):
+    def __remove_leading_empty_lines(lines: List[str]) -> List[str]:
         """
         Removes leading empty lines from a list of lines.
 
@@ -108,7 +103,7 @@ class DocBlockReflection:
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def __remove_trailing_empty_lines(lines):
+    def __remove_trailing_empty_lines(lines: List[str]) -> List[str]:
         """
         Removes leading empty lines from a list of lines.
 
@@ -122,7 +117,7 @@ class DocBlockReflection:
         return tmp
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __clean_doc_block(self):
+    def __clean_doc_block(self) -> None:
         """
         Cleans the DocBlock from leading and trailing white space and comment tokens.
         """
@@ -144,7 +139,7 @@ class DocBlockReflection:
         self._comment = self.__remove_trailing_empty_lines(self._comment)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __extract_description(self):
+    def __extract_description(self) -> None:
         """
         Extracts the description from the DocBlock. The description start at the first line and stops at the first tag
         or the end of the DocBlock.
@@ -161,7 +156,7 @@ class DocBlockReflection:
         self._description = os.linesep.join(tmp)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __extract_tags(self):
+    def __extract_tags(self) -> None:
         """
         Extract tags from the DocBlock.
         """

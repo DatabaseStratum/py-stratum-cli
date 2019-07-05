@@ -4,6 +4,9 @@ PyStratum
 import importlib
 import inspect
 import re
+from typing import Dict, Any, List, Union
+
+from pystratum.style.PyStratumStyle import PyStratumStyle
 
 
 class ConstantClass:
@@ -12,18 +15,16 @@ class ConstantClass:
     """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __init__(self, class_name, io):
+    def __init__(self, class_name: str, io: PyStratumStyle):
         """
         Object constructor.
 
         :param str class_name: The name of class that acts like a namespace for constants.
-        :param pystratum.style.PyStratumStyle.PyStratumStyle io: The output decorator.
+        :param PyStratumStyle io: The output decorator.
         """
-        self.__class_name = class_name
+        self.__class_name: str = class_name
         """
         The name of class that acts like a namespace for constants.
-
-        :type: str
         """
 
         self.__module = None
@@ -33,24 +34,20 @@ class ConstantClass:
         :type: module
         """
 
-        self.__annotation = '# PyStratum'
+        self.__annotation: str = '# PyStratum'
         """
         The comment after which the auto generated constants must be inserted.
-
-        :type: str
         """
 
-        self._io = io
+        self._io: PyStratumStyle = io
         """
         The output decorator.
-
-        :type: pystratum.style.PyStratumStyle.PyStratumStyle
         """
 
         self.__load()
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __load(self):
+    def __load(self) -> None:
         """
         Loads dynamically the class that acts like a namespace for constants.
         """
@@ -65,7 +62,7 @@ class ConstantClass:
         self.__module = modules[-2]
 
     # ------------------------------------------------------------------------------------------------------------------
-    def file_name(self):
+    def file_name(self) -> str:
         """
         Returns the filename of the module with the class that acts like a namespace for constants.
 
@@ -74,7 +71,7 @@ class ConstantClass:
         return inspect.getfile(self.__module)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def source(self):
+    def source(self) -> str:
         """
         Returns the source of the module with the class that acts like a namespace for constants.
 
@@ -83,14 +80,14 @@ class ConstantClass:
         return inspect.getsource(self.__module)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def reload(self):
+    def reload(self) -> None:
         """
         Reloads the module with the class that acts like a namespace for constants.
         """
         importlib.reload(self.__module)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def constants(self):
+    def constants(self) -> Dict[str, Any]:
         """
         Gets the constants from the class that acts like a namespace for constants.
 
@@ -107,7 +104,7 @@ class ConstantClass:
         return ret
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __extract_info(self, lines):
+    def __extract_info(self, lines: List[str]) -> Dict[str, Union[str, int]]:
         """
         Extracts the following info from the source of the module with the class that acts like a namespace for
         constants:
@@ -151,7 +148,7 @@ class ConstantClass:
         return ret
 
     # ------------------------------------------------------------------------------------------------------------------
-    def source_with_constants(self, constants):
+    def source_with_constants(self, constants: Dict[str, int]) -> str:
         """
         Returns the source of the module with the class that acts like a namespace for constants with new constants.
 

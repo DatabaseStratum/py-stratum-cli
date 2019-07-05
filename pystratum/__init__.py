@@ -4,7 +4,7 @@ PyStratum
 from pystratum.application.PyStratumApplication import PyStratumApplication
 
 
-def main():
+def main() -> int:
     application = PyStratumApplication()
     ret = application.run()
 

@@ -10,7 +10,16 @@ class Singleton0Wrapper(Wrapper):
     """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _get_docstring_return_type(self):
+    def _return_type_hint(self) -> str:
+        """
+        Returns the return type hint of the wrapper method.
+
+        :rtype: str
+        """
+        return 'Any'
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def _get_docstring_return_type(self) -> str:
         """
         Returns the return type of the wrapper methods the be used in the docstring.
 

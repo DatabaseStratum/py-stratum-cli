@@ -2,6 +2,7 @@
 PyStratum
 """
 import abc
+from typing import Dict, Any
 
 from pystratum.wrapper.Wrapper import Wrapper
 
@@ -13,7 +14,16 @@ class RowsWithIndexWrapper(Wrapper):
     """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _get_docstring_return_type(self):
+    def _return_type_hint(self) -> str:
+        """
+        Returns the return type hint of the wrapper method.
+
+        :rtype: str
+        """
+        return 'Dict'
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def _get_docstring_return_type(self) -> str:
         """
         Returns the return type of the wrapper methods the be used in the docstring.
 
@@ -23,11 +33,11 @@ class RowsWithIndexWrapper(Wrapper):
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
-    def _write_execute_rows(self, routine):
+    def _write_execute_rows(self, routine: Dict[str, Any]) -> None:
         raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _write_result_handler(self, routine):
+    def _write_result_handler(self, routine: Dict[str, Any]) -> None:
         """
         Generates code for calling the stored routine in the wrapper method.
         """

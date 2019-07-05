@@ -4,7 +4,8 @@ PyStratum
 import configparser
 from pydoc import locate
 
-from cleo import Command
+from cleo import Command, Input, Output
+from pystratum.RoutineLoader import RoutineLoader
 
 from pystratum.style.PyStratumStyle import PyStratumStyle
 
@@ -19,14 +20,17 @@ class LoaderCommand(Command):
     """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def execute(self, i, o):
-        self.input = i
-        self.output = o
+    def execute(self, input_object: Input, output_object: Output) -> int:
+        """
+        Executes this command.
+        """
+        self.input = input_object
+        self.output = output_object
 
         return self.handle()
 
     # ------------------------------------------------------------------------------------------------------------------
-    def handle(self):
+    def handle(self) -> int:
         """
         Executes loader command.
         """
@@ -35,12 +39,10 @@ class LoaderCommand(Command):
         config_file = self.argument('config_file')
         sources = self.argument('file_names')
 
-        status = self.run_command(config_file, sources)
-
-        return status
+        return self.run_command(config_file, sources)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def run_command(self, config_file, sources):
+    def run_command(self, config_file, sources) -> int:
         """
         :param str config_file: The name of config file.
         :param list sources: The list with source files.
@@ -56,14 +58,14 @@ class LoaderCommand(Command):
         return status
 
     # ------------------------------------------------------------------------------------------------------------------
-    def create_routine_loader(self, rdbms):
+    def create_routine_loader(self, rdbms: str) -> RoutineLoader:
         """
         Factory for creating a Routine Loader objects (i.e. objects for loading stored routines into a RDBMS instance
         from (pseudo) SQL files.
 
         :param str rdbms: The target RDBMS (i.e. mysql, mssql or pgsql).
 
-        :rtype: pystratum.RoutineLoader.RoutineLoader
+        :rtype: RoutineLoader
         """
         # Note: We load modules and classes dynamically such that on the end user's system only the required modules
         #       and other dependencies for the targeted RDBMS must be installed (and required modules and other

@@ -4,7 +4,8 @@ PyStratum
 import configparser
 from pydoc import locate
 
-from cleo import Command
+from cleo import Command, Input, Output
+from pystratum.RoutineWrapperGenerator import RoutineWrapperGenerator
 
 from pystratum.style.PyStratumStyle import PyStratumStyle
 
@@ -18,24 +19,28 @@ class WrapperCommand(Command):
     """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def execute(self, i, o):
-        self.input = i
-        self.output = o
+    def execute(self, input_object: Input, output_object: Output) -> int:
+        """
+        Executes this command.
+        """
+        self.input = input_object
+        self.output = output_object
 
         return self.handle()
 
     # ------------------------------------------------------------------------------------------------------------------
-    def handle(self):
+    def handle(self) -> int:
         """
         Executes wrapper command when PyStratumCommand is activated.
         """
         self.output = PyStratumStyle(self.input, self.output)
 
         config_file = self.input.get_argument('config_file')
-        self.run_command(config_file)
+
+        return self.run_command(config_file)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def run_command(self, config_file):
+    def run_command(self, config_file: str) -> int:
         """
         :param str config_file: The name of config file.
         """
@@ -47,15 +52,17 @@ class WrapperCommand(Command):
         wrapper = self.create_routine_wrapper_generator(rdbms)
         wrapper.main(config_file)
 
+        return 0
+
     # ------------------------------------------------------------------------------------------------------------------
-    def create_routine_wrapper_generator(self, rdbms):
+    def create_routine_wrapper_generator(self, rdbms: str) -> RoutineWrapperGenerator:
         """
         Factory for creating a Constants objects (i.e. objects for generating a class with wrapper methods for calling
         stored routines in a database).
 
         :param str rdbms: The target RDBMS (i.e. mysql, mssql or pgsql).
 
-        :rtype: pystratum.RoutineWrapperGenerator.RoutineWrapperGenerator
+        :rtype: RoutineWrapperGenerator
         """
         # Note: We load modules and classes dynamically such that on the end user's system only the required modules
         #       and other dependencies for the targeted RDBMS must be installed (and required modules and other

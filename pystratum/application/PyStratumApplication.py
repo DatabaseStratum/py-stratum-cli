@@ -1,7 +1,9 @@
 """
 PyStratum
 """
-from cleo import Application
+from typing import List
+
+from cleo import Application, Command
 
 from pystratum.command.ConstantsCommand import ConstantsCommand
 from pystratum.command.LoaderCommand import LoaderCommand
@@ -22,11 +24,11 @@ class PyStratumApplication(Application):
         Application.__init__(self, 'pystratum', '0.10.20')
 
     # ------------------------------------------------------------------------------------------------------------------
-    def get_default_commands(self):
+    def get_default_commands(self) -> List[Command]:
         """
         Returns the default commands of this application.
 
-        :rtype: list[cleo.Command]
+        :rtype: list[Command]
         """
         commands = Application.get_default_commands(self)
 

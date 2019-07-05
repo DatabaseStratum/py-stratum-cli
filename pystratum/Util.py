@@ -3,6 +3,8 @@ PyStratum
 """
 import os
 
+from pystratum.style.PyStratumStyle import PyStratumStyle
+
 
 class Util:
     """
@@ -11,7 +13,7 @@ class Util:
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def write_two_phases(filename, data, io):
+    def write_two_phases(filename: str, data: str, io: PyStratumStyle) -> None:
         """
         Writes a file in two phase to the filesystem.
 
@@ -24,7 +26,7 @@ class Util:
 
         :param str filename: The name of the file were the data must be stored.
         :param str data: The data that must be written.
-        :param pystratum.style.PyStratumStyle.PyStratumStyle io: The output decorator.
+        :param  PyStratumStyle io: The output decorator.
         """
         write_flag = True
         if os.path.exists(filename):

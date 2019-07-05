@@ -10,7 +10,7 @@ class ResultException(RuntimeError):
     the actual and expected numbers of rows selected or an unexpected NULL value was selected.
     """
     # ------------------------------------------------------------------------------------------------------------------
-    def __init__(self, expected_row_count, actual_row_count, query):
+    def __init__(self, expected_row_count: str, actual_row_count: int, query: str):
         """
         Object constructor.
 
@@ -20,30 +20,24 @@ class ResultException(RuntimeError):
         """
         RuntimeError.__init__(self, self.__message(expected_row_count, actual_row_count, query))
 
-        self._expected_row_count = expected_row_count
+        self._expected_row_count: str = expected_row_count
         """
         The expected row count.
-
-        :type: str
         """
 
-        self._actual_row_count = actual_row_count
+        self._actual_row_count: int = actual_row_count
         """
         The actual row count.
-
-        :type: int
         """
 
-        self._query = query
+        self._query: str = query
         """
         The query.
-
-        :type: str
         """
 
     # ------------------------------------------------------------------------------------------------------------------
     @property
-    def expected_row_count(self):
+    def expected_row_count(self) -> str:
         """
         The expected row count.
 
@@ -53,7 +47,7 @@ class ResultException(RuntimeError):
 
     # ------------------------------------------------------------------------------------------------------------------
     @property
-    def actual_row_count(self):
+    def actual_row_count(self) -> int:
         """
         The actual row count.
 
@@ -63,7 +57,7 @@ class ResultException(RuntimeError):
 
     # ------------------------------------------------------------------------------------------------------------------
     @property
-    def query(self):
+    def query(self) -> str:
         """
         The query.
 
@@ -73,7 +67,7 @@ class ResultException(RuntimeError):
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def __message(expected_row_count, actual_row_count, query):
+    def __message(expected_row_count: str, actual_row_count: int, query: str) -> str:
         """
         Composes the exception message.
 

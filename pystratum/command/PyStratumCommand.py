@@ -1,7 +1,7 @@
 """
 PyStratum
 """
-from cleo import Command
+from cleo import Command, Input, Output
 
 from pystratum.style.PyStratumStyle import PyStratumStyle
 
@@ -16,14 +16,17 @@ class PyStratumCommand(Command):
     """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def execute(self, i, o):
-        self.input = i
-        self.output = o
+    def execute(self, input_object: Input, output_object: Output) -> int:
+        """
+        Executes this command.
+        """
+        self.input = input_object
+        self.output = output_object
 
         return self.handle()
 
     # ------------------------------------------------------------------------------------------------------------------
-    def handle(self):
+    def handle(self) -> int:
         """
         Executes the actual Stratum program.
         """

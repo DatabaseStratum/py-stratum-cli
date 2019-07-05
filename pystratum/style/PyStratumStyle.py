@@ -1,7 +1,9 @@
 """
 PyStratum
 """
-from cleo import Output
+from typing import List, Union
+
+from cleo import Output, Input
 from cleo.styles import CleoStyle
 
 
@@ -11,33 +13,33 @@ class PyStratumStyle(CleoStyle):
     """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __init__(self, input, output):
+    def __init__(self, input_object: Input, output_object: Output):
         """
         Object constructor.
 
-        :param cleo.inputs.input.Input input: The input object.
-        :param cleo.outputs.output.Output output: The output object.
+        :param Input input_object: The input object.
+        :param Output output_object: The output object.
         """
-        CleoStyle.__init__(self, input, output)
+        CleoStyle.__init__(self, input_object, output_object)
 
         # Create style notes.
-        output.get_formatter().add_style('note', 'yellow', None, ['bold'])
+        output_object.get_formatter().add_style('note', 'yellow', None, ['bold'])
 
         # Create style for database objects.
-        output.get_formatter().add_style('dbo', 'green', None, ['bold'])
+        output_object.get_formatter().add_style('dbo', 'green', None, ['bold'])
 
         # Create style for file and directory names.
-        output.get_formatter().add_style('fso', 'white', None, ['bold'])
+        output_object.get_formatter().add_style('fso', 'white', None, ['bold'])
 
         # Create style for SQL statements.
-        output.get_formatter().add_style('sql', 'magenta', None, ['bold'])
+        output_object.get_formatter().add_style('sql', 'magenta', None, ['bold'])
 
     # ------------------------------------------------------------------------------------------------------------------
-    def warning(self, message):
+    def warning(self, message: Union[str, List[str]]) -> None:
         self.block(message, 'WARNING', 'fg=white;bg=red', padding=True)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def text(self, message):
+    def text(self, message: Union[str, List[str]]) -> None:
         if isinstance(message, list):
             messages = message
         else:
@@ -47,7 +49,7 @@ class PyStratumStyle(CleoStyle):
             self.writeln(' {0}'.format(line))
 
     # ------------------------------------------------------------------------------------------------------------------
-    def log_verbose(self, message):
+    def log_verbose(self, message: Union[str, List[str]]) -> None:
         """
         Logs a message only when logging level is verbose.
 
@@ -57,7 +59,7 @@ class PyStratumStyle(CleoStyle):
             self.writeln(message)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def log_very_verbose(self, message):
+    def log_very_verbose(self, message: Union[str, List[str]]) -> None:
         """
         Logs a message only when logging level is very verbose.
 

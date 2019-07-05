@@ -2,6 +2,7 @@
 PyStratum
 """
 import abc
+from typing import Dict, Any
 
 from pystratum.wrapper.Wrapper import Wrapper
 
@@ -11,6 +12,15 @@ class RowsWithKeyWrapper(Wrapper):
     Parent class wrapper wrapper method generator for stored procedures whose result set must be returned using tree
     structure using a combination of unique columns.
     """
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def _return_type_hint(self) -> str:
+        """
+        Returns the return type hint of the wrapper method.
+
+        :rtype: str
+        """
+        return 'Dict'
 
     # ------------------------------------------------------------------------------------------------------------------
     def _get_docstring_return_type(self):
@@ -23,11 +33,11 @@ class RowsWithKeyWrapper(Wrapper):
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
-    def _write_execute_rows(self, routine):
+    def _write_execute_rows(self, routine: Dict[str, Any]) -> None:
         raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _write_result_handler(self, routine):
+    def _write_result_handler(self, routine: Dict[str, Any]) -> None:
         """
         Generates code for calling the stored routine in the wrapper method.
         """

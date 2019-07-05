@@ -4,9 +4,9 @@ PyStratum
 from pystratum.wrapper.Wrapper import Wrapper
 
 
-class FunctionsWrapper(Wrapper):
+class MultiWrapper(Wrapper):
     """
-    Wrapper method generator for stored functions.
+    Wrapper method generator for stored procedures with designation type log.
     """
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -16,7 +16,7 @@ class FunctionsWrapper(Wrapper):
 
         :rtype: str
         """
-        return 'Any'
+        return 'List[List[Dict[str, Any]]]'
 
     # ------------------------------------------------------------------------------------------------------------------
     def _get_docstring_return_type(self) -> str:
@@ -25,6 +25,6 @@ class FunctionsWrapper(Wrapper):
 
         :rtype: str
         """
-        return '*'
+        return 'list[list[dict[str,*]]]'
 
 # ----------------------------------------------------------------------------------------------------------------------

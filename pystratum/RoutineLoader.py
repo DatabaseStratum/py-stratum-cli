@@ -5,6 +5,11 @@ import abc
 import configparser
 import json
 import os
+from typing import Dict, Optional, List
+
+from pystratum.RoutineLoaderHelper import RoutineLoaderHelper
+
+from pystratum.style.PyStratumStyle import PyStratumStyle
 
 from pystratum.ConstantClass import ConstantClass
 
@@ -15,7 +20,7 @@ class RoutineLoader:
     """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __init__(self, io):
+    def __init__(self, io: PyStratumStyle):
         """
         Object constructor.
 
@@ -28,85 +33,63 @@ class RoutineLoader:
         :type: set
         """
 
-        self._pystratum_metadata = {}
+        self._pystratum_metadata: Dict = {}
         """
         The meta data of all stored routines.
-
-        :type: dict
         """
 
-        self._pystratum_metadata_filename = None
+        self._pystratum_metadata_filename: Optional[str] = None
         """
         The filename of the file with the metadata of all stored routines.
-
-        :type: str
         """
 
-        self._rdbms_old_metadata = {}
+        self._rdbms_old_metadata: Dict = {}
         """
         Old metadata about all stored routines.
-
-        :type: dict
         """
 
-        self._replace_pairs = {}
+        self._replace_pairs: Dict = {}
         """
         A map from placeholders to their actual values.
-
-        :type: dict
         """
 
-        self._source_file_encoding = None
+        self._source_file_encoding: Optional[str] = None
         """
         The character set of the source files.
-
-        :type: str
         """
 
-        self._source_directory = None
+        self._source_directory: Optional[str] = None
         """
         Path where source files can be found.
-
-        :type: str
         """
 
-        self._source_file_extension = None
+        self._source_file_extension: Optional[str] = None
         """
         The extension of the source files.
-
-        :type: str
         """
 
-        self._source_file_names = {}
+        self._source_file_names: Dict = {}
         """
         All found source files.
-
-        :type: dict
         """
 
-        self._constants_class_name = ''
+        self._constants_class_name: str = ''
         """
         The name of the class that acts like a namespace for constants.
-
-        :type: str
         """
 
-        self.__shadow_directory = None
+        self.__shadow_directory: Optional[str] = None
         """
         The name of the directory were copies with pure SQL of the stored routine sources must be stored.
-
-        :type: str|None
         """
 
-        self._io = io
+        self._io: PyStratumStyle = io
         """
         The output decorator.
-
-        :type: pystratum.style.PyStratumStyle.PyStratumStyle
         """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def main(self, config_filename, file_names=None):
+    def main(self, config_filename: str, file_names: Optional[List[str]] = None) -> int:
         """
         Loads stored routines into the current schema.
 
@@ -129,7 +112,7 @@ class RoutineLoader:
             return 0
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __log_overview_errors(self):
+    def __log_overview_errors(self) -> None:
         """
         Show info about sources files of stored routines that were not loaded successfully.
         """
@@ -139,7 +122,7 @@ class RoutineLoader:
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
-    def connect(self):
+    def connect(self) -> None:
         """
         Connects to the RDBMS instance.
         """
@@ -147,14 +130,14 @@ class RoutineLoader:
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
-    def disconnect(self):
+    def disconnect(self) -> None:
         """
         Disconnects from the RDBMS instance.
         """
         raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _add_replace_pair(self, name, value, quote):
+    def _add_replace_pair(self, name: str, value: str, quote: bool):
         """
         Adds a replace part to the map of replace pairs.
 
@@ -179,7 +162,7 @@ class RoutineLoader:
         self._replace_pairs[key] = value
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __load_list(self, config_filename, file_names):
+    def __load_list(self, config_filename: str, file_names: Optional[List[str]]) -> None:
         """
         Loads all stored routines in a list into the RDBMS instance.
 
@@ -199,7 +182,7 @@ class RoutineLoader:
         self.disconnect()
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __load_all(self, config_filename):
+    def __load_all(self, config_filename: str) -> None:
         """
         Loads all stored routines into the RDBMS instance.
 
@@ -220,7 +203,7 @@ class RoutineLoader:
         self.disconnect()
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _read_configuration_file(self, config_filename):
+    def _read_configuration_file(self, config_filename: str) -> None:
         """
         Reads parameters from the configuration file.
 
@@ -239,7 +222,7 @@ class RoutineLoader:
         self._constants_class_name = config.get('constants', 'class')
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __find_source_files(self):
+    def __find_source_files(self) -> None:
         """
         Searches recursively for all source files in a directory.
         """
@@ -257,7 +240,7 @@ class RoutineLoader:
                         self._source_file_names[basename] = relative_path
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __read_stored_routine_metadata(self):
+    def __read_stored_routine_metadata(self) -> None:
         """
         Reads the metadata of stored routines from the metadata file.
         """
@@ -267,7 +250,7 @@ class RoutineLoader:
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
-    def _get_column_type(self):
+    def _get_column_type(self) -> None:
         """
         Selects schema, table, column names and the column type from the RDBMS instance and saves them as replace pairs.
         """
@@ -275,7 +258,10 @@ class RoutineLoader:
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
-    def create_routine_loader_helper(self, routine_name, pystratum_old_metadata, rdbms_old_metadata):
+    def create_routine_loader_helper(self,
+                                     routine_name: str,
+                                     pystratum_old_metadata: Dict,
+                                     rdbms_old_metadata: Dict) -> RoutineLoaderHelper:
         """
         Creates a Routine Loader Helper object.
 
@@ -283,12 +269,12 @@ class RoutineLoader:
         :param dict pystratum_old_metadata: The old metadata of the stored routine from PyStratum.
         :param dict rdbms_old_metadata:  The old metadata of the stored routine from database instance.
 
-        :rtype: pystratum.RoutineLoaderHelper.RoutineLoaderHelper
+        :rtype: RoutineLoaderHelper
         """
         raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __load_stored_routines(self):
+    def __load_stored_routines(self) -> None:
         """
         Loads all stored routines into the RDBMS instance.
         """
@@ -319,14 +305,14 @@ class RoutineLoader:
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
-    def _get_old_stored_routine_info(self):
+    def _get_old_stored_routine_info(self) -> None:
         """
         Retrieves information about all stored routines in the current schema.
         """
         raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _get_correct_sql_mode(self):
+    def _get_correct_sql_mode(self) -> None:
         """
         Gets the SQL mode in the order as preferred by MySQL. This method is specific for MySQL.
         """
@@ -334,7 +320,7 @@ class RoutineLoader:
 
     # ------------------------------------------------------------------------------------------------------------------
     @abc.abstractmethod
-    def _drop_obsolete_routines(self):
+    def _drop_obsolete_routines(self) -> None:
         """
         Drops obsolete stored routines (i.e. stored routines that exits in the current schema but for
         which we don't have a source file).
@@ -342,7 +328,7 @@ class RoutineLoader:
         raise NotImplementedError()
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __remove_obsolete_metadata(self):
+    def __remove_obsolete_metadata(self) -> None:
         """
         Removes obsolete entries from the metadata of all stored routines.
         """
@@ -354,7 +340,7 @@ class RoutineLoader:
         self._pystratum_metadata = clean
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __write_stored_routine_metadata(self):
+    def __write_stored_routine_metadata(self) -> None:
         """
         Writes the metadata of all stored routines to the metadata file.
         """
@@ -362,7 +348,7 @@ class RoutineLoader:
             json.dump(self._pystratum_metadata, stream, indent=4, sort_keys=True)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def find_source_files_from_list(self, file_names):
+    def find_source_files_from_list(self, file_names) -> None:
         """
         Finds all source files that actually exists from a list of file names.
 
@@ -382,7 +368,7 @@ class RoutineLoader:
                 self.error_file_names.add(file_name)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __get_constants(self):
+    def __get_constants(self) -> None:
         """
         Gets the constants from the class that acts like a namespace for constants and adds them to the replace pairs.
         """

@@ -2,22 +2,23 @@
 PyStratum
 """
 import os
+from typing import Optional
+
+from pystratum.style.PyStratumStyle import PyStratumStyle
 
 
 class MetadataDataLayer:
     """
     Data layer for retrieving metadata and loading stored routines.
     """
-    io = None
+    io: Optional[PyStratumStyle] = None
     """
     The output decorator.
-
-    :type: pystratum.style.PyStratumStyle.PyStratumStyle|None
     """
 
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def _log_query(query):
+    def _log_query(query: str) -> None:
         """
         Logs the query on the console.
 
