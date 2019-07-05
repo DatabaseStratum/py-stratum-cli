@@ -20,3 +20,9 @@ build:
           - psql -c "create user test with password 'test';"
           - psql -c "create database test owner=test;"
           - psql -c "create schema test authorization test;"
+
+    nodes:
+      analysis:
+        tests:
+          override:
+            - py-scrutinizer-run
