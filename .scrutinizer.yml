@@ -3,26 +3,15 @@ before_commands:
   - sudo pip3 install coverage
 
 build:
-    dependencies:
-        before:
-          - wget https://dev.mysql.com/get/Downloads/Connector-Python/mysql-connector-python-2.1.3.tar.gz;
-          - tar zxvf mysql-connector-python-2.1.3.tar.gz
-          - cd mysql-connector-python-2.1.3 && python3 setup.py install
+  override:
+    - command: coverage run -m unittest discover -s pystratum_test -p *Test.py
+      coverage:
+        file: '.coverage'
+        config_file: '.coveragerc'
+        format: 'py-cc'
 
-    tests:
-        before:
-          - mysql -u root -e "create database if not exists test;"
-          - mysql -u root -e "create user 'test'@'localhost' identified by 'test';"
-          - mysql -u root -e "grant all on test.*  to 'test'@'localhost';"
-          - mysql -u root -e "set global binlog_format = 'row';"
-          - mysql -u root -e "set global log_bin_trust_function_creators = 1;"
-
-          - psql -c "create user test with password 'test';"
-          - psql -c "create database test owner=test;"
-          - psql -c "create schema test authorization test;"
-
-    nodes:
-      analysis:
-        tests:
-          override:
-            - py-scrutinizer-run
+  nodes:
+    analysis:
+      tests:
+        override:
+          - py-scrutinizer-run
