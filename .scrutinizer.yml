@@ -14,16 +14,13 @@ build:
       - pip3 install coverage
       - pip3 install PyStratum-Backend
 
-  tests:
-    override:
-      - command: coverage run -m unittest discover -s test -p *Test.py
-        coverage:
-          file: '.coverage'
-          config_file: '.coveragerc'
-          format: 'py-cc'
-
   nodes:
     analysis:
       tests:
         override:
+          - command: coverage run -m unittest discover -s test -p *Test.py
+            coverage:
+              file: '.coverage'
+              config_file: '.coveragerc'
+              format: 'py-cc'
           - py-scrutinizer-run
