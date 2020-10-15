@@ -1,11 +1,11 @@
 before_commands:
-  - sudo pip3 install cleo
+  - sudo pip3 install cleo==0.6.8
   - sudo pip3 install coverage
 
 build:
   dependencies:
     before:
-      - pip3 install cleo
+      - pip3 install cleo==0.6.8
       - pip3 install coverage
 
   tests:
