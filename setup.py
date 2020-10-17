@@ -46,7 +46,7 @@ setup(
 
     entry_points={
         'console_scripts': [
-            'pystratum = pystratum_cli.application:main',
+            'pystratum = pystratum_cli:main',
         ],
     }
 )
