@@ -13,7 +13,7 @@ setup(
 
     version='1.0.1',
 
-    description='PyStratum: Command Line Interface',
+    description='PyStratum-Cli: The frontend of PyStratum.',
     long_description=long_description,
 
     url='https://github.com/DatabaseStratum/py-stratum-cli',
@@ -38,7 +38,7 @@ setup(
         'Programming Language :: Python :: 3.9',
     ],
 
-    keywords='PyStratum, CLI',
+    keywords='PyStratum',
 
     packages=find_packages(exclude=['build', 'test']),
 
@@ -46,7 +46,7 @@ setup(
 
     entry_points={
         'console_scripts': [
-            'pystratum_cli = pystratum_cli.application:main',
+            'pystratum = pystratum_cli.application:main',
         ],
     }
 )
