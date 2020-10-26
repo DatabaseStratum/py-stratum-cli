@@ -42,7 +42,8 @@ setup(
 
     packages=find_packages(exclude=['build', 'test']),
 
-    install_requires=['cleo==0.6.8'],
+    install_requires=['cleo==0.6.8',
+                      'PyStratum-Backend<2, >=1.0.2'],
 
     entry_points={
         'console_scripts': [

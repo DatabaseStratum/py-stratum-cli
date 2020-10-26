@@ -1,0 +1,6 @@
+# Must be aligned with setup.py.
+cleo==0.6.8
+PyStratum-Backend<2, >=1.0.2
+
+# For development only.
+coverage<6, >=5.3

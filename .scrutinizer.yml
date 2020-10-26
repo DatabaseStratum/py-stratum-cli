@@ -2,17 +2,10 @@ filter:
   excluded_paths:
     - test/*
 
-before_commands:
-  - sudo pip3 install cleo==0.6.8
-  - sudo pip3 install coverage
-  - sudo pip3 install PyStratum-Backend
-
 build:
   dependencies:
     before:
-      - pip3 install cleo==0.6.8
-      - pip3 install coverage
-      - pip3 install PyStratum-Backend
+      - pip install -r requirements.txt
 
   nodes:
     analysis:
