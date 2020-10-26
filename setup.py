@@ -11,7 +11,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 setup(
     name='PyStratum-Cli',
 
-    version='1.0.3',
+    version='1.0.4',
 
     description='PyStratum-Cli: The frontend of PyStratum.',
     long_description=long_description,
