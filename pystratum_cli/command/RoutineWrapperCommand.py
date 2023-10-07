@@ -6,7 +6,7 @@ class RoutineWrapperCommand(BaseCommand):
     Command for generating a class with wrapper methods for invoking stored routines in a database instance.
 
     wrapper
-        {config_file : The strum configuration file}
+        {config_file : The stratum configuration file}
     """
 
     # ------------------------------------------------------------------------------------------------------------------

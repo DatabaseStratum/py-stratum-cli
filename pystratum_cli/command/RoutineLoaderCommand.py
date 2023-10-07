@@ -6,7 +6,7 @@ class RoutineLoaderCommand(BaseCommand):
     Command for loading stored routines into a database instance from pseudo SQL files.
 
     loader
-        {config_file : The audit configuration file}
+        {config_file : The stratum configuration file}
         {file_names?* : Sources with stored routines}
     """
 
