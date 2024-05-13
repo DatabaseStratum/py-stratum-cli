@@ -1,6 +1,6 @@
 [project]
 name = "PyStratum-Cli"
-version = "2.0.0"
+version = "2.0.1"
 description = "PyStratum Cli: The frontend of PyStratum"
 keywords = ["PyStratum", "CLI"]
 readme = "README.rst"

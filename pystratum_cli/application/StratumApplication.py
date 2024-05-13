@@ -19,7 +19,7 @@ class StratumApplication(Application):
         """
         Object constructor
         """
-        Application.__init__(self, 'pystratum', '2.0.0')
+        Application.__init__(self, 'pystratum', '2.0.1')
 
         self.add(ConstantsCommand())
         self.add(RoutineLoaderCommand())
