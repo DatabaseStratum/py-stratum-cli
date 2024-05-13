@@ -1,0 +1,40 @@
+[project]
+name = "PyStratum-Cli"
+version = "2.0.0"
+description = "PyStratum Cli: The frontend of PyStratum"
+keywords = ["PyStratum", "CLI"]
+readme = "README.rst"
+authors = [{ name = "Set Based IT Consultancy", email = "info@setbased.nl" },
+]
+classifiers = ["Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Build Tools",
+    "Topic :: Software Development :: Code Generators",
+    "Topic :: System :: Installation/Setup",
+]
+dependencies = ["cleo~=2.0.1",
+    "PyStratum-Backend~=2.0.0",
+]
+license = { text = "MIT" }
+requires-python = ">=3.9"
+
+[project.urls]
+Homepage = "https://github.com/DatabaseStratum/py-stratum-cli"
+
+[options.entry_points]
+console_scripts = ['pystratum = pystratum_cli:main']
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[project.optional-dependencies]
+dev = ["build~=1.2.1",
+    "coverage~=5.3",
+    "twine~=5.0.0"]

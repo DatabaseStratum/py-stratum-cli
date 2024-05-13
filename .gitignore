@@ -3,9 +3,10 @@
 /.idea/
 /PyStratum_Cli.egg-info/
 /bin/phing
-/build/
 /composer.lock
 /dist/
+/requirements.txt
+/test/coverage.xml
 /test/html/
 /vendor/
 /venv/

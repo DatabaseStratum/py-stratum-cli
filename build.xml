@@ -7,20 +7,31 @@
         <exec command="composer update" checkreturn="true" passthru="true"/>
     </target>
 
+    <!-- Install virtual environment -->
+    <target name="venv">
+        <delete dir="venv" quiet="true"/>
+        <exec command="python3 -m venv venv" checkreturn="true" passthru="true"/>
+        <exec command="./venv/bin/python -m pip install --upgrade pip" checkreturn="true" passthru="true"/>
+        <exec command="./venv/bin/python -m pip install --upgrade pip-tools" checkreturn="true" passthru="true"/>
+        <exec command="./venv/bin/python -m piptools compile --all-extras -o requirements.txt pyproject.toml"
+              passthru="true" checkreturn="true"/>
+        <exec command="./venv/bin/python -m pip install --upgrade -r requirements.txt" passthru="true"
+              checkreturn="true"/>
+    </target>
+
     <!-- Creates a new version/release. -->
     <!-- @todo replace semantic version with pep-396 -->
     <target name="version">
         <readSemanticVersion file=".version"
                              versionProperty="VERSION"
                              haltOnError="true"/>
-
         <reflexive>
             <fileset dir=".">
-                <include name="setup.py"/>
+                <include name="pyproject.toml"/>
             </fileset>
             <filterchain>
                 <replaceregexp>
-                    <regexp pattern="version=.*" replace="version='${VERSION}',"/>
+                    <regexp pattern="version = .*" replace="version = &quot;${VERSION}&quot;"/>
                 </replaceregexp>
             </filterchain>
         </reflexive>
@@ -35,21 +46,36 @@
                 </replaceregexp>
             </filterchain>
         </reflexive>
-        <gitcommit repository="." message="Release: ${VERSION}" allFiles="true"/>
-        <gitpush repository="."/>
-        <gittag repository="." name="${VERSION}"/>
-        <gitpush repository="." refspec="${VERSION}" quiet="false"/>
+        <exec executable="git" checkreturn="true" passthru="true">
+            <arg value="commit"/>
+            <arg value="-a"/>
+            <arg value="-m"/>
+            <arg value="Release: ${VERSION}"/>
+        </exec>
+        <exec executable="git" checkreturn="true" passthru="true">
+            <arg value="push"/>
+        </exec>
+        <exec executable="git" checkreturn="true" passthru="true">
+            <arg value="tag"/>
+            <arg value="${VERSION}"/>
+        </exec>
+        <exec executable="git" checkreturn="true" passthru="true">
+            <arg value="push"/>
+            <arg value="origin"/>
+            <arg value="${VERSION}"/>
+        </exec>
     </target>
 
-    <!-- Creates a new distribution using setup.py -->
+    <!-- Creates a new distribution using pyproject.toml -->
     <target name="dist">
-        <exec command="python3 setup.py sdist" passthru="true" checkreturn="true"/>
+        <exec command="./venv/bin/python -m build" passthru="true" checkreturn="true"/>
     </target>
 
     <!-- Uploads a distribution to PyPI -->
     <target name="upload">
         <loadfile property="VERSION" file=".version"/>
-        <exec command="twine upload dist/PyStratum-Cli-${VERSION}.tar.gz" passthru="true" checkreturn="true"/>
+        <exec command="./venv/bin/python -m twine upload dist/pystratum_cli-${VERSION}*" passthru="true"
+              checkreturn="true"/>
     </target>
 
     <!-- All steps for releasing a new version -->
@@ -57,24 +83,9 @@
 
     <!-- Runs all unit tests-->
     <target name="unit">
-        <exec command="coverage3 run -m unittest discover -s test -p *Test.py" passthru="true" checkreturn="true"/>
-        <exec command="coverage3 html" passthru="true" checkreturn="true"/>
-    </target>
-
-    <!-- Generates the API documentation -->
-    <target name="apidoc">
-        <delete includeemptydirs="true" verbose="false" failonerror="true">
-            <fileset dir="source">
-                <include name="**"/>
-                <exclude name="conf.py"/>
-                <exclude name="index.rst"/>
-                <exclude name="Makefile"/>
-                <exclude name="modules.rst"/>
-                <exclude name="_static"/>
-            </fileset>
-        </delete>
-        <exec command="sphinx-apidoc-3 -f pystratum/ -d 4 -e -P -o source/" passthru="true" checkreturn="true"/>
-        <exec command="sphinx-build-3 -b html -d build/doctrees source build/html" passthru="true" checkreturn="true"/>
+        <exec command="./venv/bin/python -m coverage run -m unittest discover -s test -p \*Test.py" passthru="true"
+              checkreturn="true"/>
+        <exec command="./venv/bin/python -m coverage html" passthru="true" checkreturn="true"/>
     </target>
 
     <!-- Default target -->
