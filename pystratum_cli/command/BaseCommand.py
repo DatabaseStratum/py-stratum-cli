@@ -1,9 +1,11 @@
 import os
 from configparser import ConfigParser
+from typing import Optional
 
-from cleo import Command, Input, Output
+from cleo.commands.command import Command
+from cleo.io.io import IO
 from pystratum_backend.Backend import Backend
-from pystratum_backend.StratumStyle import StratumStyle
+from pystratum_backend.StratumIO import StratumIO
 
 
 class BaseCommand(Command):
@@ -21,15 +23,11 @@ class BaseCommand(Command):
         self._config = ConfigParser()
         """
         The configuration object.
-
-        :type: ConfigParser 
         """
 
-        self._io = None
+        self._io: Optional[StratumIO] = None
         """
         The Output decorator.
-
-        :type: StratumStyle|None 
         """
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -48,13 +46,13 @@ class BaseCommand(Command):
         return module()
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _read_config_file(self, input_object: Input) -> None:
+    def _read_config_file(self) -> None:
         """
         Reads the PyStratum configuration file.
 
         :rtype: ConfigParser
         """
-        config_filename = input_object.get_argument('config_file')
+        config_filename = self.argument('config_file')
         self._config.read(config_filename)
 
         if 'database' in self._config and 'supplement' in self._config['database']:
@@ -68,17 +66,13 @@ class BaseCommand(Command):
                     self._config['database'][option] = config_supplement['database'][option]
 
     # ------------------------------------------------------------------------------------------------------------------
-    def execute(self, input_object: Input, output_object: Output) -> int:
+    def execute(self, io: IO) -> int:
         """
         Executes this command.
 
-        :param input_object:  The input object.
-        :param output_object: The output object.
+        :param io: The input/output object.
         """
-        self.input = input_object
-        self.output = output_object
-
-        self._io = StratumStyle(input_object, output_object)
+        self._io = StratumIO(io.input, io.output, io.error_output)
 
         return self.handle()
 

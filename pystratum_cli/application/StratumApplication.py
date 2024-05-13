@@ -1,6 +1,7 @@
-from typing import List
-
-from cleo import Application, Command
+from cleo.application import Application
+from cleo.io.io import IO
+from cleo.io.outputs.output import Verbosity
+from pystratum_backend.StratumIO import StratumIO
 
 from pystratum_cli.command.ConstantsCommand import ConstantsCommand
 from pystratum_cli.command.RoutineLoaderCommand import RoutineLoaderCommand
@@ -20,20 +21,18 @@ class StratumApplication(Application):
         """
         Application.__init__(self, 'pystratum', '1.0.4')
 
-    # ------------------------------------------------------------------------------------------------------------------
-    def get_default_commands(self) -> List[Command]:
-        """
-        Returns the default commands of this application.
-
-        :rtype: list[Command]
-        """
-        commands = Application.get_default_commands(self)
-
         self.add(ConstantsCommand())
         self.add(RoutineLoaderCommand())
         self.add(StratumCommand())
         self.add(RoutineWrapperCommand())
 
-        return commands
+    # ------------------------------------------------------------------------------------------------------------------
+    def render_error(self, error: Exception, io: IO) -> None:
+        if io.output.verbosity == Verbosity.NORMAL:
+            my_io = StratumIO(io.input, io.output, io.error_output)
+            lines = [error.__class__.__name__, str(error)]
+            my_io.error(lines)
+        else:
+            Application.render_error(self, error, io)
 
 # ----------------------------------------------------------------------------------------------------------------------

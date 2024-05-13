@@ -1,5 +1,5 @@
 from pystratum_backend.ConstantWorker import ConstantWorker
-from pystratum_backend.StratumStyle import StratumStyle
+from pystratum_backend.StratumIO import StratumIO
 
 
 class VoidConstantWorker(ConstantWorker):
@@ -8,13 +8,13 @@ class VoidConstantWorker(ConstantWorker):
     """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __init__(self, io: StratumStyle):
+    def __init__(self, io: StratumIO):
         """
         Object constructor.
 
         :param io: The Output decorator.
         """
-        self._io: StratumStyle = io
+        self._io: StratumIO = io
 
     # ------------------------------------------------------------------------------------------------------------------
     def execute(self) -> int:

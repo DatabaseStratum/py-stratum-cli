@@ -1,20 +1,22 @@
+from cleo.helpers import argument
+
 from pystratum_cli.command.BaseCommand import BaseCommand
 
 
 class StratumCommand(BaseCommand):
     """
     The stratum command: combination of constants, loader, and wrapper commands.
-
-    stratum
-        {config_file : The stratum configuration file}
     """
+    name = 'stratum'
+    description = 'Generates constants based on database IDs.'
+    arguments = [argument(name='config_file', description='The stratum configuration file.')]
 
     # ------------------------------------------------------------------------------------------------------------------
     def handle(self) -> int:
         """
         Executes constants command when StratumCommand is activated.
         """
-        self._read_config_file(self.input)
+        self._read_config_file()
 
         factory = self._create_backend_factory()
 

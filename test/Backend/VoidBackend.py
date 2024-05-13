@@ -5,7 +5,7 @@ from pystratum_backend.Backend import Backend
 from pystratum_backend.ConstantWorker import ConstantWorker
 from pystratum_backend.RoutineLoaderWorker import RoutineLoaderWorker
 from pystratum_backend.RoutineWrapperGeneratorWorker import RoutineWrapperGeneratorWorker
-from pystratum_backend.StratumStyle import StratumStyle
+from pystratum_backend.StratumIO import StratumIO
 
 from test.Worker.VoidConstantWorker import VoidConstantWorker
 from test.Worker.VoidRoutineLoaderWorker import VoidRoutineLoaderWorker
@@ -18,39 +18,33 @@ class VoidBackend(Backend):
     """
 
     # ------------------------------------------------------------------------------------------------------------------
-    def create_constant_worker(self, settings: ConfigParser, io: StratumStyle) -> Optional[ConstantWorker]:
+    def create_constant_worker(self, settings: ConfigParser, io: StratumIO) -> Optional[ConstantWorker]:
         """
         Creates the object that does the actual execution of the constant command for the backend.
 
-        :param ConfigParser settings: The settings from the PyStratum configuration file.
-        :param StratumStyle io: The output object.
-
-        :rtype: ConstantWorker|None
+        :param settings: The settings from the PyStratum configuration file.
+        :param io: The output object.
         """
         return VoidConstantWorker(io)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def create_routine_loader_worker(self, settings: ConfigParser, io: StratumStyle) -> Optional[RoutineLoaderWorker]:
+    def create_routine_loader_worker(self, settings: ConfigParser, io: StratumIO) -> Optional[RoutineLoaderWorker]:
         """
         Creates the object that does the actual execution of the routine loader command for the backend.
 
-        :param ConfigParser settings: The settings from the PyStratum configuration file.
-        :param StratumStyle io: The output object.
-
-        :rtype: RoutineLoaderWorker|None
+        :param settings: The settings from the PyStratum configuration file.
+        :param io: The output object.
         """
         return VoidRoutineLoaderWorker(io)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def create_routine_wrapper_generator_worker(self, settings: ConfigParser, io: StratumStyle) \
+    def create_routine_wrapper_generator_worker(self, settings: ConfigParser, io: StratumIO) \
             -> Optional[RoutineWrapperGeneratorWorker]:
         """
         Creates the object that does the actual execution of the routine wrapper generator command for the backend.
 
-        :param ConfigParser settings: The settings from the PyStratum configuration file.
-        :param StratumStyle io: The output object.
-
-        :rtype: RoutineWrapperGeneratorWorker|None
+        :param settings: The settings from the PyStratum configuration file.
+        :param io: The output object.
         """
         return VoidRoutineWrapperGeneratorWorker(io)
 
