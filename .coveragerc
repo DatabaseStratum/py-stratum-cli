@@ -25,7 +25,7 @@ exclude_lines =
 ignore_errors = True
 
 [xml]
-output = coverage.xml
+output = test/coverage.xml
 
 [html]
 directory = test/html/
