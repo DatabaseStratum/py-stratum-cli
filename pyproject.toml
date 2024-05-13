@@ -27,8 +27,8 @@ requires-python = ">=3.9"
 [project.urls]
 Homepage = "https://github.com/DatabaseStratum/py-stratum-cli"
 
-[options.entry_points]
-console_scripts = ['pystratum = pystratum_cli:main']
+[project.scripts]
+pystratum = "pystratum_cli:main"
 
 [build-system]
 requires = ["pdm-backend"]
