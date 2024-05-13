@@ -10,13 +10,11 @@
     <!-- Install virtual environment -->
     <target name="venv">
         <delete dir="venv" quiet="true"/>
+        <delete file="poetry.lock" quiet="true"/>
         <exec command="python3 -m venv venv" checkreturn="true" passthru="true"/>
         <exec command="./venv/bin/python -m pip install --upgrade pip" checkreturn="true" passthru="true"/>
-        <exec command="./venv/bin/python -m pip install --upgrade pip-tools" checkreturn="true" passthru="true"/>
-        <exec command="./venv/bin/python -m piptools compile --all-extras -o requirements.txt pyproject.toml"
-              passthru="true" checkreturn="true"/>
-        <exec command="./venv/bin/python -m pip install --upgrade -r requirements.txt" passthru="true"
-              checkreturn="true"/>
+        <exec command="./venv/bin/python -m pip install --upgrade poetry" checkreturn="true" passthru="true"/>
+        <exec command="./venv/bin/poetry install --no-root" passthru="true" checkreturn="true"/>
     </target>
 
     <!-- Creates a new version/release. -->
@@ -68,14 +66,12 @@
 
     <!-- Creates a new distribution using pyproject.toml -->
     <target name="dist">
-        <exec command="./venv/bin/python -m build" passthru="true" checkreturn="true"/>
+        <exec command="./venv/bin/poetry build" passthru="true" checkreturn="true"/>
     </target>
 
     <!-- Uploads a distribution to PyPI -->
     <target name="upload">
-        <loadfile property="VERSION" file=".version"/>
-        <exec command="./venv/bin/python -m twine upload dist/pystratum_cli-${VERSION}*" passthru="true"
-              checkreturn="true"/>
+        <exec command="./venv/bin/poetry publish" passthru="true" checkreturn="true"/>
     </target>
 
     <!-- All steps for releasing a new version -->

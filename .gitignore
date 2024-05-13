@@ -1,11 +1,10 @@
 **/__pycache__/
 /.coverage
 /.idea/
-/PyStratum_Cli.egg-info/
 /bin/phing
 /composer.lock
 /dist/
-/requirements.txt
+/poetry.lock
 /test/coverage.xml
 /test/html/
 /vendor/
