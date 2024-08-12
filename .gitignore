@@ -1,6 +1,7 @@
 **/__pycache__/
 /.coverage
 /.idea/
+/.venv/
 /bin/phing
 /composer.lock
 /dist/
@@ -8,4 +9,3 @@
 /test/coverage.xml
 /test/html/
 /vendor/
-/venv/
