@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "PyStratum-Cli"
-version = "2.0.2"
+version = "2.1.0"
 description = "PyStratum CLI: The frontend of PyStratum"
 authors = ["Set Based IT Consultancy <info@setbased.nl>"]
 keywords = ["PyStratum", "CLI"]
