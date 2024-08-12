@@ -1,6 +1,5 @@
 import os
 from configparser import ConfigParser
-from typing import Optional
 
 from cleo.commands.command import Command
 from cleo.io.io import IO
@@ -25,7 +24,7 @@ class BaseCommand(Command):
         The configuration object.
         """
 
-        self._io: Optional[StratumIO] = None
+        self._io: StratumIO | None = None
         """
         The Output decorator.
         """

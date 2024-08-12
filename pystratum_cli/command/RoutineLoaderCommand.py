@@ -10,7 +10,7 @@ class RoutineLoaderCommand(BaseCommand):
     name = 'loader'
     description = 'Command for loading stored routines into a database instance from pseudo SQL files.'
     arguments = [argument(name='config_file', description='The stratum configuration file.'),
-                 argument(name='file_names',  description='Sources with stored routines', optional=True, multiple=True)]
+                 argument(name='file_names', description='Sources with stored routines', optional=True, multiple=True)]
 
     # ------------------------------------------------------------------------------------------------------------------
     def handle(self) -> int:
